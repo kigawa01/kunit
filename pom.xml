@@ -4,18 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <java.version></java.version>
-        <name></name>
-        <description></description>
-        <url></url>
-        <version></version>
+        <java.version>17</java.version>
+        <name>kutil-unit</name>
+        <groupe>net.kigawa</groupe>
+        <description>add unit</description>
+        <url>https://github.com/kigawa01/kutil-unit</url>
+        <version>1.0</version>
     </properties>
 
     <name>${name}</name>
     <description>${description}</description>
     <url>${url}</url>
 
-    <groupId>net.kigawa</groupId>
+    <groupId>${groupe}</groupId>
     <artifactId>${name}</artifactId>
     <version>${version</version>
 
