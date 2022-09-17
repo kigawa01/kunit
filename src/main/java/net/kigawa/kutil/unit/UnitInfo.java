@@ -2,21 +2,35 @@ package net.kigawa.kutil.unit;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UnitInfo<T extends Unit>
 {
+    protected final Set<UnitInfo<?>> parents = new HashSet<>();
+    protected final Set<UnitInfo<?>> childs = new HashSet<>();
     private final Class<T> unitClass;
     private final UnitContainer unitContainer;
-    private final List<UnitInfo<?>> parents = new LinkedList<>();
-    private final List<UnitInfo<?>> childs = new LinkedList<>();
+    private final boolean isResident;
     private T unit;
 
-    public UnitInfo(Class<T> unitClass, UnitContainer unitContainer)
+    public UnitInfo(Class<T> unitClass, UnitContainer unitContainer, boolean isResident)
     {
         this.unitClass = unitClass;
         this.unitContainer = unitContainer;
+        this.isResident = isResident;
+    }
+
+    protected void shutdown()
+    {
+        for (var child : childs) {
+            child.shutdown();
+        }
+        unit.shutdown();
+        for (var parent : parents) {
+            parent.childs.remove(this);
+            if (parent.childs.size() == 0 && !parent.isResident) parent.shutdown();
+        }
     }
 
     public T getUnit(UnitInfo<?> parent) throws InvocationTargetException, InstantiationException, IllegalAccessException

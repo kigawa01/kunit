@@ -10,21 +10,21 @@ public abstract class UnitContainer implements Unit
 
     public UnitContainer()
     {
-        unitMap.put(getClass(), new UnitInfo<>(getClass(), this)
-        {
-
-        });
+        unitMap.put(getClass(), new UnitInfo<>(getClass(), this, true));
     }
 
     public <T extends Unit> void registerUnit(Class<T> unitClass)
     {
-        var unitInfo = new UnitInfo<>(unitClass, this);
+        var unitInfo = new UnitInfo<>(unitClass, this, false);
         unitMap.put(unitClass, unitInfo);
     }
 
-    public <T extends Unit> T getResidentUnit(Class<T> unitClass)
+    public <T extends Unit> void registerResidentUnit(Class<T> unitClass)
     {
-        return getUnit(unitMap.get(getClass()), unitClass);
+        registerUnit(unitClass);
+        var unitInfo = unitMap.get(getClass());
+        if (unitInfo == null) throw new UnitException("unit is not exist");
+        getUnit(unitInfo, unitClass);
     }
 
     protected <T extends Unit> T getUnit(UnitInfo<?> parent, Class<?> unitClass)
@@ -40,11 +40,12 @@ public abstract class UnitContainer implements Unit
 
     public <T extends Unit> void shutdownUnit(Class<T> unitClass)
     {
-        // TODO: 2022/09/10
+        unitMap.get(unitClass).shutdown();
     }
 
+    @Override
     public void shutdown()
     {
-        // TODO: 2022/09/10
+        shutdownUnit(getClass());
     }
 }
