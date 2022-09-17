@@ -1,11 +1,20 @@
 package net.kigawa.kutil.unit;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class UnitContainer implements Unit
 {
-    protected Map<Class<? extends Unit>, UnitInfo<? extends Unit>> unitMap = new HashMap<>();
+    protected Map<Class<? extends Unit>, UnitInfo<?>> unitMap = new HashMap<>();
+
+    public UnitContainer()
+    {
+        unitMap.put(getClass(), new UnitInfo<>(getClass(), this)
+        {
+
+        });
+    }
 
     public <T extends Unit> void registerUnit(Class<T> unitClass)
     {
@@ -15,12 +24,17 @@ public abstract class UnitContainer implements Unit
 
     public <T extends Unit> T getResidentUnit(Class<T> unitClass)
     {
-        return getUnit(this, unitClass);
+        return getUnit(unitMap.get(getClass()), unitClass);
     }
 
-    public <T extends Unit> T getUnit(Unit parent, Class<T> unitClass)
+    protected <T extends Unit> T getUnit(UnitInfo<?> parent, Class<?> unitClass)
     {
-        // TODO: 2022/09/10
+        try {
+            return (T) unitMap.get(unitClass)
+                    .getUnit(parent);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
