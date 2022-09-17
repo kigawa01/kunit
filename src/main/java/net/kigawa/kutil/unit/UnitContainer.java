@@ -4,13 +4,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class UnitContainer implements Unit
+public  class UnitContainer implements Unit
 {
+    public static final UnitContainer defaultContainer = new UnitContainer();
     protected Map<Class<? extends Unit>, UnitInfo<?>> unitMap = new HashMap<>();
 
     public UnitContainer()
     {
         unitMap.put(getClass(), new UnitInfo<>(getClass(), this, true));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
     public <T extends Unit> void registerUnit(Class<T> unitClass)
