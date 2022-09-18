@@ -9,10 +9,11 @@ public class UnitInfo<T extends Unit>
 {
     protected final Set<UnitInfo<?>> parents = new HashSet<>();
     protected final Set<UnitInfo<?>> childs = new HashSet<>();
+    protected final boolean isResident;
     private final Class<T> unitClass;
     private final UnitContainer unitContainer;
-    private final boolean isResident;
-    private T unit;
+    protected T unit;
+    protected boolean shutdown;
 
     public UnitInfo(Class<T> unitClass, UnitContainer unitContainer, boolean isResident)
     {
@@ -23,6 +24,8 @@ public class UnitInfo<T extends Unit>
 
     protected void shutdown()
     {
+        if (shutdown) return;
+        shutdown = false;
         for (var child : childs) {
             child.shutdown();
         }
@@ -33,16 +36,20 @@ public class UnitInfo<T extends Unit>
         }
     }
 
-    public T getUnit(UnitInfo<?> parent) throws InvocationTargetException, InstantiationException, IllegalAccessException
+    public T getUnit(UnitInfo<?> child) throws InvocationTargetException, InstantiationException, IllegalAccessException
     {
-        parents.add(parent);
-        parent.childs.add(this);
+        shutdown = true;
+        if (child != null) {
+            childs.add(child);
+            child.parents.add(this);
+        }
         if (unit != null) return unit;
 
         var constructor = getConstructor();
         var args = getArgs(constructor);
 
-        return (T) constructor.newInstance(args);
+        unit = (T) constructor.newInstance(args);
+        return unit;
     }
 
     private Object[] getArgs(Constructor<?> constructor)
