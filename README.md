@@ -6,6 +6,7 @@
 * manage unit by container
 
 ## Usage
+
 ```pom.xml
 <dependency>
   <groupId>net.kigawa.kutil</groupId>
@@ -13,6 +14,28 @@
   <version>1.0</version>
 </dependency>
 ```
+
+```java
+import net.kigawa.kutil.unit.Unit;
+
+@Unit
+class Unit
+{
+
+}
+```
+
+```java
+import net.kigawa.kutil.unit.UnitContainer;
+
+class Main
+{
+    public static void main(String[] args) {
+        var container = new UnitContainer(getClass());
+    }
+}
+```
+
 ## Requirement
 
 * java
