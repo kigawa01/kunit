@@ -37,13 +37,18 @@ public class UnitContainer
         var mappedClass = interfaceMap.get(interfaceClass);
         if (mappedClass != null) return getUnit(interfaceClass);
 
+        T result = null;
         for (var unitClass : unitInfoMap.keySet()) {
             if (!Arrays.asList(unitClass.getInterfaces()).contains(interfaceClass)) continue;
+
+            if (result != null) throw new UnitException("interface must implemented by only one unit");
+
             interfaceMap.put(interfaceClass, unitClass);
-            return (T) getUnit(unitClass);
+            result = (T) getUnit(unitClass);
         }
 
-        throw new UnitException("unit is not found");
+        if (result == null) throw new UnitException("unit is not found");
+        return result;
     }
 
     private void initUnits() {

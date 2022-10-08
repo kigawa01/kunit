@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit;
 
-public class UnitDummy1
+@Unit
+public class UnitDummy1 implements AllUnitInterface
 {
     protected final UnitDummy unitDummy;
     protected final UnitContainer unitContainer;
