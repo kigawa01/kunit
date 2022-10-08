@@ -10,7 +10,7 @@
         <groupId>net.kigawa.kutil</groupId>
         <description>add unit</description>
         <url>https://github.com/kigawa01/kutil-unit</url>
-        <version>1.0</version>
+        <version>1.1</version>
 
 
         <maven.compiler.source>${java.version}</maven.compiler.source>

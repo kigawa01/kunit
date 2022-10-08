@@ -18,13 +18,16 @@ public class UnitContainer
 
     public UnitContainer(Class<?> rootClass) {
         rootPackage = rootClass.getPackage();
-
-        var containerInfo = new UnitInfo(getClass());
-        containerInfo.unit = this;
-        unitInfoMap.put(getClass(), containerInfo);
+        registerUnit(this);
 
         loadUnits();
         initUnits();
+    }
+
+    public <T> void registerUnit(T unit) {
+        var containerInfo = new UnitInfo(unit.getClass());
+        containerInfo.unit = unit;
+        unitInfoMap.put(unit.getClass(), containerInfo);
     }
 
     public <T> T getUnit(Class<T> unitClass) {
