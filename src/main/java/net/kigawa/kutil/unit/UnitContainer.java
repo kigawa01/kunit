@@ -16,9 +16,13 @@ public class UnitContainer
     private final Map<Class<?>, UnitInfo> unitInfoMap = new HashMap<>();
     private final Map<Class<?>, Class<?>> interfaceMap = new HashMap<>();
 
-    public UnitContainer(Class<?> rootClass) {
+    public UnitContainer(Class<?> rootClass, Object... units) {
         rootPackage = rootClass.getPackage();
         registerUnit(this);
+
+        for (Object unit : units) {
+            registerUnit(unit);
+        }
 
         loadUnits();
         initUnits();
