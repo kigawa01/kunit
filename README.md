@@ -10,7 +10,7 @@
 <dependency>
   <groupId>net.kigawa.kutil</groupId>
   <artifactId>unit</artifactId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ```
 ## Requirement
