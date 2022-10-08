@@ -1,76 +1,119 @@
 package net.kigawa.kutil.unit;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UnitContainer implements Unit
+public class UnitContainer
 {
-    public static final UnitContainer defaultContainer = new UnitContainer();
-    protected Map<Class<? extends Unit>, UnitInfo<?>> unitMap = new HashMap<>();
-    protected Map<Class<? extends Unit>, Unit> residentMap = new HashMap<>();
+    private final Package rootPackage;
+    private final Map<Class<?>, UnitInfo> unitInfoMap = new HashMap<>();
+    private final Map<Class<?>, Class<?>> interfaceMap = new HashMap<>();
 
-    public UnitContainer()
-    {
-        unitMap.put(getClass(), new UnitInfo<>(getClass(), this, true));
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+    public UnitContainer(Class<?> rootClass) {
+        rootPackage = rootClass.getPackage();
+
+        var containerInfo = new UnitInfo(getClass());
+        containerInfo.unit = this;
+        unitInfoMap.put(getClass(), containerInfo);
+
+        loadUnits();
+        initUnits();
     }
 
-    public <T extends Unit> T getResidentUnit(Class<T> unitClass)
-    {
-        var unit = residentMap.get(unitClass);
-        if (unit == null) throw new UnitException("unit is not exits");
-
-        return (T) unit;
+    public <T> T getUnit(Class<T> unitClass) {
+        var result = unitInfoMap.get(unitClass);
+        if (result == null) return getUnitByInterface(unitClass);
+        return (T) result.unit;
     }
 
-    public void start()
-    {
-        var conInfo = unitMap.get(getClass());
-        for (var entry : unitMap.entrySet()) {
-            if (entry.getValue().isResident) {
+    private <T> T getUnitByInterface(Class<T> interfaceClass) {
+        var mappedClass = interfaceMap.get(interfaceClass);
+        if (mappedClass != null) return getUnit(interfaceClass);
+
+        for (var unitClass : unitInfoMap.keySet()) {
+            if (!Arrays.asList(unitClass.getInterfaces()).contains(interfaceClass)) continue;
+            interfaceMap.put(interfaceClass, unitClass);
+            return (T) getUnit(unitClass);
+        }
+
+        throw new UnitException("unit is not found");
+    }
+
+    private void initUnits() {
+        for (var unitClass : unitInfoMap.keySet()) {
+            loadUnit(unitClass);
+        }
+    }
+
+    private void loadUnit(Class<?> unitClass) {
+        var unitInfo = unitInfoMap.get(unitClass);
+        if (unitInfo.unit != null) return;
+
+        var constructor = unitInfo.getConstructor();
+
+        var parameters = constructor.getParameterTypes();
+        var objects = new Object[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            loadUnit(parameters[i]);
+            objects[i] = getUnit(parameters[i]);
+        }
+        try {
+            unitInfo.unit = constructor.newInstance(objects);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new UnitException("cold not init unit", e);
+        }
+    }
+
+    private void loadUnits() {
+        final String resourceName = rootPackage.getName().replace('.', '/');
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final URL root = classLoader.getResource(resourceName);
+
+        if (root == null) throw new UnitException("cold not load units classes");
+
+        if ("file".equals(root.getProtocol())) {
+            var files = new File(root.getFile()).listFiles((dir, name) -> name.endsWith(".class"));
+            if (files == null) throw new UnitException("cold not load unit files");
+
+            for (var file : files) {
+                var name = file.getName();
+                name = name.replaceAll(".class$", "");
+                name = rootPackage.getName() + "." + name;
+
                 try {
-                    var unit = entry.getValue().getUnit(null);
-                    conInfo.childs.add(entry.getValue());
-                    residentMap.put(entry.getKey(), unit);
-                } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
+                    loadClass(Class.forName(name));
+                } catch (ClassNotFoundException e) {
+                    throw new UnitException("cold not load unit", e);
                 }
+            }
+            return;
+        }
+
+        if ("jar".equals(root.getProtocol())) {
+            try (var jarFile = ((JarURLConnection) root.openConnection()).getJarFile()) {
+                for (var entry : Collections.list(jarFile.entries())) {
+                    var name = entry.getName();
+                    if (!name.startsWith(resourceName)) continue;
+                    if (!name.endsWith(".class")) continue;
+                    name = name.replace('/', '.').replaceAll(".class$", "");
+
+                    loadClass(Class.forName(name));
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                throw new UnitException("cold not load unit", e);
             }
         }
     }
 
-    public <T extends Unit> void registerUnit(Class<T> unitClass)
-    {
-        var unitInfo = new UnitInfo<>(unitClass, this, false);
-        unitMap.put(unitClass, unitInfo);
-    }
-
-    public <T extends Unit> void registerResidentUnit(Class<T> unitClass)
-    {
-        var unitInfo = new UnitInfo<>(unitClass, this, true);
-        unitMap.put(unitClass, unitInfo);
-    }
-
-    protected <T extends Unit> T getUnit(UnitInfo<?> parent, Class<?> unitClass)
-    {
-        try {
-            return (T) unitMap.get(unitClass).getUnit(parent);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public <T extends Unit> void shutdownUnit(Class<T> unitClass)
-    {
-        unitMap.get(unitClass).shutdown();
-        residentMap.remove(unitClass);
-    }
-
-    @Override
-    public void shutdown()
-    {
-        shutdownUnit(getClass());
+    private void loadClass(Class<?> clazz) {
+        if (clazz.getAnnotation(Unit.class) == null) return;
+        unitInfoMap.put(clazz, new UnitInfo(clazz));
     }
 }

@@ -1,12 +1,11 @@
 package net.kigawa.kutil.unit;
 
-public class UnitDummy1 implements Unit
+public class UnitDummy1
 {
     protected final UnitDummy unitDummy;
     protected final UnitContainer unitContainer;
 
-    public UnitDummy1(UnitDummy unitDummy, UnitContainer unitContainer)
-    {
+    public UnitDummy1(UnitDummy unitDummy, UnitContainer unitContainer) {
 
         this.unitDummy = unitDummy;
         this.unitContainer = unitContainer;
