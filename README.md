@@ -3,8 +3,16 @@
 ## About
 
 * add unit for java app
-* unit
+* manage unit by container
 
+## Usage
+```pom.xml
+<dependency>
+  <groupId>net.kigawa.kutil</groupId>
+  <artifactId>unit</artifactId>
+  <version>1.0</version>
+</dependency>
+```
 ## Requirement
 
 * java
