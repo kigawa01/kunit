@@ -10,7 +10,7 @@
         <groupId>net.kigawa.kutil</groupId>
         <description>add unit</description>
         <url>https://github.com/kigawa01/kutil-unit</url>
-        <version>1.2</version>
+        <version>1.3</version>
         <kotlin.version>1.7.20</kotlin.version>
 
 

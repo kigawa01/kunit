@@ -15,6 +15,9 @@
 </dependency>
 ```
 
+Unitの登録
+register unit
+
 ```java
 import net.kigawa.kutil.unit.Unit;
 
@@ -24,6 +27,18 @@ class Unit
 
 }
 ```
+
+```kotlin
+import net.kigawa.kutil.unit.Unit
+
+@Unit
+object Unit {
+
+}
+```
+
+Unitをロードして初期化する
+load units and init them
 
 ```java
 import net.kigawa.kutil.unit.UnitContainer;
