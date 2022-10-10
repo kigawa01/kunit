@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.JarURLConnection;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class UnitContainer
 {
@@ -44,27 +40,34 @@ public class UnitContainer
         var mappedClass = interfaceMap.get(interfaceClass);
         if (mappedClass != null) return getUnit(interfaceClass);
 
-        T result = null;
+        Class<?> resultClass = null;
         for (var unitClass : unitInfoMap.keySet()) {
             if (!Arrays.asList(unitClass.getInterfaces()).contains(interfaceClass)) continue;
 
-            if (result != null) throw new UnitException("interface must implemented by only one unit");
+            if (resultClass != null)
+                throw new UnitException("interface must implemented by only one unit: " + resultClass + unitClass);
 
-            interfaceMap.put(interfaceClass, unitClass);
-            result = (T) getUnit(unitClass);
+            resultClass = unitClass;
         }
 
-        if (result == null) throw new UnitException("unit is not found");
-        return result;
+        if (resultClass == null) throw new UnitException("unit is not found: " + interfaceClass);
+        interfaceMap.put(interfaceClass, resultClass);
+        return (T) getUnit(resultClass);
     }
 
     private void initUnits() {
+        var exceptions = new LinkedList<Exception>();
         for (var unitClass : unitInfoMap.keySet()) {
-            loadUnit(unitClass);
+            try {
+                initUnit(unitClass);
+            } catch (Exception e) {
+                exceptions.add(new UnitException("could not init unit: " + unitClass, e));
+            }
         }
+        throwExceptions(exceptions, "there are exceptions when init units");
     }
 
-    private void loadUnit(Class<?> unitClass) {
+    private void initUnit(Class<?> unitClass) {
         var unitInfo = unitInfoMap.get(unitClass);
         if (unitInfo.unit != null) return;
 
@@ -73,22 +76,25 @@ public class UnitContainer
         var parameters = constructor.getParameterTypes();
         var objects = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
-            loadUnit(parameters[i]);
+            initUnit(parameters[i]);
             objects[i] = getUnit(parameters[i]);
         }
         try {
             unitInfo.unit = constructor.newInstance(objects);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new UnitException("cold not init unit", e);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new UnitException("could not init unit: " + unitClass, e);
+        } catch (InvocationTargetException e) {
+            throw new UnitException("could not init unit: " + unitClass, e.getCause());
         }
     }
 
     private void loadUnits() {
-        final String resourceName = rootPackage.getName().replace('.', '/');
-        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        final URL root = classLoader.getResource(resourceName);
+        var resourceName = rootPackage.getName().replace('.', '/');
+        var classLoader = Thread.currentThread().getContextClassLoader();
+        var root = classLoader.getResource(resourceName);
+        var exceptions = new LinkedList<Exception>();
 
-        if (root == null) throw new UnitException("cold not load units classes");
+        if (root == null) throw new UnitException("could not load class files");
 
         if ("file".equals(root.getProtocol())) {
             var files = new File(root.getFile()).listFiles((dir, name) -> name.endsWith(".class"));
@@ -100,15 +106,12 @@ public class UnitContainer
                 name = rootPackage.getName() + "." + name;
 
                 try {
-                    loadClass(Class.forName(name));
-                } catch (ClassNotFoundException e) {
-                    throw new UnitException("cold not load unit", e);
+                    loadUnit(Class.forName(name));
+                } catch (Exception e) {
+                    exceptions.add(new UnitException("cold not load unit: " + name, e));
                 }
             }
-            return;
-        }
-
-        if ("jar".equals(root.getProtocol())) {
+        } else if ("jar".equals(root.getProtocol())) {
             try (var jarFile = ((JarURLConnection) root.openConnection()).getJarFile()) {
                 for (var entry : Collections.list(jarFile.entries())) {
                     var name = entry.getName();
@@ -116,16 +119,31 @@ public class UnitContainer
                     if (!name.endsWith(".class")) continue;
                     name = name.replace('/', '.').replaceAll(".class$", "");
 
-                    loadClass(Class.forName(name));
+                    try {
+                        loadUnit(Class.forName(name));
+                    } catch (Exception e) {
+                        exceptions.add(new UnitException("could not load unit: " + name, e));
+                    }
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                throw new UnitException("cold not load unit", e);
+            } catch (IOException e) {
+                throw new UnitException("could not load units file", e);
             }
         }
+        throwExceptions(exceptions, "there are exceptions when load units");
     }
 
-    private void loadClass(Class<?> clazz) {
+    private void loadUnit(Class<?> clazz) {
         if (clazz.getAnnotation(Unit.class) == null) return;
         unitInfoMap.put(clazz, new UnitInfo(clazz));
+    }
+
+    private void throwExceptions(List<Exception> exceptions, String message) {
+        if (exceptions.size() == 0) return;
+
+        var exceptionResult = new UnitException(message);
+        for (var e : exceptions) {
+            exceptionResult.addSuppressed(e);
+        }
+        throw exceptionResult;
     }
 }

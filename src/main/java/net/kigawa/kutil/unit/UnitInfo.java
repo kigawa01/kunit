@@ -1,8 +1,6 @@
 package net.kigawa.kutil.unit;
 
 import java.lang.reflect.Constructor;
-import java.util.HashSet;
-import java.util.Set;
 
 public class UnitInfo
 {
@@ -23,6 +21,6 @@ public class UnitInfo
             }
         }
 
-        throw new UnitException("cold not get constructor");
+        throw new UnitException("cold not get constructor: " + unitClass);
     }
 }
