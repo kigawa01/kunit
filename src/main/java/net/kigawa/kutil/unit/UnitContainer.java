@@ -10,8 +10,14 @@ public class UnitContainer
 {
     private final Map<Class<?>, UnitInfo> unitInfoMap = new HashMap<>();
     private final Map<Class<?>, Class<?>> interfaceMap = new HashMap<>();
+    private final UnitContainer parent;
 
     public UnitContainer(Class<?> rootClass, Object... units) {
+        this(null, rootClass, units);
+    }
+
+    public UnitContainer(UnitContainer parent, Class<?> rootClass, Object... units) {
+        this.parent = parent;
         registerUnit(this);
 
         for (Object unit : units) {
@@ -29,9 +35,15 @@ public class UnitContainer
     }
 
     public <T> T getUnit(Class<T> unitClass) {
-        var result = unitInfoMap.get(unitClass);
-        if (result == null) return getUnitByInterface(unitClass);
-        return (T) result.unit;
+        var unitInfo = unitInfoMap.get(unitClass);
+        if (unitInfo != null) return (T) unitInfo.unit;
+
+        var result = getUnitByInterface(unitClass);
+        if (result != null) return result;
+
+        if (parent != null) return parent.getUnit(unitClass);
+
+        throw new UnitException("unit is not found: " + unitClass);
     }
 
     private <T> T getUnitByInterface(Class<T> interfaceClass) {
@@ -48,7 +60,7 @@ public class UnitContainer
             resultClass = unitClass;
         }
 
-        if (resultClass == null) throw new UnitException("unit is not found: " + interfaceClass);
+        if (resultClass == null) return null;
         interfaceMap.put(interfaceClass, resultClass);
         return (T) getUnit(resultClass);
     }
@@ -87,6 +99,7 @@ public class UnitContainer
     }
 
     public void loadUnits(Class<?> rootClass) {
+        interfaceMap.clear();
         var rootPackage = rootClass.getPackage();
         var resourceName = rootPackage.getName().replace('.', '/');
         var classLoader = rootClass.getClassLoader();
