@@ -14,19 +14,21 @@ public class UnitContainer
     private final Map<Class<?>, Class<?>> interfaceMap = new HashMap<>();
     private final UnitContainer parent;
 
-    public UnitContainer(Class<?> rootClass, Object... units) throws UnitException {
-        this(null, rootClass, units);
+    public UnitContainer(Object... units) {
+        this(null, units);
     }
 
-    public UnitContainer(UnitContainer parent, Class<?> rootClass, Object... units) throws UnitException {
+    public UnitContainer(UnitContainer parent, Object... units) {
         this.parent = parent;
         registerUnit(this);
 
         for (Object unit : units) {
             registerUnit(unit);
         }
+    }
 
-        loadUnits(rootClass);
+    public void loadUnits(Class<?> rootClass) throws UnitException {
+        registerUnits(rootClass);
         initUnits();
     }
 
@@ -120,7 +122,7 @@ public class UnitContainer
         }
     }
 
-    public void loadUnits(Class<?> rootClass) throws UnitException {
+    private void registerUnits(Class<?> rootClass) throws UnitException {
         interfaceMap.clear();
         var rootPackage = rootClass.getPackage();
         var resourceName = rootPackage.getName().replace('.', '/');
@@ -140,7 +142,7 @@ public class UnitContainer
                 name = rootPackage.getName() + "." + name;
 
                 try {
-                    loadUnit(Class.forName(name));
+                    registerUnit(Class.forName(name));
                 } catch (Exception e) {
                     exceptions.add(new UnitException("cold not load unit: " + name, e));
                 }
@@ -154,7 +156,7 @@ public class UnitContainer
                     name = name.replace('/', '.').replaceAll(".class$", "");
 
                     try {
-                        loadUnit(Class.forName(name));
+                        registerUnit(Class.forName(name));
                     } catch (Exception e) {
                         exceptions.add(new UnitException("could not load unit: " + name, e));
                     }
@@ -166,7 +168,7 @@ public class UnitContainer
         throwExceptions(exceptions, new UnitException("there are exceptions when load units"));
     }
 
-    private void loadUnit(Class<?> unitClass) {
+    private void registerUnit(Class<?> unitClass) {
         if (unitClass.getAnnotation(Unit.class) == null) return;
         unitInfoMap.put(unitClass, new UnitInfo(unitClass));
     }
