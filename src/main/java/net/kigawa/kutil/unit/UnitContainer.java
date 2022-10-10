@@ -1,5 +1,7 @@
 package net.kigawa.kutil.unit;
 
+import kotlin.Metadata;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -81,6 +83,26 @@ public class UnitContainer
         var unitInfo = unitInfoMap.get(unitClass);
         if (unitInfo.unit != null) return;
 
+        if (unitClass.isAnnotationPresent(Metadata.class)) {
+            unitInfo.unit = initKotlinClass(unitClass, unitInfo);
+            return;
+        }
+        unitInfo.unit = initNormalClass(unitClass, unitInfo);
+    }
+
+    private Object initKotlinClass(Class<?> unitClass, UnitInfo unitInfo) throws UnitException {
+        try {
+            var field = unitClass.getField("INSTANCE");
+
+            return field.get(null);
+        } catch (NoSuchFieldException e) {
+            return initNormalClass(unitClass, unitInfo);
+        } catch (IllegalAccessException e) {
+            throw new UnitException("could not access INSTANCE field: ", e);
+        }
+    }
+
+    private Object initNormalClass(Class<?> unitClass, UnitInfo unitInfo) throws UnitException {
         var constructor = unitInfo.getConstructor();
 
         var parameters = constructor.getParameterTypes();
@@ -90,7 +112,7 @@ public class UnitContainer
             objects[i] = getUnit(parameters[i]);
         }
         try {
-            unitInfo.unit = constructor.newInstance(objects);
+            return constructor.newInstance(objects);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new UnitException("could not init unit: " + unitClass, e);
         } catch (InvocationTargetException e) {
@@ -144,9 +166,9 @@ public class UnitContainer
         throwExceptions(exceptions, new UnitException("there are exceptions when load units"));
     }
 
-    private void loadUnit(Class<?> clazz) {
-        if (clazz.getAnnotation(Unit.class) == null) return;
-        unitInfoMap.put(clazz, new UnitInfo(clazz));
+    private void loadUnit(Class<?> unitClass) {
+        if (unitClass.getAnnotation(Unit.class) == null) return;
+        unitInfoMap.put(unitClass, new UnitInfo(unitClass));
     }
 
     private <E extends Exception> void throwExceptions(List<Exception> exceptions, E base) throws E {

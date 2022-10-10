@@ -13,6 +13,7 @@ class UnitContainerTest extends Assertions
         assertNotNull(con.getUnit(UnitDummy.class));
         assertNotNull(con.getUnit(UnitDummy1.class));
         assertNotNull(con.getUnit(UnitDummyInterface.class));
+        assertNotNull(con.getUnit(UnitDummy2.class));
         assertThrows(RuntimeUnitException.class, () -> con.getUnit(AllUnitInterface.class));
     }
 }
