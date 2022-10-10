@@ -16,9 +16,11 @@
 ```
 
 Unitの登録
+
 register unit
 
 ```java
+// java
 import net.kigawa.kutil.unit.Unit;
 
 @Unit
@@ -29,6 +31,7 @@ class Unit
 ```
 
 ```kotlin
+// kotlin
 import net.kigawa.kutil.unit.Unit
 
 @Unit
@@ -38,6 +41,7 @@ object Unit {
 ```
 
 Unitをロードして初期化する
+
 load units and init them
 
 ```java
