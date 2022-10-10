@@ -8,19 +8,17 @@ import java.util.*;
 
 public class UnitContainer
 {
-    private final Package rootPackage;
     private final Map<Class<?>, UnitInfo> unitInfoMap = new HashMap<>();
     private final Map<Class<?>, Class<?>> interfaceMap = new HashMap<>();
 
     public UnitContainer(Class<?> rootClass, Object... units) {
-        rootPackage = rootClass.getPackage();
         registerUnit(this);
 
         for (Object unit : units) {
             registerUnit(unit);
         }
 
-        loadUnits();
+        loadUnits(rootClass);
         initUnits();
     }
 
@@ -88,9 +86,10 @@ public class UnitContainer
         }
     }
 
-    private void loadUnits() {
+    public void loadUnits(Class<?> rootClass) {
+        var rootPackage = rootClass.getPackage();
         var resourceName = rootPackage.getName().replace('.', '/');
-        var classLoader = Thread.currentThread().getContextClassLoader();
+        var classLoader = rootClass.getClassLoader();
         var root = classLoader.getResource(resourceName);
         var exceptions = new LinkedList<Exception>();
 
