@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit;
 
-public class UnitException extends RuntimeException
+public class UnitException extends Exception
 {
     public UnitException(String message, Throwable cause)
     {

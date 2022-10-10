@@ -12,11 +12,11 @@ public class UnitContainer
     private final Map<Class<?>, Class<?>> interfaceMap = new HashMap<>();
     private final UnitContainer parent;
 
-    public UnitContainer(Class<?> rootClass, Object... units) {
+    public UnitContainer(Class<?> rootClass, Object... units) throws UnitException {
         this(null, rootClass, units);
     }
 
-    public UnitContainer(UnitContainer parent, Class<?> rootClass, Object... units) {
+    public UnitContainer(UnitContainer parent, Class<?> rootClass, Object... units) throws UnitException {
         this.parent = parent;
         registerUnit(this);
 
@@ -43,7 +43,7 @@ public class UnitContainer
 
         if (parent != null) return parent.getUnit(unitClass);
 
-        throw new UnitException("unit is not found: " + unitClass);
+        throw new RuntimeUnitException("unit is not found: " + unitClass);
     }
 
     private <T> T getUnitByInterface(Class<T> interfaceClass) {
@@ -55,7 +55,7 @@ public class UnitContainer
             if (!Arrays.asList(unitClass.getInterfaces()).contains(interfaceClass)) continue;
 
             if (resultClass != null)
-                throw new UnitException("interface must implemented by only one unit: " + resultClass + unitClass);
+                throw new RuntimeUnitException("interface must implemented by only one unit: " + resultClass + unitClass);
 
             resultClass = unitClass;
         }
@@ -65,7 +65,7 @@ public class UnitContainer
         return (T) getUnit(resultClass);
     }
 
-    private void initUnits() {
+    private void initUnits() throws UnitException {
         var exceptions = new LinkedList<Exception>();
         for (var unitClass : unitInfoMap.keySet()) {
             try {
@@ -74,10 +74,10 @@ public class UnitContainer
                 exceptions.add(new UnitException("could not init unit: " + unitClass, e));
             }
         }
-        throwExceptions(exceptions, "there are exceptions when init units");
+        throwExceptions(exceptions, new UnitException("there are exceptions when init units"));
     }
 
-    private void initUnit(Class<?> unitClass) {
+    private void initUnit(Class<?> unitClass) throws UnitException {
         var unitInfo = unitInfoMap.get(unitClass);
         if (unitInfo.unit != null) return;
 
@@ -98,7 +98,7 @@ public class UnitContainer
         }
     }
 
-    public void loadUnits(Class<?> rootClass) {
+    public void loadUnits(Class<?> rootClass) throws UnitException {
         interfaceMap.clear();
         var rootPackage = rootClass.getPackage();
         var resourceName = rootPackage.getName().replace('.', '/');
@@ -141,7 +141,7 @@ public class UnitContainer
                 throw new UnitException("could not load units file", e);
             }
         }
-        throwExceptions(exceptions, "there are exceptions when load units");
+        throwExceptions(exceptions, new UnitException("there are exceptions when load units"));
     }
 
     private void loadUnit(Class<?> clazz) {
@@ -149,13 +149,12 @@ public class UnitContainer
         unitInfoMap.put(clazz, new UnitInfo(clazz));
     }
 
-    private void throwExceptions(List<Exception> exceptions, String message) {
+    private <E extends Exception> void throwExceptions(List<Exception> exceptions, E base) throws E {
         if (exceptions.size() == 0) return;
 
-        var exceptionResult = new UnitException(message);
         for (var e : exceptions) {
-            exceptionResult.addSuppressed(e);
+            base.addSuppressed(e);
         }
-        throw exceptionResult;
+        throw base;
     }
 }

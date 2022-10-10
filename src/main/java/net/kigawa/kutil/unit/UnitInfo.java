@@ -12,7 +12,7 @@ public class UnitInfo
     }
 
 
-    protected Constructor<?> getConstructor() {
+    protected Constructor<?> getConstructor() throws UnitException {
         var constructors = unitClass.getConstructors();
         if (constructors.length == 1) return constructors[0];
         for (var constructor : constructors) {
@@ -21,6 +21,6 @@ public class UnitInfo
             }
         }
 
-        throw new UnitException("cold not get constructor: " + unitClass);
+        throw new UnitException("could not get constructor: " + unitClass);
     }
 }
