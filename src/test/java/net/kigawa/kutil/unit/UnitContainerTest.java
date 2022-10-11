@@ -7,9 +7,14 @@ class UnitContainerTest extends Assertions
 {
 
     @Test
-    void getUnit() throws UnitException {
+    void getUnit()  {
         var con = new UnitContainer();
-        con.loadUnits(getClass());
+        try {
+            con.loadUnits(getClass());
+        } catch (UnitException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
 
         assertNotNull(con.getUnit(UnitDummy.class));
         assertNotNull(con.getUnit(UnitDummy1.class));

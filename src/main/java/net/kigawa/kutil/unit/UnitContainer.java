@@ -6,13 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.JarURLConnection;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class UnitContainer
 {
-    private final Map<Class<?>, UnitInfo> unitInfoMap = new HashMap<>();
-    private final Map<Class<?>, Class<?>> interfaceMap = new HashMap<>();
     private final UnitContainer parent;
+    private final UnitsMap unitInfoMap = new UnitsMap();
 
     public UnitContainer(Object... units) {
         this(null, units);
@@ -40,33 +42,22 @@ public class UnitContainer
 
     public <T> T getUnit(Class<T> unitClass) {
         var unitInfo = unitInfoMap.get(unitClass);
-        if (unitInfo != null) return (T) unitInfo.unit;
-
-        var result = getUnitByInterface(unitClass);
-        if (result != null) return result;
+        if (unitInfo != null) {
+            if (unitInfo.unit != null) return (T) unitInfo.unit;
+            try {
+                return initUnit(unitClass);
+            } catch (UnitException e) {
+                throw new RuntimeUnitException("could not init unit: " + unitClass, e);
+            }
+        }
 
         if (parent != null) return parent.getUnit(unitClass);
 
         throw new RuntimeUnitException("unit is not found: " + unitClass);
     }
 
-    private <T> T getUnitByInterface(Class<T> interfaceClass) {
-        var mappedClass = interfaceMap.get(interfaceClass);
-        if (mappedClass != null) return getUnit(interfaceClass);
-
-        Class<?> resultClass = null;
-        for (var unitClass : unitInfoMap.keySet()) {
-            if (!Arrays.asList(unitClass.getInterfaces()).contains(interfaceClass)) continue;
-
-            if (resultClass != null)
-                throw new RuntimeUnitException("interface must implemented by only one unit: " + resultClass + unitClass);
-
-            resultClass = unitClass;
-        }
-
-        if (resultClass == null) return null;
-        interfaceMap.put(interfaceClass, resultClass);
-        return (T) getUnit(resultClass);
+    public Set<Class<?>> getAllClasses() {
+        return unitInfoMap.keySet();
     }
 
     private void initUnits() throws UnitException {
@@ -81,15 +72,18 @@ public class UnitContainer
         throwExceptions(exceptions, new UnitException("there are exceptions when init units"));
     }
 
-    private void initUnit(Class<?> unitClass) throws UnitException {
+    private <T> T initUnit(Class<T> unitClass) throws UnitException {
         var unitInfo = unitInfoMap.get(unitClass);
-        if (unitInfo.unit != null) return;
+
+        if (unitInfo == null) throw new UnitException("could not find unit: " + unitClass);
+        if (unitInfo.unit != null) return (T) unitInfo.unit;
 
         if (unitClass.isAnnotationPresent(Metadata.class)) {
             unitInfo.unit = initKotlinClass(unitClass, unitInfo);
-            return;
+            return (T) unitInfo.unit;
         }
         unitInfo.unit = initNormalClass(unitClass, unitInfo);
+        return (T) unitInfo.unit;
     }
 
     private Object initKotlinClass(Class<?> unitClass, UnitInfo unitInfo) throws UnitException {
@@ -110,7 +104,6 @@ public class UnitContainer
         var parameters = constructor.getParameterTypes();
         var objects = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
-            initUnit(parameters[i]);
             objects[i] = getUnit(parameters[i]);
         }
         try {
@@ -123,7 +116,7 @@ public class UnitContainer
     }
 
     private void registerUnits(Class<?> rootClass) throws UnitException {
-        interfaceMap.clear();
+        unitInfoMap.clearCache();
         var rootPackage = rootClass.getPackage();
         var resourceName = rootPackage.getName().replace('.', '/');
         var classLoader = rootClass.getClassLoader();
