@@ -8,7 +8,7 @@ class UnitsMap {
         infoMap[clazz] = unitInfo
     }
 
-    fun get(clazz: Class<*>): UnitInfo?{
+    fun get(clazz: Class<*>): UnitInfo? {
         val result = infoMap[clazz]
         if (result != null) return result
 
@@ -17,7 +17,7 @@ class UnitsMap {
 
         var foundClass: Class<*>? = null
         for (entry in infoMap.entries) {
-            if (!entry.key.interfaces.contains(clazz)) continue
+            if (!containParentClasses(entry.key, clazz)) continue
 
             if (foundClass != null)
                 throw RuntimeUnitException("interface must implemented by only one unit: " + foundClass + entry.key)
@@ -35,5 +35,15 @@ class UnitsMap {
 
     fun clearCache() {
         interfaceMap.clear()
+    }
+
+    private fun containParentClasses(base: Class<*>, clazz: Class<*>): Boolean {
+        if (base.interfaces.contains(clazz)) return true
+        if (base.superclass != null && base.superclass.equals(clazz)) return true
+        for (interfaceClass in base.interfaces) {
+            if (containParentClasses(interfaceClass, clazz)) return true
+        }
+        if (base.superclass != null && containParentClasses(base.superclass, clazz)) return true
+        return false
     }
 }
