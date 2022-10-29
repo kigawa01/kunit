@@ -1,5 +1,7 @@
 package net.kigawa.kutil.unit
 
+import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+
 class UnitsMap {
     private val infoMap: MutableMap<Class<*>, UnitInfo> = HashMap()
     private val interfaceMap: MutableMap<Class<*>, Class<*>> = HashMap()

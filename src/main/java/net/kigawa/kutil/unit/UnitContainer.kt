@@ -1,177 +1,218 @@
-package net.kigawa.kutil.unit;
+package net.kigawa.kutil.unit
 
-import kotlin.Metadata;
+import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+import net.kigawa.kutil.unit.runtimeexception.UnitNotInitException
+import java.io.File
+import java.io.FilenameFilter
+import java.io.IOException
+import java.lang.reflect.InvocationTargetException
+import java.net.JarURLConnection
+import java.util.*
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.JarURLConnection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-public class UnitContainer
+class UnitContainer(
+    private val parent: UnitContainer? = null,
+    vararg units: Any,
+)
 {
-    private final UnitContainer parent;
-    private final UnitsMap unitInfoMap = new UnitsMap();
+    constructor(vararg units: Any) : this(null, *units)
 
-    public UnitContainer(Object... units) {
-        this(null, units);
-    }
+    private val unitInfoMap = UnitsMap()
 
-    public UnitContainer(UnitContainer parent, Object... units) {
-        this.parent = parent;
-        registerUnit(this);
-
-        for (Object unit : units) {
-            registerUnit(unit);
+    init
+    {
+        registerUnit(this)
+        for (unit in units)
+        {
+            registerUnit(unit)
         }
     }
 
-    public void loadUnits(Class<?> rootClass) throws UnitException {
-        registerUnits(rootClass);
-        initUnits();
+    @Throws(UnitException::class)
+    fun loadUnits(rootClass: Class<*>)
+    {
+        registerUnits(rootClass)
+        initUnits()
     }
 
-    public <T> void registerUnit(T unit) {
-        var containerInfo = new UnitInfo(unit.getClass());
-        containerInfo.unit = unit;
-        unitInfoMap.put(unit.getClass(), containerInfo);
+    fun <T : Any> registerUnit(unit: T)
+    {
+        val containerInfo = UnitInfo(unit.javaClass)
+        containerInfo.unit = unit
+        unitInfoMap.put(unit.javaClass, containerInfo)
     }
 
-    public <T> T getUnit(Class<T> unitClass) {
-        var unitInfo = unitInfoMap.get(unitClass);
-        if (unitInfo != null) {
-            if (unitInfo.unit != null) return (T) unitInfo.unit;
-            try {
-                return initUnit(unitClass);
-            } catch (UnitException e) {
-                throw new RuntimeUnitException("could not init unit: " + unitClass, e);
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getUnit(unitClass: Class<T>): T?
+    {
+        val unitInfo = unitInfoMap.get(unitClass)
+        if (unitInfo != null)
+        {
+            if (unitInfo.unit != null) return unitInfo.unit as T
+            throw UnitNotInitException("unit is not initialized")
+        }
+        if (parent != null) return parent.getUnit(unitClass)
+        throw RuntimeUnitException("unit is not found: $unitClass")
+    }
+
+    private fun <T> getUnitAndInit(unitClass: Class<T>): T?
+    {
+        val unitInfo = unitInfoMap.get(unitClass)
+        if (unitInfo != null)
+        {
+            return try
+            {
+                getUnit(unitClass)
+            } catch (e: UnitNotInitException)
+            {
+                initUnit(unitClass)
             }
         }
-
-        if (parent != null) return parent.getUnit(unitClass);
-
-        throw new RuntimeUnitException("unit is not found: " + unitClass);
+        if (parent != null) return parent.getUnitAndInit(unitClass)
+        throw RuntimeUnitException("unit is not found: $unitClass")
     }
 
-    public Set<Class<?>> getAllClasses() {
-        return unitInfoMap.keySet();
-    }
+    val allClasses: Set<Class<*>>
+        get() = unitInfoMap.keySet()
 
-    private void initUnits() throws UnitException {
-        var exceptions = new LinkedList<Exception>();
-        for (var unitClass : unitInfoMap.keySet()) {
-            try {
-                initUnit(unitClass);
-            } catch (Exception e) {
-                exceptions.add(new UnitException("could not init unit: " + unitClass, e));
+    fun initUnits()
+    {
+        val exceptions = LinkedList<Exception>()
+        for (unitClass in unitInfoMap.keySet())
+        {
+            try
+            {
+                initUnit(unitClass)
+            } catch (e: Throwable)
+            {
+                exceptions.add(UnitException("could not init unit: $unitClass", e))
             }
         }
-        throwExceptions(exceptions, new UnitException("there are exceptions when init units"));
+        throwExceptions(exceptions, RuntimeUnitException("there are exceptions when init units"))
     }
 
-    private <T> T initUnit(Class<T> unitClass) throws UnitException {
-        var unitInfo = unitInfoMap.get(unitClass);
-
-        if (unitInfo == null) throw new UnitException("could not find unit: " + unitClass);
-        if (unitInfo.unit != null) return (T) unitInfo.unit;
-
-        if (unitClass.isAnnotationPresent(Metadata.class)) {
-            unitInfo.unit = initKotlinClass(unitClass, unitInfo);
-            return (T) unitInfo.unit;
+    @Suppress("UNCHECKED_CAST")
+    @Throws(UnitException::class)
+    private fun <T> initUnit(unitClass: Class<T>): T
+    {
+        val unitInfo = unitInfoMap.get(unitClass) ?: throw UnitException("could not find unit: $unitClass")
+        if (unitInfo.unit != null) return unitInfo.unit as T
+        if (unitClass.isAnnotationPresent(Metadata::class.java))
+        {
+            unitInfo.unit = initKotlinClass(unitClass, unitInfo)
+            return unitInfo.unit as T
         }
-        unitInfo.unit = initNormalClass(unitClass, unitInfo);
-        return (T) unitInfo.unit;
+        unitInfo.unit = initNormalClass(unitClass, unitInfo)
+        return unitInfo.unit as T
     }
 
-    private Object initKotlinClass(Class<?> unitClass, UnitInfo unitInfo) throws UnitException {
-        try {
-            var field = unitClass.getField("INSTANCE");
-
-            return field.get(null);
-        } catch (NoSuchFieldException e) {
-            return initNormalClass(unitClass, unitInfo);
-        } catch (IllegalAccessException e) {
-            throw new UnitException("could not access INSTANCE field: ", e);
-        }
-    }
-
-    private Object initNormalClass(Class<?> unitClass, UnitInfo unitInfo) throws UnitException {
-        var constructor = unitInfo.getConstructor();
-
-        var parameters = constructor.getParameterTypes();
-        var objects = new Object[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            objects[i] = getUnit(parameters[i]);
-        }
-        try {
-            return constructor.newInstance(objects);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new UnitException("could not init unit: " + unitClass, e);
-        } catch (InvocationTargetException e) {
-            throw new UnitException("could not init unit: " + unitClass, e.getCause());
+    @Throws(UnitException::class)
+    private fun initKotlinClass(unitClass: Class<*>, unitInfo: UnitInfo): Any
+    {
+        return try
+        {
+            val field = unitClass.getField("INSTANCE")
+            field[null]
+        } catch (e: NoSuchFieldException)
+        {
+            initNormalClass(unitClass, unitInfo)
+        } catch (e: IllegalAccessException)
+        {
+            throw UnitException("could not access INSTANCE field: ", e)
         }
     }
 
-    private void registerUnits(Class<?> rootClass) throws UnitException {
-        unitInfoMap.clearCache();
-        var rootPackage = rootClass.getPackage();
-        var resourceName = rootPackage.getName().replace('.', '/');
-        var classLoader = rootClass.getClassLoader();
-        var root = classLoader.getResource(resourceName);
-        var exceptions = new LinkedList<Exception>();
+    @Throws(UnitException::class)
+    private fun initNormalClass(unitClass: Class<*>, unitInfo: UnitInfo): Any
+    {
+        val constructor = unitInfo.constructor
+        val parameters = constructor.parameterTypes
+        val objects = arrayOfNulls<Any>(parameters.size)
+        for (i in parameters.indices)
+        {
+            objects[i] = getUnitAndInit(parameters[i])
+        }
+        return try
+        {
+            constructor.newInstance(*objects)
+        } catch (e: InstantiationException)
+        {
+            throw UnitException("could not init unit: $unitClass", e)
+        } catch (e: IllegalAccessException)
+        {
+            throw UnitException("could not init unit: $unitClass", e)
+        } catch (e: InvocationTargetException)
+        {
+            throw UnitException("could not init unit: $unitClass", e.cause)
+        }
+    }
 
-        if (root == null) throw new UnitException("could not load class files");
-
-        if ("file".equals(root.getProtocol())) {
-            var files = new File(root.getFile()).listFiles((dir, name) -> name.endsWith(".class"));
-            if (files == null) throw new UnitException("cold not load unit files");
-
-            for (var file : files) {
-                var name = file.getName();
-                name = name.replaceAll(".class$", "");
-                name = rootPackage.getName() + "." + name;
-
-                try {
-                    registerUnit(Class.forName(name));
-                } catch (Exception e) {
-                    exceptions.add(new UnitException("cold not load unit: " + name, e));
+    fun registerUnits(rootClass: Class<*>)
+    {
+        unitInfoMap.clearCache()
+        val rootPackage = rootClass.getPackage()
+        val resourceName = rootPackage.name.replace('.', '/')
+        val classLoader = rootClass.classLoader
+        val root = classLoader.getResource(resourceName)
+        val exceptions = LinkedList<Exception>()
+        if (root == null) throw RuntimeUnitException("could not load class files")
+        if ("file" == root.protocol)
+        {
+            val files = File(root.file).listFiles(FilenameFilter { dir: File?, name: String -> name.endsWith(".class") })
+                ?: throw RuntimeUnitException("cold not load unit files")
+            for (file in files)
+            {
+                var name = file.name
+                name = name.replace(".class$".toRegex(), "")
+                name = rootPackage.name + "." + name
+                try
+                {
+                    registerUnit(Class.forName(name))
+                } catch (e: Exception)
+                {
+                    exceptions.add(UnitException("cold not load unit: $name", e))
                 }
             }
-        } else if ("jar".equals(root.getProtocol())) {
-            try (var jarFile = ((JarURLConnection) root.openConnection()).getJarFile()) {
-                for (var entry : Collections.list(jarFile.entries())) {
-                    var name = entry.getName();
-                    if (!name.startsWith(resourceName)) continue;
-                    if (!name.endsWith(".class")) continue;
-                    name = name.replace('/', '.').replaceAll(".class$", "");
-
-                    try {
-                        registerUnit(Class.forName(name));
-                    } catch (Exception e) {
-                        exceptions.add(new UnitException("could not load unit: " + name, e));
+        } else if ("jar" == root.protocol)
+        {
+            try
+            {
+                (root.openConnection() as JarURLConnection).jarFile.use { jarFile ->
+                    for (entry in Collections.list(jarFile.entries()))
+                    {
+                        var name = entry.name
+                        if (!name.startsWith(resourceName)) continue
+                        if (!name.endsWith(".class")) continue
+                        name = name.replace('/', '.').replace(".class$".toRegex(), "")
+                        try
+                        {
+                            registerUnit(Class.forName(name))
+                        } catch (e: Exception)
+                        {
+                            exceptions.add(UnitException("could not load unit: $name", e))
+                        }
                     }
                 }
-            } catch (IOException e) {
-                throw new UnitException("could not load units file", e);
+            } catch (e: IOException)
+            {
+                throw RuntimeUnitException("could not load units file", e)
             }
         }
-        throwExceptions(exceptions, new UnitException("there are exceptions when load units"));
+        throwExceptions(exceptions, RuntimeUnitException("there are exceptions when load units"))
     }
 
-    private void registerUnit(Class<?> unitClass) {
-        if (unitClass.getAnnotation(Unit.class) == null) return;
-        unitInfoMap.put(unitClass, new UnitInfo(unitClass));
+    private fun registerUnit(unitClass: Class<*>)
+    {
+        val annotation = unitClass.getAnnotation(Unit::class.java) ?: return
+        unitInfoMap.put(unitClass, UnitInfo(unitClass, annotation))
     }
 
-    private <E extends Exception> void throwExceptions(List<Exception> exceptions, E base) throws E {
-        if (exceptions.size() == 0) return;
-
-        for (var e : exceptions) {
-            base.addSuppressed(e);
+    @Throws(Throwable::class)
+    private fun <E : Throwable> throwExceptions(exceptions: List<Exception>, base: E)
+    {
+        if (exceptions.isEmpty()) return
+        exceptions.forEach {
+            base.addSuppressed(it)
         }
-        throw base;
+        throw base
     }
 }

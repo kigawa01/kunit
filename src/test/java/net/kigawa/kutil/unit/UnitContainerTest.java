@@ -6,6 +6,7 @@ import net.kigawa.kutil.unit.dummy.Unit4;
 import net.kigawa.kutil.unit.dummy.parent.AbstractUnit;
 import net.kigawa.kutil.unit.dummy.parent.AllUnitInterface;
 import net.kigawa.kutil.unit.dummy.parent.UnitInterface1;
+import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
