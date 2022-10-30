@@ -3,10 +3,10 @@ package net.kigawa.kutil.unit
 import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
 import net.kigawa.kutil.unit.runtimeexception.UnitNotInitException
 import java.io.File
-import java.io.FilenameFilter
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.net.JarURLConnection
+import java.net.URL
 import java.util.*
 
 class UnitContainer(
@@ -150,54 +150,72 @@ class UnitContainer(
     {
         unitInfoMap.clearCache()
         val rootPackage = rootClass.getPackage()
-        val resourceName = rootPackage.name.replace('.', '/')
         val classLoader = rootClass.classLoader
-        val root = classLoader.getResource(resourceName)
+        val root = classLoader.getResource(rootPackage.name.replace('.', '/'))
         val exceptions = LinkedList<Exception>()
         if (root == null) throw RuntimeUnitException("could not load class files")
         if ("file" == root.protocol)
         {
-            val files = File(root.file).listFiles(FilenameFilter { dir: File?, name: String -> name.endsWith(".class") })
-                ?: throw RuntimeUnitException("cold not load unit files")
-            for (file in files)
-            {
-                var name = file.name
-                name = name.replace(".class$".toRegex(), "")
-                name = rootPackage.name + "." + name
-                try
-                {
-                    registerUnit(Class.forName(name))
-                } catch (e: Exception)
-                {
-                    exceptions.add(UnitException("cold not load unit: $name", e))
-                }
-            }
+            registerUnit(File(root.file), rootPackage.name)
         } else if ("jar" == root.protocol)
         {
-            try
-            {
-                (root.openConnection() as JarURLConnection).jarFile.use { jarFile ->
-                    for (entry in Collections.list(jarFile.entries()))
-                    {
-                        var name = entry.name
-                        if (!name.startsWith(resourceName)) continue
-                        if (!name.endsWith(".class")) continue
-                        name = name.replace('/', '.').replace(".class$".toRegex(), "")
-                        try
-                        {
-                            registerUnit(Class.forName(name))
-                        } catch (e: Exception)
-                        {
-                            exceptions.add(UnitException("could not load unit: $name", e))
-                        }
-                    }
-                }
-            } catch (e: IOException)
-            {
-                throw RuntimeUnitException("could not load units file", e)
-            }
+            registerUnit(root, rootPackage.name)
         }
         throwExceptions(exceptions, RuntimeUnitException("there are exceptions when load units"))
+    }
+
+    private fun registerUnit(root: URL, packageName: String): MutableList<Throwable>
+    {
+        val exceptions = mutableListOf<Throwable>()
+        try
+        {
+            (root.openConnection() as JarURLConnection).jarFile.use { jarFile ->
+                for (entry in Collections.list(jarFile.entries()))
+                {
+                    var name = entry.name
+                    if (!name.startsWith(packageName.replace('.', '/'))) continue
+                    if (!name.endsWith(".class")) continue
+                    name = name.replace('/', '.').replace(".class$".toRegex(), "")
+                    try
+                    {
+                        registerUnit(Class.forName(name))
+                    } catch (e: Exception)
+                    {
+                        exceptions.add(UnitException("could not load unit: $name", e))
+                    }
+                }
+            }
+        } catch (e: IOException)
+        {
+            exceptions.add(RuntimeUnitException("could not load units file", e))
+        }
+        return exceptions
+    }
+
+
+    private fun registerUnit(dir: File, packageName: String): MutableList<Throwable>
+    {
+        val exceptions = mutableListOf<Throwable>()
+        for (file in dir.listFiles() ?: throw UnitException("cold not load unit files"))
+        {
+            if (file.isDirectory)
+            {
+                registerUnit(file, packageName + "." + file.name)
+                continue
+            }
+            if (!file.name.endsWith(".class")) continue
+            var name = file.name
+            name = name.replace(".class$".toRegex(), "")
+            name = "$packageName.$name"
+            try
+            {
+                registerUnit(Class.forName(name))
+            } catch (e: Exception)
+            {
+                exceptions.add(UnitException("cold not load unit: $name", e))
+            }
+        }
+        return exceptions
     }
 
     private fun registerUnit(unitClass: Class<*>)
