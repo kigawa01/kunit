@@ -1,5 +1,7 @@
-package net.kigawa.kutil.unit
+package net.kigawa.kutil.unit.container
 
+import net.kigawa.kutil.unit.Inject
+import net.kigawa.kutil.unit.Unit
 import net.kigawa.kutil.unit.UnitException
 import java.lang.reflect.Constructor
 

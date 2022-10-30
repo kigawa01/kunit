@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit;
 
+import net.kigawa.kutil.unit.container.UnitContainer;
 import net.kigawa.kutil.unit.dummy.Unit1;
 import net.kigawa.kutil.unit.dummy.Unit2;
 import net.kigawa.kutil.unit.dummy.Unit4;
@@ -26,7 +27,7 @@ class UnitContainerTest extends Assertions
             throw new RuntimeException(e);
         }
         var executor = Executors.newCachedThreadPool();
-        con.registerUnit(executor);
+        con.loadUnit(executor);
 
         assertNotNull(con.getUnit(Unit4.class));
         assertNotNull(con.getUnit(Unit1.class));

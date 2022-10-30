@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.dummy;
 
 import net.kigawa.kutil.unit.Unit;
-import net.kigawa.kutil.unit.UnitContainer;
+import net.kigawa.kutil.unit.container.UnitContainer;
 import net.kigawa.kutil.unit.dummy.parent.AllUnitInterface;
 
 @Unit

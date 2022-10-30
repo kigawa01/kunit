@@ -45,7 +45,7 @@ Unitをロードして初期化する
 load units and init them
 
 ```java
-import net.kigawa.kutil.unit.UnitContainer;
+import net.kigawa.kutil.unit.container.UnitContainer;
 
 class Main
 {
