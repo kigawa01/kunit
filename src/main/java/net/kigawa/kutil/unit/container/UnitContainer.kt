@@ -14,7 +14,7 @@ import java.util.*
 class UnitContainer(
     private val parent: UnitContainer? = null,
     vararg units: Any,
-)
+) : UnitContainerInterface
 {
     constructor(vararg units: Any) : this(null, *units)
 
@@ -36,6 +36,7 @@ class UnitContainer(
         registerUnits(rootClass)
         initUnits()
     }
+
     val allClasses: Set<Class<*>>
         get() = unitInfoMap.keySet()
 
@@ -54,6 +55,7 @@ class UnitContainer(
         }
         throwExceptions(exceptions, RuntimeUnitException("there are exceptions when init units"))
     }
+
     fun <T : Any> loadUnit(unit: T)
     {
         val containerInfo = UnitInfo(unit.javaClass)

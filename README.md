@@ -49,9 +49,9 @@ import net.kigawa.kutil.unit.container.UnitContainer;
 
 class Main
 {
-    public static void main(String[] args) {
-        var container = new UnitContainer(getClass());
-    }
+  public static void main(String[] args) {
+    var container = new UnitContainer(getClass());
+  }
 }
 ```
 
