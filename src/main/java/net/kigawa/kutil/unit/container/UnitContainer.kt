@@ -2,6 +2,8 @@ package net.kigawa.kutil.unit.container
 
 import net.kigawa.kutil.unit.Unit
 import net.kigawa.kutil.unit.UnitException
+import net.kigawa.kutil.unit.factory.UnitFactory
+import net.kigawa.kutil.unit.loader.UnitLoader
 import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
 import net.kigawa.kutil.unit.runtimeexception.UnitNotInitException
 import java.io.File
@@ -19,6 +21,8 @@ class UnitContainer(
     constructor(vararg units: Any) : this(null, *units)
 
     private val unitInfoMap = UnitsMap()
+    private val loaders = mutableListOf<UnitLoader>()
+    private val factories = mutableListOf<UnitFactory>()
 
     init
     {
@@ -29,18 +33,27 @@ class UnitContainer(
         }
     }
 
-    @Deprecated("use init units")
-    @Throws(UnitException::class)
-    fun loadUnits(rootClass: Class<*>)
+    override fun registerJar(jarFile: File)
     {
-        registerUnits(rootClass)
-        initUnits()
+        TODO("Not yet implemented")
     }
 
-    val allClasses: Set<Class<*>>
-        get() = unitInfoMap.keySet()
+    override fun registerUnits(rootClass: Class<*>): MutableList<Throwable>
+    {
+        val exceptions = mutableListOf<Throwable>()
 
-    fun initUnits()
+        return exceptions
+    }
+
+    override fun getAllClass(): MutableList<Class<*>>
+    {
+        val list = mutableListOf<Class<*>>()
+        list.addAll(unitInfoMap.keySet())
+        parent?.let { list.addAll(it.getAllClass()) }
+        return list
+    }
+
+    override fun initUnits()
     {
         val exceptions = LinkedList<Exception>()
         for (unitClass in unitInfoMap.keySet())
@@ -64,7 +77,7 @@ class UnitContainer(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> getUnit(unitClass: Class<T>): T?
+    override fun <T> getUnit(unitClass: Class<T>): T?
     {
         val unitInfo = unitInfoMap.get(unitClass)
         if (unitInfo != null)
@@ -149,79 +162,15 @@ class UnitContainer(
         }
     }
 
-    fun registerUnits(rootClass: Class<*>)
-    {
-        unitInfoMap.clearCache()
-        val rootPackage = rootClass.getPackage()
-        val classLoader = rootClass.classLoader
-        val root = classLoader.getResource(rootPackage.name.replace('.', '/'))
-        val exceptions = LinkedList<Exception>()
-        if (root == null) throw RuntimeUnitException("could not load class files")
-        if ("file" == root.protocol)
-        {
-            loadUnit(File(root.file), rootPackage.name)
-        } else if ("jar" == root.protocol)
-        {
-            loadUnit(root, rootPackage.name)
-        }
-        throwExceptions(exceptions, RuntimeUnitException("there are exceptions when load units"))
-    }
 
-    private fun loadUnit(root: URL, packageName: String): MutableList<Throwable>
+    override fun registerUnit(unit: Class<*>)
     {
-        val exceptions = mutableListOf<Throwable>()
-        try
-        {
-            (root.openConnection() as JarURLConnection).jarFile.use { jarFile ->
-                for (entry in Collections.list(jarFile.entries()))
-                {
-                    var name = entry.name
-                    if (!name.startsWith(packageName.replace('.', '/'))) continue
-                    if (!name.endsWith(".class")) continue
-                    name = name.replace('/', '.').replace(".class$".toRegex(), "")
-                    try
-                    {
-                        loadUnit(Class.forName(name))
-                    } catch (e: Exception)
-                    {
-                        exceptions.add(UnitException("could not load unit: $name", e))
-                    }
-                }
-            }
-        } catch (e: IOException)
-        {
-            exceptions.add(RuntimeUnitException("could not load units file", e))
-        }
-        return exceptions
+        TODO("Not yet implemented")
     }
 
 
-    private fun loadUnit(dir: File, packageName: String): MutableList<Throwable>
-    {
-        val exceptions = mutableListOf<Throwable>()
-        for (file in dir.listFiles() ?: throw UnitException("cold not load unit files"))
-        {
-            if (file.isDirectory)
-            {
-                loadUnit(file, packageName + "." + file.name)
-                continue
-            }
-            if (!file.name.endsWith(".class")) continue
-            var name = file.name
-            name = name.replace(".class$".toRegex(), "")
-            name = "$packageName.$name"
-            try
-            {
-                loadUnit(Class.forName(name))
-            } catch (e: Exception)
-            {
-                exceptions.add(UnitException("cold not load unit: $name", e))
-            }
-        }
-        return exceptions
-    }
 
-    private fun loadUnit(unitClass: Class<*>)
+     fun loadUnit(unitClass: Class<*>)
     {
         val annotation = unitClass.getAnnotation(Unit::class.java) ?: return
         unitInfoMap.put(unitClass, UnitInfo(unitClass, annotation))

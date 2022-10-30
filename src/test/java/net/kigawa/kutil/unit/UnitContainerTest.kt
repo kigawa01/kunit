@@ -30,7 +30,7 @@ internal class UnitContainerTest : Assertions()
         val executor = Executors.newCachedThreadPool()
         con.loadUnit(executor)
 
-        con.allClasses
+        con.getAllClass()
 
         assertNotNull(con.getUnit(Unit4::class.java))
         assertNotNull(con.getUnit(Unit1::class.java))
