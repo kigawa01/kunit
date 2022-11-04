@@ -2,10 +2,10 @@ package net.kigawa.kutil.unit.container
 
 import net.kigawa.kutil.unit.Inject
 import net.kigawa.kutil.unit.Unit
-import net.kigawa.kutil.unit.UnitException
+import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
 import java.lang.reflect.Constructor
 
-class UnitInfo(private val unitClass: Class<*>, annotation: Unit? = null)
+class UnitInfo(private val unitClass: Class<*>)
 {
     var dependencies = listOf<Class<*>>()
         private set
@@ -15,33 +15,28 @@ class UnitInfo(private val unitClass: Class<*>, annotation: Unit? = null)
     init
     {
         val list = mutableListOf<Class<*>>()
-        annotation?.depended?.forEach {
+
+        unitClass.getAnnotation(Unit::class.java)?.depended?.forEach {
             list.add(it.java)
         }
-        try
-        {
-            constructor.parameterTypes.forEach {
-                list.add(it)
-            }
-        } catch (_: UnitException)
-        {
+        getConstructor(Inject::class.java).parameterTypes.forEach {
+            list.add(it)
         }
+
         dependencies = list
     }
 
-    @get:Throws(UnitException::class)
-    val constructor: Constructor<*>
-        get()
+    fun getConstructor(annotationClass: Class<out Annotation>): Constructor<*>
+    {
+        val constructors = unitClass.constructors
+        if (constructors.size == 1) return constructors[0]
+        for (constructor in constructors)
         {
-            val constructors = unitClass.constructors
-            if (constructors.size == 1) return constructors[0]
-            for (constructor in constructors)
+            if (constructor.isAnnotationPresent(annotationClass))
             {
-                if (constructor.isAnnotationPresent(Inject::class.java))
-                {
-                    return constructor
-                }
+                return constructor
             }
-            throw UnitException("could not get constructor: $unitClass")
         }
+        throw RuntimeUnitException("could not get constructor: $unitClass")
+    }
 }

@@ -1,16 +1,14 @@
 package net.kigawa.kutil.unit.container
 
+import net.kigawa.kutil.unit.Inject
 import net.kigawa.kutil.unit.Unit
 import net.kigawa.kutil.unit.UnitException
+import net.kigawa.kutil.unit.classlist.ClassList
 import net.kigawa.kutil.unit.factory.UnitFactory
-import net.kigawa.kutil.unit.loader.UnitLoader
 import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
 import net.kigawa.kutil.unit.runtimeexception.UnitNotInitException
 import java.io.File
-import java.io.IOException
 import java.lang.reflect.InvocationTargetException
-import java.net.JarURLConnection
-import java.net.URL
 import java.util.*
 
 class UnitContainer(
@@ -21,28 +19,42 @@ class UnitContainer(
     constructor(vararg units: Any) : this(null, *units)
 
     private val unitInfoMap = UnitsMap()
-    private val loaders = mutableListOf<UnitLoader>()
-    private val factories = mutableListOf<UnitFactory>()
+    private val loaders = mutableSetOf<ClassList>()
+    private val factories = mutableSetOf<UnitFactory>()
 
     init
     {
-        loadUnit(this)
+        addUnit(this)
         for (unit in units)
         {
-            loadUnit(unit)
+            addUnit(unit)
         }
     }
 
-    override fun registerJar(jarFile: File)
+    override fun addLoader(loader: ClassList)
     {
-        TODO("Not yet implemented")
+        loaders.add(loader)
+    }
+    override fun registerUnit(unitClass: Class<*>)
+    {
+        unitInfoMap.put(unitClass, UnitInfo(unitClass))
     }
 
-    override fun registerUnits(rootClass: Class<*>): MutableList<Throwable>
+    override fun registerUnits(classList: ClassList): MutableList<Throwable>
     {
-        val exceptions = mutableListOf<Throwable>()
+        val errors = mutableListOf<Throwable>()
 
-        return exceptions
+        classList.classes.forEach {
+            try
+            {
+                registerUnit(it)
+            } catch (e: Throwable)
+            {
+                errors.add(e)
+            }
+        }
+
+        return errors
     }
 
     override fun getAllClass(): MutableList<Class<*>>
@@ -69,11 +81,9 @@ class UnitContainer(
         throwExceptions(exceptions, RuntimeUnitException("there are exceptions when init units"))
     }
 
-    fun <T : Any> loadUnit(unit: T)
+    override fun registerJar(jarFile: File)
     {
-        val containerInfo = UnitInfo(unit.javaClass)
-        containerInfo.unit = unit
-        unitInfoMap.put(unit.javaClass, containerInfo)
+        TODO("Not yet implemented")
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -88,6 +98,14 @@ class UnitContainer(
         if (parent != null) return parent.getUnit(unitClass)
         throw RuntimeUnitException("unit is not found: $unitClass")
     }
+
+    override fun addUnit(unit: Any)
+    {
+        registerUnit(unit.javaClass)
+        (unitInfoMap.get(unit.javaClass) ?: throw RuntimeUnitException("could not register unit"))
+            .unit = unit
+    }
+
 
     private fun <T> getUnitAndInit(unitClass: Class<T>): T?
     {
@@ -140,7 +158,7 @@ class UnitContainer(
     @Throws(UnitException::class)
     private fun initNormalClass(unitClass: Class<*>, unitInfo: UnitInfo): Any
     {
-        val constructor = unitInfo.constructor
+        val constructor = unitInfo.getConstructor(Inject::class.java)
         val parameters = constructor.parameterTypes
         val objects = arrayOfNulls<Any>(parameters.size)
         for (i in parameters.indices)
@@ -160,20 +178,6 @@ class UnitContainer(
         {
             throw UnitException("could not init unit: $unitClass", e.cause)
         }
-    }
-
-
-    override fun registerUnit(unit: Class<*>)
-    {
-        TODO("Not yet implemented")
-    }
-
-
-
-     fun loadUnit(unitClass: Class<*>)
-    {
-        val annotation = unitClass.getAnnotation(Unit::class.java) ?: return
-        unitInfoMap.put(unitClass, UnitInfo(unitClass, annotation))
     }
 
     @Throws(Throwable::class)
