@@ -2,7 +2,7 @@
 
 ## About
 
-* add unit for java app
+* add DIContainer for java app
 * manage unit by container
 
 ## Usage
