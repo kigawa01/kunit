@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit
 
+import net.kigawa.kutil.unit.classlist.ClassList
 import net.kigawa.kutil.unit.container.UnitContainer
 import net.kigawa.kutil.unit.dummy.Unit1
 import net.kigawa.kutil.unit.dummy.Unit2
@@ -13,22 +14,19 @@ import org.junit.jupiter.api.Test
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-internal class UnitContainerTest : Assertions()
-{
+internal class UnitContainerTest : Assertions() {
     @Test
-    fun testGetUnit()
-    {
-        val con = UnitContainer()
-        try
-        {
-            con.loadUnits(javaClass)
-        } catch (e: UnitException)
-        {
+    fun testGetUnit() {
+        val con = UnitContainer.create()
+        try {
+            con.registerUnits(ClassList.create(javaClass))
+            con.initUnits()
+        } catch (e: UnitException) {
             e.printStackTrace()
             throw RuntimeException(e)
         }
         val executor = Executors.newCachedThreadPool()
-        con.loadUnit(executor)
+        con.addUnit(executor)
 
         con.getIdentifies()
 
