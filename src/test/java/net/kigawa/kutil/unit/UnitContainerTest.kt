@@ -39,4 +39,9 @@ internal class UnitContainerTest : Assertions() {
         assertThrows(RuntimeUnitException::class.java) { con.getUnit(AllUnitInterface::class.java) }
         executor.shutdown()
     }
+
+    @Test
+    fun test() {
+        assertFalse(Unit1::class.java == Unit2::class.java)
+    }
 }

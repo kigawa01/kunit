@@ -34,7 +34,7 @@ interface UnitContainer {
     @Throws(NoSingleUnitException::class)
     fun <T> getUnit(unitClass: Class<T>, name: String?): T
     fun initUnits(): MutableList<Throwable> {
-        return initUnits(Objects::class.java)
+        return initUnits(Object::class.java)
     }
 
     fun <T> initUnits(unitClass: Class<T>): MutableList<Throwable> {

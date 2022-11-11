@@ -17,7 +17,7 @@ class UnitsList {
     fun getUnits(unitClass: Class<*>, name: String?): List<UnitInfo> {
         return synchronized(infoList) {
             infoList.filter {
-                if (!Util.instanceOf(unitClass, it.unitClass)) return@filter false
+                if (!Util.instanceOf(it.unitClass, unitClass)) return@filter false
                 if (name == null) return@filter true
                 it.name == name
             }

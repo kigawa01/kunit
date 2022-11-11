@@ -3,6 +3,7 @@ package net.kigawa.kutil.unit.container
 import net.kigawa.kutil.unit.classlist.ClassList
 import net.kigawa.kutil.unit.factory.DefaultFactory
 import net.kigawa.kutil.unit.factory.UnitFactory
+import net.kigawa.kutil.unit.runtimeexception.NoFoundUnitException
 import net.kigawa.kutil.unit.runtimeexception.NoSingleUnitException
 import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
 import net.kigawa.kutil.unit.runtimeexception.UnitNotInitException
@@ -25,7 +26,7 @@ class UnitContainerImpl(
     override fun registerUnit(unitClass: Class<*>, name: String?) {
         val unitInfo = UnitInfo(unitClass, name)
         try {
-            val factory = factories.last { !it.isValid(unitClass) }
+            val factory = factories.last { it.isValid(unitClass) }
             unitInfo.factory = factory
             synchronized(unitInfoList) {
                 unitInfoList.put(unitInfo)
@@ -119,16 +120,18 @@ class UnitContainerImpl(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> getUnit(unitClass: Class<T>, name: String?): T {
-        val unitInfo = unitInfoList.getUnits(unitClass, name)
-        if (unitInfo.size == 1) {
-            if (unitInfo[0].status == UnitStatus.INITIALIZED) return unitInfo[0].unit as T
-            if (unitInfo[0].status == UnitStatus.INITIALIZING) {
-                return unitInfo[0].future!!.get() as T
+        val unitInfoList = unitInfoList.getUnits(unitClass, name)
+        if (unitInfoList.isEmpty())
+            throw NoFoundUnitException("unit is not found: $unitClass")
+        if (unitInfoList.size == 1) {
+            if (unitInfoList[0].status == UnitStatus.INITIALIZED) return unitInfoList[0].unit as T
+            if (unitInfoList[0].status == UnitStatus.INITIALIZING) {
+                return unitInfoList[0].future!!.get() as T
             }
 
             throw UnitNotInitException("unit is not initialized")
         }
         if (parent != null) return parent.getUnit(unitClass)
-        throw NoSingleUnitException("unit is not found: $unitClass")
+        throw NoSingleUnitException("unit is not single count: ${unitInfoList.size} class: $unitClass")
     }
 }
