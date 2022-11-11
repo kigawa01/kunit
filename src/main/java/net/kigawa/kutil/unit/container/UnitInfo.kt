@@ -1,39 +1,39 @@
 package net.kigawa.kutil.unit.container
 
-import net.kigawa.kutil.unit.Inject
-import net.kigawa.kutil.unit.Unit
+import net.kigawa.kutil.unit.factory.UnitFactory
 import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
 import java.lang.reflect.Constructor
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
 
-class UnitInfo(private val unitClass: Class<*>)
-{
-    var dependencies = listOf<Class<*>>()
+class UnitInfo(val unitClass: Class<*>, val name: String?) {
+    var status: UnitStatus = UnitStatus.NOT_LOADED
         private set
+
     var unit: Any? = null
-    var status: UnitStatus = UnitStatus.LOADED
-
-    init
-    {
-        val list = mutableListOf<Class<*>>()
-
-        unitClass.getAnnotation(Unit::class.java)?.depended?.forEach {
-            list.add(it.java)
+        set(value) {
+            field = value
+            status = UnitStatus.INITIALIZED
         }
-        getConstructor(Inject::class.java).parameterTypes.forEach {
-            list.add(it)
+    var future: FutureTask<*>? = null
+        set(value) {
+            field = value
+            status = UnitStatus.INITIALIZING
+        }
+    var factory: UnitFactory? = null
+        set(value) {
+            field = value
+            status = if (field == null) UnitStatus.NOT_LOADED
+            else UnitStatus.LOADED
         }
 
-        dependencies = list
-    }
+    constructor(unitClass: Class<*>) : this(unitClass, null)
 
-    fun getConstructor(annotationClass: Class<out Annotation>): Constructor<*>
-    {
+    fun getConstructor(annotationClass: Class<out Annotation>): Constructor<*> {
         val constructors = unitClass.constructors
         if (constructors.size == 1) return constructors[0]
-        for (constructor in constructors)
-        {
-            if (constructor.isAnnotationPresent(annotationClass))
-            {
+        for (constructor in constructors) {
+            if (constructor.isAnnotationPresent(annotationClass)) {
                 return constructor
             }
         }
