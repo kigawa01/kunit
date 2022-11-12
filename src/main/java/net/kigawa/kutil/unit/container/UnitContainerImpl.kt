@@ -19,13 +19,14 @@ class UnitContainerImpl(
 
     private val unitInfoList = UnitsList()
     private val factories = UnitFactoriesList()
-    var executor: ((Runnable) -> Any)? = null
     var timeoutSec: Long = 100
 
     init {
-        addUnit(this,null)
+        addUnit(this, null)
         addFactory(DefaultFactory())
     }
+
+    override var executor: (Runnable) -> Any = { it.run() }
 
     override fun registerUnit(unitClass: Class<*>, name: String?) {
         val unitInfo = UnitInfo(unitClass, name)
@@ -88,7 +89,7 @@ class UnitContainerImpl(
     }
 
     private fun initUnit(unitInfo: UnitInfo) {
-        synchronized(unitInfo) {
+        val future = synchronized(unitInfo) {
             if (unitInfo.status == UnitStatus.INITIALIZED) return
             if (unitInfo.status == UnitStatus.INITIALIZING) return
             if (unitInfo.status != UnitStatus.LOADED)
@@ -100,10 +101,10 @@ class UnitContainerImpl(
                 factory.init(unitInfo.unitClass, this)
             }
             unitInfo.future = future
-
-            future.run()
-            unitInfo.unit = future.get(timeoutSec, TimeUnit.SECONDS)
+            future
         }
+        executor.run(future::run)
+        unitInfo.unit = future.get(timeoutSec, TimeUnit.SECONDS)
 
     }
 

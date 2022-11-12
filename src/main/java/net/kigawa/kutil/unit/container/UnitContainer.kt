@@ -15,7 +15,7 @@ interface UnitContainer {
             return UnitContainerImpl(parent, units)
         }
     }
-
+    var executor: ((Runnable) -> Any)
     fun addFactory(unitFactory: UnitFactory)
     fun addUnit(unit: Any) {
         addUnit(unit, null)
