@@ -45,13 +45,12 @@ Unitをロードして初期化する
 load units and init them
 
 ```java
-import net.kigawa.kutil.unit.container.UnitContainerImpl;
+import net.kigawa.kutil.unit.UnitContainer;
 
 class Main
 {
-    public static void main(String[] args)
-    {
-        var container = new UnitContainerImpl(getClass());
+    public static void main(String[] args) {
+        var container = new UnitContainer(getClass());
     }
 }
 ```
