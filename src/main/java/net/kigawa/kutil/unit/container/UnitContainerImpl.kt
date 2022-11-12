@@ -9,6 +9,7 @@ import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
 import net.kigawa.kutil.unit.runtimeexception.UnitNotInitException
 import java.util.*
 import java.util.concurrent.FutureTask
+import java.util.concurrent.TimeUnit
 
 class UnitContainerImpl(
     private val parent: UnitContainer? = null,
@@ -18,8 +19,11 @@ class UnitContainerImpl(
 
     private val unitInfoList = UnitsList()
     private val factories = UnitFactoriesList()
+    var executor: ((Runnable) -> Any)? = null
+    var timeoutSec: Long = 100
 
     init {
+        addUnit(this,null)
         addFactory(DefaultFactory())
     }
 
@@ -74,13 +78,6 @@ class UnitContainerImpl(
 
         unitInfoList.forEach {
             try {
-                preInitUnit(it)
-            } catch (e: Throwable) {
-                errors.add(e)
-            }
-        }
-        unitInfoList.forEach {
-            try {
                 initUnit(it)
             } catch (e: Throwable) {
                 errors.add(e)
@@ -93,18 +90,6 @@ class UnitContainerImpl(
     private fun initUnit(unitInfo: UnitInfo) {
         synchronized(unitInfo) {
             if (unitInfo.status == UnitStatus.INITIALIZED) return
-            if (unitInfo.status != UnitStatus.INITIALIZING)
-                throw RuntimeUnitException("unit must be initializing state class: ${unitInfo.unitClass} name: ${unitInfo.name}")
-            val future = unitInfo.future!!
-            future.run()
-            unitInfo.unit = future.get()
-        }
-
-    }
-
-    private fun preInitUnit(unitInfo: UnitInfo) {
-        synchronized(unitInfo) {
-            if (unitInfo.status == UnitStatus.INITIALIZED) return
             if (unitInfo.status == UnitStatus.INITIALIZING) return
             if (unitInfo.status != UnitStatus.LOADED)
                 throw RuntimeUnitException("unit status is not valid class: ${unitInfo.unitClass} name: ${unitInfo.name}")
@@ -115,7 +100,11 @@ class UnitContainerImpl(
                 factory.init(unitInfo.unitClass, this)
             }
             unitInfo.future = future
+
+            future.run()
+            unitInfo.unit = future.get(timeoutSec, TimeUnit.SECONDS)
         }
+
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -124,12 +113,11 @@ class UnitContainerImpl(
         if (unitInfoList.isEmpty())
             throw NoFoundUnitException("unit is not found: $unitClass")
         if (unitInfoList.size == 1) {
-            if (unitInfoList[0].status == UnitStatus.INITIALIZED) return unitInfoList[0].unit as T
-            if (unitInfoList[0].status == UnitStatus.INITIALIZING) {
-                return unitInfoList[0].future!!.get() as T
-            }
-
-            throw UnitNotInitException("unit is not initialized")
+            val info = unitInfoList[0]
+            if (info.status == UnitStatus.INITIALIZED) return info.unit as T
+            if (info.status == UnitStatus.FAIL) throw UnitNotInitException("unit is not initialized")
+            if (info.status == UnitStatus.LOADED) initUnit(info)
+            return info.future!!.get(timeoutSec, TimeUnit.SECONDS) as T
         }
         if (parent != null) return parent.getUnit(unitClass)
         throw NoSingleUnitException("unit is not single count: ${unitInfoList.size} class: $unitClass")
