@@ -1,13 +1,12 @@
 package net.kigawa.kutil.unit.container
 
 import net.kigawa.kutil.unit.classlist.ClassList
-import net.kigawa.kutil.unit.exception.NoFoundUnitException
-import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import net.kigawa.kutil.unit.exception.UnitNotInitException
 import net.kigawa.kutil.unit.factory.DefaultFactory
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.*
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.FutureTask
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -20,7 +19,7 @@ class UnitContainerImpl(
 
     private val unitInfoList = UnitsList()
     private val factories = UnitFactoriesList()
-    var timeoutSec: Long = 100
+    override var timeoutSec: Long = 100
 
     init {
         addUnit(this, null)
@@ -37,8 +36,7 @@ class UnitContainerImpl(
             synchronized(unitInfoList) {
                 unitInfoList.put(unitInfo)
             }
-        } catch (e: NoSuchElementException) {
-            throw RuntimeUnitException("$unitClass can not register")
+        } catch (_: NoSuchElementException) {
         }
     }
 
@@ -105,27 +103,33 @@ class UnitContainerImpl(
             future
         }
         executor.run(future::run)
-        unitInfo.unit = future.get(timeoutSec, TimeUnit.SECONDS)
-
+        try {
+            unitInfo.unit = future.get(timeoutSec, TimeUnit.SECONDS)
+        } catch (e: TimeoutException) {
+            throw RuntimeUnitException("could not init unit: ${unitInfo.unitClass}", e)
+        } catch (e: ExecutionException) {
+            throw RuntimeUnitException("could not init unit: ${unitInfo.unitClass}", e.cause)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> getUnit(unitClass: Class<T>, name: String?): T {
+    override fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T> {
         val unitInfoList = unitInfoList.getUnits(unitClass, name)
-        if (unitInfoList.isEmpty())
-            throw NoFoundUnitException("unit is not found: $unitClass")
-        if (unitInfoList.size == 1) {
-            val info = unitInfoList[0]
-            if (info.status == UnitStatus.INITIALIZED) return info.unit as T
-            if (info.status == UnitStatus.FAIL) throw UnitNotInitException("unit is not initialized")
-            if (info.status == UnitStatus.LOADED) initUnit(info)
+
+        val units = mutableListOf<T>()
+        units.addAll(unitInfoList.map {
+            if (it.status == UnitStatus.INITIALIZED) return@map it.unit as T
+            if (it.status == UnitStatus.FAIL) throw UnitNotInitException("unit is not initialized")
+            if (it.status == UnitStatus.LOADED) initUnit(it)
             try {
-                return info.future!!.get(timeoutSec, TimeUnit.SECONDS) as T
+                return@map it.future!!.get(timeoutSec, TimeUnit.SECONDS) as T
             } catch (e: TimeoutException) {
-                throw RuntimeUnitException("could not get unit: $unitClass",e)
+                throw RuntimeUnitException("could not get unit: $unitClass", e)
+            } catch (e: ExecutionException) {
+                throw RuntimeUnitException("could not get unit: $unitClass", e.cause)
             }
-        }
-        if (parent != null) return parent.getUnit(unitClass)
-        throw NoSingleUnitException("unit is not single count: ${unitInfoList.size} class: $unitClass")
+        })
+        parent?.getUnitList(unitClass)?.let { units.addAll(it) }
+        return units
     }
 }
