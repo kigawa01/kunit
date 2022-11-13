@@ -1,8 +1,9 @@
 package net.kigawa.kutil.unit.container
 
 import net.kigawa.kutil.unit.classlist.ClassList
-import net.kigawa.kutil.unit.factory.UnitFactory
+import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
+import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.*
 
 interface UnitContainer {
@@ -15,7 +16,9 @@ interface UnitContainer {
             return UnitContainerImpl(parent, units)
         }
     }
+
     var executor: ((Runnable) -> Any)
+    var timeoutSec: Long
     fun addFactory(unitFactory: UnitFactory)
     fun addUnit(unit: Any) {
         addUnit(unit, null)
@@ -27,12 +30,29 @@ interface UnitContainer {
     fun getIdentifies(): MutableList<UnitIdentify>
 
     @Throws(NoSingleUnitException::class)
+    fun <T> getUnitList(unitClass: Class<T>): List<T> {
+        return getUnitList(unitClass, null)
+    }
+
+    @Throws(NoSingleUnitException::class)
+    fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T>
+
+    @Throws(NoSingleUnitException::class)
+    fun <T> getUnit(unitClass: Class<T>, name: String?): T {
+        val units = getUnitList(unitClass, name)
+        if (units.isEmpty())
+            throw NoFoundUnitException("unit is not found: $unitClass")
+        if (units.size == 1) {
+            return units[0]
+        }
+        throw NoSingleUnitException("unit is not single count: ${units.size} class: $unitClass")
+    }
+
+    @Throws(NoSingleUnitException::class)
     fun <T> getUnit(unitClass: Class<T>): T {
         return getUnit(unitClass, null)
     }
 
-    @Throws(NoSingleUnitException::class)
-    fun <T> getUnit(unitClass: Class<T>, name: String?): T
     fun initUnits(): MutableList<Throwable> {
         return initUnits(Object::class.java)
     }
