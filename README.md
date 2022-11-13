@@ -21,7 +21,6 @@ register unit
 
 ```java
 // java
-import net.kigawa.kutil.unit.Unit;
 
 @Unit
 class Unit
@@ -32,7 +31,7 @@ class Unit
 
 ```kotlin
 // kotlin
-import net.kigawa.kutil.unit.Unit
+import net.kigawa.kutil.unit.annotation.Unit
 
 @Unit
 object Unit {

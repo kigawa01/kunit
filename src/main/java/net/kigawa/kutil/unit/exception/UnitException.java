@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit;
+package net.kigawa.kutil.unit.exception;
 
 public class UnitException extends Exception
 {

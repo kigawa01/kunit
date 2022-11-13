@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.container
 
-import net.kigawa.kutil.unit.runtimeexception.NoFoundUnitException
-import net.kigawa.kutil.unit.runtimeexception.NoSingleUnitException
+import net.kigawa.kutil.unit.exception.NoFoundUnitException
+import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.util.Util
 
 class UnitsList {
@@ -18,7 +18,8 @@ class UnitsList {
         return synchronized(infoList) {
             infoList.filter {
                 if (!Util.instanceOf(it.unitClass, unitClass)) return@filter false
-                if (name == null) return@filter true
+                if (name == null || name == "") return@filter true
+                if (it.name == null || it.name == "") return@filter true
                 it.name == name
             }
         }

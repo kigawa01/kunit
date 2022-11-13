@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.runtimeexception;
+package net.kigawa.kutil.unit.exception;
 
 public class NoSingleUnitException extends RuntimeUnitException
 {
