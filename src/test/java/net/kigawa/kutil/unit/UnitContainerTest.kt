@@ -8,9 +8,7 @@ import net.kigawa.kutil.unit.dummy.Unit4
 import net.kigawa.kutil.unit.dummy.parent.AbstractUnit
 import net.kigawa.kutil.unit.dummy.parent.AllUnitInterface
 import net.kigawa.kutil.unit.dummy.parent.UnitInterface1
-import net.kigawa.kutil.unit.runtimeexception.NoFoundUnitException
-import net.kigawa.kutil.unit.runtimeexception.NoSingleUnitException
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll

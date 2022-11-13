@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit;
+package net.kigawa.kutil.unit.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

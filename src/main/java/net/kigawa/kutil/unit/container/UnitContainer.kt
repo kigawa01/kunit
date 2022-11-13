@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.container
 
 import net.kigawa.kutil.unit.classlist.ClassList
 import net.kigawa.kutil.unit.factory.UnitFactory
-import net.kigawa.kutil.unit.runtimeexception.NoSingleUnitException
+import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import java.util.*
 
 interface UnitContainer {

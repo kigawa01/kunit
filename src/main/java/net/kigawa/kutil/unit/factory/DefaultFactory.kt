@@ -1,10 +1,11 @@
 package net.kigawa.kutil.unit.factory
 
-import net.kigawa.kutil.unit.Inject
-import net.kigawa.kutil.unit.Unit
-import net.kigawa.kutil.unit.UnitException
+import net.kigawa.kutil.unit.annotation.Dependencies
+import net.kigawa.kutil.unit.annotation.Inject
+import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.container.UnitContainer
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -15,6 +16,13 @@ class DefaultFactory : UnitFactory {
     }
 
     override fun init(unitClass: Class<*>, unitContainer: UnitContainer): Any {
+        val unitAnnotation = unitClass.getAnnotation(Unit::class.java)
+            ?: throw RuntimeUnitException("$unitClass is not supported. need @Unit")
+
+        val dependencies = unitClass.getAnnotation(Dependencies::class.java)
+        dependencies?.value?.forEach {
+            unitContainer.getUnit(it.value.java,it.name)
+        }
         if (unitClass.isAnnotationPresent(Metadata::class.java)) {
             return initKotlinClass(unitClass, unitContainer)
         }
@@ -40,7 +48,10 @@ class DefaultFactory : UnitFactory {
         } catch (e: NoSuchFieldException) {
             initNormalClass(unitClass, unitContainer)
         } catch (e: IllegalAccessException) {
-            throw UnitException("could not access INSTANCE field: $unitClass", e)
+            throw UnitException(
+                "could not access INSTANCE field: $unitClass",
+                e
+            )
         }
     }
 
@@ -59,7 +70,10 @@ class DefaultFactory : UnitFactory {
         } catch (e: IllegalAccessException) {
             throw UnitException("could not init unit: $unitClass", e)
         } catch (e: InvocationTargetException) {
-            throw UnitException("could not init unit: $unitClass", e.cause)
+            throw UnitException(
+                "could not init unit: $unitClass",
+                e.cause
+            )
         }
     }
 }

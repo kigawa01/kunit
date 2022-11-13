@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.classlist
 
-import net.kigawa.kutil.unit.UnitException
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.UnitException
+import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import java.io.IOException
 import java.net.JarURLConnection
 import java.net.URL
@@ -29,7 +29,12 @@ class JarfileClassList(resource: URL, packageName: Package) : ClassList {
                     try {
                         classes.add(Class.forName(name))
                     } catch (e: Exception) {
-                        errors.add(UnitException("could not load unit: $name", e))
+                        errors.add(
+                            UnitException(
+                                "could not load unit: $name",
+                                e
+                            )
+                        )
                     }
                 }
             }

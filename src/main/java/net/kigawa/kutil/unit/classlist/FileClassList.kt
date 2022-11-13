@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.classlist
 
-import net.kigawa.kutil.unit.UnitException
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.UnitException
+import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import java.io.File
 import java.net.URL
 
@@ -36,7 +36,12 @@ class FileClassList(resource: URL, packageName: Package) : ClassList {
             try {
                 classes.add(Class.forName(name))
             } catch (e: Exception) {
-                errors.add(UnitException("cold not load unit: $name", e))
+                errors.add(
+                    UnitException(
+                        "cold not load unit: $name",
+                        e
+                    )
+                )
             }
         }
     }

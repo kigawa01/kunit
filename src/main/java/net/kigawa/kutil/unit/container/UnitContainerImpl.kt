@@ -1,15 +1,16 @@
 package net.kigawa.kutil.unit.container
 
 import net.kigawa.kutil.unit.classlist.ClassList
+import net.kigawa.kutil.unit.exception.NoFoundUnitException
+import net.kigawa.kutil.unit.exception.NoSingleUnitException
+import net.kigawa.kutil.unit.exception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.UnitNotInitException
 import net.kigawa.kutil.unit.factory.DefaultFactory
 import net.kigawa.kutil.unit.factory.UnitFactory
-import net.kigawa.kutil.unit.runtimeexception.NoFoundUnitException
-import net.kigawa.kutil.unit.runtimeexception.NoSingleUnitException
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
-import net.kigawa.kutil.unit.runtimeexception.UnitNotInitException
 import java.util.*
 import java.util.concurrent.FutureTask
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class UnitContainerImpl(
     private val parent: UnitContainer? = null,
@@ -118,7 +119,11 @@ class UnitContainerImpl(
             if (info.status == UnitStatus.INITIALIZED) return info.unit as T
             if (info.status == UnitStatus.FAIL) throw UnitNotInitException("unit is not initialized")
             if (info.status == UnitStatus.LOADED) initUnit(info)
-            return info.future!!.get(timeoutSec, TimeUnit.SECONDS) as T
+            try {
+                return info.future!!.get(timeoutSec, TimeUnit.SECONDS) as T
+            } catch (e: TimeoutException) {
+                throw RuntimeUnitException("could not get unit: $unitClass",e)
+            }
         }
         if (parent != null) return parent.getUnit(unitClass)
         throw NoSingleUnitException("unit is not single count: ${unitInfoList.size} class: $unitClass")
