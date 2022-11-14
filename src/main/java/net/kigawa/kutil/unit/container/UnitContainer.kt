@@ -10,10 +10,12 @@ import java.util.*
 
 interface UnitContainer :AutoCloseable{
     companion object {
+        @JvmStatic
         fun create(vararg units: Any): UnitContainer {
             return create(null, units)
         }
 
+        @JvmStatic
         fun create(parent: UnitContainerImpl?, vararg units: Any): UnitContainer {
             return UnitContainerImpl(parent, units)
         }
