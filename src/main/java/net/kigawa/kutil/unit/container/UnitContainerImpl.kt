@@ -75,6 +75,7 @@ class UnitContainerImpl(
     override fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
         val errors = mutableListOf<Throwable>()
         getUnitList(unitClass, name).forEach { unit ->
+            if (unit is UnitContainerImpl) return@forEach
             val closers = closers.filter {
                 return@filter try {
                     it.isValid(unit)
@@ -137,6 +138,10 @@ class UnitContainerImpl(
         }
 
         return errors
+    }
+
+    override fun close() {
+        removeUnit(Any::class.java)
     }
 
     private fun initUnit(unitInfo: UnitInfo) {

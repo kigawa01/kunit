@@ -8,7 +8,7 @@ import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.*
 
-interface UnitContainer {
+interface UnitContainer :AutoCloseable{
     companion object {
         fun create(vararg units: Any): UnitContainer {
             return create(null, units)
