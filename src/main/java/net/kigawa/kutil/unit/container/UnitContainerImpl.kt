@@ -40,6 +40,7 @@ class UnitContainerImpl(
         addUnit(this, null)
         addFactory(DefaultFactory())
         addCloser(AutoCloseAbleCloser())
+        Runtime.getRuntime().addShutdownHook(Thread { close() })
     }
 
     override var executor: (Runnable) -> Any = { it.run() }
