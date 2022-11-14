@@ -35,7 +35,7 @@ class FileClassList(resource: URL, packageName: Package) : ClassList {
             name = "$packageName.$name"
             try {
                 classes.add(Class.forName(name))
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 errors.add(
                     UnitException(
                         "cold not load unit: $name",

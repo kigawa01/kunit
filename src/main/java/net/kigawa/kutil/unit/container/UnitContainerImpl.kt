@@ -1,15 +1,20 @@
 package net.kigawa.kutil.unit.container
 
+import net.kigawa.kutil.unit.UnitIdentify
+import net.kigawa.kutil.unit.UnitInfo
+import net.kigawa.kutil.unit.UnitStatus
 import net.kigawa.kutil.unit.classlist.ClassList
+import net.kigawa.kutil.unit.closer.AutoCloseAbleCloser
+import net.kigawa.kutil.unit.closer.UnitCloser
+import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.concurrent.UnitsList
+import net.kigawa.kutil.unit.container.*
 import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import net.kigawa.kutil.unit.exception.UnitNotInitException
 import net.kigawa.kutil.unit.factory.DefaultFactory
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.*
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.FutureTask
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
+import java.util.concurrent.*
 
 class UnitContainerImpl(
     private val parent: UnitContainer? = null,
@@ -18,12 +23,23 @@ class UnitContainerImpl(
     constructor(vararg units: Any) : this(null, *units)
 
     private val unitInfoList = UnitsList()
-    private val factories = UnitFactoriesList()
+    private val factories = ConcurrentList<UnitFactory>()
+    private val closers = ConcurrentList<UnitCloser>()
     override var timeoutSec: Long = 100
+    override fun addCloser(closer: UnitCloser) {
+        closers.add(closer)
+        addUnit(closer)
+    }
+
+    override fun removeCloser(closerClass: Class<out UnitCloser>) {
+        closers.remove(closerClass)
+        removeUnit(closerClass)
+    }
 
     init {
         addUnit(this, null)
         addFactory(DefaultFactory())
+        addCloser(AutoCloseAbleCloser())
     }
 
     override var executor: (Runnable) -> Any = { it.run() }
@@ -42,12 +58,48 @@ class UnitContainerImpl(
 
     override fun addFactory(unitFactory: UnitFactory) {
         factories.add(unitFactory)
+        addUnit(unitFactory)
+    }
+
+    override fun removeFactory(factoryClass: Class<out UnitFactory>) {
+        factories.remove(factoryClass)
+        removeUnit(factoryClass)
     }
 
     override fun addUnit(unit: Any, name: String?) {
         val unitInfo = UnitInfo(unit.javaClass, name)
         unitInfo.unit = unit
         unitInfoList.put(unitInfo)
+    }
+
+    override fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
+        val errors = mutableListOf<Throwable>()
+        getUnitList(unitClass, name).forEach { unit ->
+            val closers = closers.filter {
+                return@filter try {
+                    it.isValid(unit)
+                } catch (e: Throwable) {
+                    errors.add(e)
+                    false
+                }
+            }
+
+            val futures = mutableListOf<Future<*>>()
+            closers.forEach {
+                val future = FutureTask { it.closeUnit(unit) }
+                futures.add(future)
+                executor.run { future.run() }
+            }
+
+            futures.forEach {
+                try {
+                    it.get()
+                } catch (e: Throwable) {
+                    errors.add(e)
+                }
+            }
+        }
+        return errors
     }
 
     override fun registerUnits(classList: ClassList): MutableList<Throwable> {

@@ -1,6 +1,8 @@
 package net.kigawa.kutil.unit.container
 
+import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.classlist.ClassList
+import net.kigawa.kutil.unit.closer.UnitCloser
 import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.factory.UnitFactory
@@ -19,9 +21,19 @@ interface UnitContainer {
 
     var executor: ((Runnable) -> Any)
     var timeoutSec: Long
+    fun addCloser(closer: UnitCloser)
+    fun removeCloser(closerClass: Class<out UnitCloser>)
+
     fun addFactory(unitFactory: UnitFactory)
+    fun removeFactory(factoryClass: Class<out UnitFactory>)
+
     fun addUnit(unit: Any) {
         addUnit(unit, null)
+    }
+
+    fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable>
+    fun removeUnit(unitClass: Class<*>) {
+        removeUnit(unitClass, null)
     }
 
     fun addUnit(unit: Any, name: String?)

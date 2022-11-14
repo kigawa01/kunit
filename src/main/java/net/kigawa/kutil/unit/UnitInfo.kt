@@ -1,5 +1,6 @@
-package net.kigawa.kutil.unit.container
+package net.kigawa.kutil.unit
 
+import net.kigawa.kutil.unit.UnitStatus
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.concurrent.FutureTask
 

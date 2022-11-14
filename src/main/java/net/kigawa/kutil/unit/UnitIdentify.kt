@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.container
+package net.kigawa.kutil.unit
 
 import java.util.*
 

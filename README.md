@@ -48,10 +48,10 @@ import net.kigawa.kutil.unit.container.UnitContainerImpl;
 
 class Main
 {
-    public static void main(String[] args)
-    {
-        var container = new UnitContainerImpl(getClass());
-    }
+  public static void main(String[] args)
+  {
+    var container = new UnitContainerImpl(getClass());
+  }
 }
 ```
 
