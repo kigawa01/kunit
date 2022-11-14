@@ -90,7 +90,9 @@ class UnitContainerImpl(
             closers.forEach {
                 val future = FutureTask { it.closeUnit(unit) }
                 futures.add(future)
-                executor.run { future.run() }
+                executor.run {
+                    future.run()
+                }
             }
 
             futures.forEach {

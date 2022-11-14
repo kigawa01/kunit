@@ -32,8 +32,8 @@ interface UnitContainer :AutoCloseable{
     }
 
     fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable>
-    fun removeUnit(unitClass: Class<*>) {
-        removeUnit(unitClass, null)
+    fun removeUnit(unitClass: Class<*>): MutableList<Throwable> {
+        return removeUnit(unitClass, null)
     }
 
     fun addUnit(unit: Any, name: String?)

@@ -4,7 +4,7 @@ import net.kigawa.kutil.unit.util.Util
 
 class AutoCloseAbleCloser : UnitCloser {
     override fun closeUnit(unit: Any) {
-        if (isValid(unit)) return
+        if (!isValid(unit)) return
         (unit as AutoCloseable).close()
     }
 
