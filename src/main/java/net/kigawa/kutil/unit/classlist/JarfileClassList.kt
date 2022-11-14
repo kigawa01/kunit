@@ -33,12 +33,7 @@ class JarfileClassList(resource: URL, packageName: String) : ClassList {
                     try {
                         classes.add(Class.forName(name))
                     } catch (e: Throwable) {
-                        errors.add(
-                            UnitException(
-                                "could not load unit: $name",
-                                e
-                            )
-                        )
+                        errors.add(UnitException("could not load unit: $name", e))
                     }
                 }
             }
