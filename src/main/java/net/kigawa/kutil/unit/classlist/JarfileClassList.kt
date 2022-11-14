@@ -28,7 +28,7 @@ class JarfileClassList(resource: URL, packageName: Package) : ClassList {
                     name = name.replace('/', '.').replace(".class$".toRegex(), "")
                     try {
                         classes.add(Class.forName(name))
-                    } catch (e: Exception) {
+                    } catch (e: Throwable) {
                         errors.add(
                             UnitException(
                                 "could not load unit: $name",

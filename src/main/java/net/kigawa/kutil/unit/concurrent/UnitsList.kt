@@ -1,12 +1,13 @@
-package net.kigawa.kutil.unit.container
+package net.kigawa.kutil.unit.concurrent
 
+import net.kigawa.kutil.unit.UnitIdentify
+import net.kigawa.kutil.unit.UnitInfo
 import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.util.Util
 
 class UnitsList {
-    private val infoList = mutableListOf<UnitInfo>()
-    private val interfaceMap: MutableMap<Class<*>, Class<*>> = HashMap()
+    private val infoList = mutableSetOf<UnitInfo>()
 
     fun put(unitInfo: UnitInfo) {
         synchronized(infoList) {

@@ -36,6 +36,18 @@ internal class UnitContainerTest : Assertions() {
         assertContain(con.getUnit(Unit4::class.java), list)
     }
 
+    @Test
+    fun testCloseAble() {
+        var closed = false
+        val closeable = AutoCloseable {
+            closed = true
+        }
+        con.addUnit(closeable)
+        con.removeUnit(closeable.javaClass)
+            .forEach { throw Exception(it) }
+        assertTrue(closed)
+    }
+
     companion object {
         private val executor = Executors.newCachedThreadPool()
         private val con: UnitContainer = UnitContainer.create()
