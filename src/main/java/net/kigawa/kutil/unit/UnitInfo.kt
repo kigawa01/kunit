@@ -1,9 +1,7 @@
-package net.kigawa.kutil.unit.container
+package net.kigawa.kutil.unit
 
+import net.kigawa.kutil.unit.UnitStatus
 import net.kigawa.kutil.unit.factory.UnitFactory
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
-import java.lang.reflect.Constructor
-import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 
 class UnitInfo(val unitClass: Class<*>, val name: String?) {

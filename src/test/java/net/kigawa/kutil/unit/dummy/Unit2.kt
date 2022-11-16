@@ -1,8 +1,8 @@
 package net.kigawa.kutil.unit.dummy
 
-import net.kigawa.kutil.unit.Unit
-import net.kigawa.kutil.unit.dummy.parent.AllUnitInterface
+import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.dummy.parent.UnitOneToFourInterface
 
 @Unit
-object Unit2 : AllUnitInterface {
+object Unit2 : UnitOneToFourInterface {
 }

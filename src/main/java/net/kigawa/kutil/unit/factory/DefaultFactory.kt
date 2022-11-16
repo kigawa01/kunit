@@ -1,12 +1,12 @@
 package net.kigawa.kutil.unit.factory
 
-import net.kigawa.kutil.unit.Inject
-import net.kigawa.kutil.unit.Unit
-import net.kigawa.kutil.unit.UnitException
+import net.kigawa.kutil.unit.annotation.Dependencies
+import net.kigawa.kutil.unit.annotation.Inject
+import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.container.UnitContainer
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.UnitException
 import java.lang.reflect.Constructor
-import java.lang.reflect.InvocationTargetException
 import java.util.*
 
 class DefaultFactory : UnitFactory {
@@ -15,6 +15,13 @@ class DefaultFactory : UnitFactory {
     }
 
     override fun init(unitClass: Class<*>, unitContainer: UnitContainer): Any {
+        val unitAnnotation = unitClass.getAnnotation(Unit::class.java)
+            ?: throw RuntimeUnitException("$unitClass is not supported. need @Unit")
+
+        val dependencies = unitClass.getAnnotation(Dependencies::class.java)
+        dependencies?.value?.forEach {
+            unitContainer.getUnitList(it.value.java, it.name)
+        }
         if (unitClass.isAnnotationPresent(Metadata::class.java)) {
             return initKotlinClass(unitClass, unitContainer)
         }
@@ -40,7 +47,10 @@ class DefaultFactory : UnitFactory {
         } catch (e: NoSuchFieldException) {
             initNormalClass(unitClass, unitContainer)
         } catch (e: IllegalAccessException) {
-            throw UnitException("could not access INSTANCE field: $unitClass", e)
+            throw UnitException(
+                "could not access INSTANCE field: $unitClass",
+                e
+            )
         }
     }
 
@@ -48,18 +58,19 @@ class DefaultFactory : UnitFactory {
     private fun initNormalClass(unitClass: Class<*>, unitContainer: UnitContainer): Any {
         val constructor = getConstructor(unitClass)
         val parameters = constructor.parameterTypes
-        val objects = arrayOfNulls<Any>(parameters.size)
-        for (i in parameters.indices) {
-            objects[i] = unitContainer.getUnit(parameters[i])
-        }
+        val objects = parameters.map {
+            unitContainer.getUnit(it)
+        }.toTypedArray()
         return try {
             constructor.newInstance(*objects)
-        } catch (e: InstantiationException) {
-            throw UnitException("could not init unit: $unitClass", e)
-        } catch (e: IllegalAccessException) {
-            throw UnitException("could not init unit: $unitClass", e)
-        } catch (e: InvocationTargetException) {
-            throw UnitException("could not init unit: $unitClass", e.cause)
+        } catch (e: Throwable) {
+            throw UnitException(
+                "could not init " +
+                        "unit: $unitClass " +
+                        "\n parameter: ${parameters.map { it }} " +
+                        "\n objects: ${objects.map { it.javaClass }}",
+                e
+            )
         }
     }
 }

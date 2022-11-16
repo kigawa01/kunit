@@ -11,7 +11,7 @@
 <dependency>
   <groupId>net.kigawa.kutil</groupId>
   <artifactId>unit</artifactId>
-  <version>1.4</version>
+  <version>2.0</version>
 </dependency>
 ```
 
@@ -21,7 +21,8 @@ register unit
 
 ```java
 // java
-import net.kigawa.kutil.unit.Unit;
+
+import net.kigawa.kutil.unit.annotation.Unit
 
 @Unit
 class Unit
@@ -32,7 +33,7 @@ class Unit
 
 ```kotlin
 // kotlin
-import net.kigawa.kutil.unit.Unit
+import net.kigawa.kutil.unit.annotation.Unit
 
 @Unit
 object Unit {
@@ -45,14 +46,23 @@ Unitをロードして初期化する
 load units and init them
 
 ```java
-import net.kigawa.kutil.unit.container.UnitContainerImpl;
+import net.kigawa.kutil.unit.classlist.*;
+import net.kigawa.kutil.unit.container.*;
+
+import java.util.*;
 
 class Main
 {
-    public static void main(String[] args)
-    {
-        var container = new UnitContainerImpl(getClass());
-    }
+  public static void main(String[] args)
+  {
+    var errors = new ArrayList<Throwable>();
+    var classList = ClassList.create(getClass());
+    var container = UnitContainer.create();
+    errors.addAll(container.registerUnits(classList));
+    errors.addAll(container.initUnits());
+
+    errors.forEach(Throwable::printStackTrace);
+  }
 }
 ```
 
@@ -72,7 +82,7 @@ class Main
 ### Example: 9.1
 
 * **9.1**
-    * **9**: major
+    * **9**: major, destructive
     * **1**: miner
 
 ## ToDo

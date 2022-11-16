@@ -1,12 +1,13 @@
 package net.kigawa.kutil.unit.classlist
 
-import net.kigawa.kutil.unit.runtimeexception.RuntimeUnitException
+import net.kigawa.kutil.unit.exception.RuntimeUnitException
 
 interface ClassList {
     val classes: MutableList<Class<*>>
     val errors: MutableList<Throwable>
 
     companion object {
+        @JvmStatic
         fun create(rootClass: Class<*>): ClassList {
             val packageName = rootClass.getPackage()
             val classLoader = rootClass.classLoader
