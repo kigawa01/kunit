@@ -20,7 +20,7 @@ class UnitContainerImpl(
 ): UnitContainer {
     constructor(vararg units: Any): this(null, *units)
     
-    private val unitInfoList = UnitsList()
+    private val infoList = UnitsList()
     private val factories = ConcurrentList<UnitFactory>()
     private val closers = ConcurrentList<UnitCloser>()
     override var timeoutSec: Long = 100
@@ -45,13 +45,12 @@ class UnitContainerImpl(
     override var executor: (Runnable)->Any = {it.run()}
     
     override fun registerUnit(unitClass: Class<*>, name: String?) {
+        if (infoList.contain(unitClass)) return
         val unitInfo = UnitInfo(unitClass, name)
         try {
             val factory = factories.last {it.isValid(unitClass)}
             unitInfo.factory = factory
-            synchronized(unitInfoList) {
-                unitInfoList.put(unitInfo)
-            }
+            infoList.put(unitInfo)
         } catch (_: NoSuchElementException) {
         }
     }
@@ -69,7 +68,7 @@ class UnitContainerImpl(
     override fun addUnit(unit: Any, name: String?) {
         val unitInfo = UnitInfo(unit.javaClass, name)
         unitInfo.unit = unit
-        unitInfoList.put(unitInfo)
+        infoList.put(unitInfo)
     }
     
     override fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
@@ -121,7 +120,7 @@ class UnitContainerImpl(
     
     override fun getIdentifies(): MutableList<UnitIdentify> {
         val list = mutableListOf<UnitIdentify>()
-        list.addAll(unitInfoList.unitKeys())
+        list.addAll(infoList.unitKeys())
         parent?.let {list.addAll(it.getIdentifies())}
         return list
     }
@@ -129,7 +128,7 @@ class UnitContainerImpl(
     @Synchronized
     override fun <T> initUnits(unitClass: Class<T>, name: String?): MutableList<Throwable> {
         val errors = mutableListOf<Throwable>()
-        val unitInfoList = unitInfoList.getUnits(unitClass, name)
+        val unitInfoList = infoList.getUnits(unitClass, name)
         
         unitInfoList.forEach {
             try {
@@ -173,7 +172,7 @@ class UnitContainerImpl(
     
     @Suppress("UNCHECKED_CAST")
     override fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T> {
-        val unitInfoList = unitInfoList.getUnits(unitClass, name)
+        val unitInfoList = infoList.getUnits(unitClass, name)
         
         val units = mutableListOf<T>()
         units.addAll(unitInfoList.map {
