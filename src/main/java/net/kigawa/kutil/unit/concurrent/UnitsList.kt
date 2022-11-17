@@ -9,14 +9,15 @@ import net.kigawa.kutil.unit.util.Util
 class UnitsList {
     private val infoList = mutableSetOf<UnitInfo>()
     
-    fun contain(unitClass: Class<*>): Boolean {
+    fun contain(unitClass: Class<*>, name: String?): Boolean {
         return synchronized(infoList) {
-            return@synchronized infoList.any {it.unitClass == unitClass}
+            return@synchronized infoList.any {isSameIdentify(it.unitClass, unitClass, it.name, name)}
         }
     }
     
     fun put(unitInfo: UnitInfo) {
         synchronized(infoList) {
+            infoList.removeIf {isSameIdentify(it.unitClass, unitInfo.unitClass, it.name, unitInfo.name)}
             infoList.add(unitInfo)
         }
     }
@@ -25,9 +26,7 @@ class UnitsList {
         return synchronized(infoList) {
             infoList.filter {
                 if (!Util.instanceOf(it.unitClass, unitClass)) return@filter false
-                if (name == null || name == "") return@filter true
-                if (it.name == null || it.name == "") return@filter true
-                it.name == name
+                isSameIdentify(null, null, name, it.name)
             }
         }
     }
@@ -43,5 +42,9 @@ class UnitsList {
         return synchronized(infoList) {
             infoList.map {UnitIdentify(it.unitClass, it.name)}
         }
+    }
+    
+    fun isSameIdentify(unitClass: Class<*>?, unitClass1: Class<*>?, name: String?, name1: String?): Boolean {
+        return unitClass == unitClass1 && (name ?: "") == (name1 ?: "")
     }
 }

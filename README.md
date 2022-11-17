@@ -11,7 +11,7 @@
 <dependency>
   <groupId>net.kigawa.kutil</groupId>
   <artifactId>unit</artifactId>
-  <version>2.2</version>
+  <version>2.3</version>
 </dependency>
 ```
 
