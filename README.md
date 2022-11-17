@@ -53,17 +53,40 @@ import java.util.*;
 
 class Main
 {
-  public static void main(String[] args)
-  {
-    var errors = new ArrayList<Throwable>();
-    var classList = ClassList.create(getClass());
-    var container = UnitContainer.create();
-    errors.addAll(container.registerUnits(classList));
-    errors.addAll(container.initUnits());
+    public static void main(String[] args)
+    {
+        var errors = new ArrayList<Throwable>();
+        var classList = ClassList.create(getClass());
+        var container = UnitContainer.create();
+        errors.addAll(container.registerUnits(classList));
+        errors.addAll(container.initUnits());
 
-    errors.forEach(Throwable::printStackTrace);
-  }
+        errors.forEach(Throwable::printStackTrace);
+    }
 }
+```
+
+非同期で使う
+
+use as async
+
+```java
+
+
+import net.kigawa.kutil.unit.container.*;
+
+import java.util.concurrent.*;
+
+public class Main
+{
+    private ExecutorService executor = Executors.newCachedThreadPool();
+
+    public void setAsync(UnitContainer container)
+    {
+        container.setExecutor(executor::execute);
+    }
+}
+
 ```
 
 ## Requirement
