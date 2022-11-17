@@ -22,7 +22,7 @@ register unit
 ```java
 // java
 
-import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.annotation.Unit;
 
 @Unit
 class Unit
