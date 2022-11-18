@@ -45,7 +45,7 @@ class UnitContainerImpl(
     override var executor: (Runnable)->Any = {it.run()}
     
     override fun registerUnit(unitClass: Class<*>, name: String?) {
-        if (infoList.contain(unitClass,name)) return
+        if (infoList.contain(unitClass, name)) return
         val unitInfo = UnitInfo(unitClass, name)
         try {
             val factory = factories.last {it.isValid(unitClass)}
@@ -142,7 +142,7 @@ class UnitContainerImpl(
     }
     
     override fun close() {
-        removeUnit(Any::class.java)
+        removeUnit(Any::class.java).forEach {it.printStackTrace()}
     }
     
     private fun initUnit(unitInfo: UnitInfo) {
