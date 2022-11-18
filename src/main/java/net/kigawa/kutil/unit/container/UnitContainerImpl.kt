@@ -106,7 +106,8 @@ class UnitContainerImpl(
     
     override fun registerUnits(classList: ClassList): MutableList<Throwable> {
         val errors = mutableListOf<Throwable>()
-        
+        errors.addAll(classList.errors)
+
         classList.classes.forEach {
             try {
                 registerUnit(it, null)
