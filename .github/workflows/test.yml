@@ -1,0 +1,19 @@
+name: run test
+run-name: run test in ${{github.ref_name}} by ${{github.actor}}
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set up jdk
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: check out branch
+        uses: actions/checkout@v3
+      - name: List files in the repository
+        run: |
+          ls -a ${{github.workspace}}
+      - name: run test
+        run: mvn --batch-mode --update-snapshots test
