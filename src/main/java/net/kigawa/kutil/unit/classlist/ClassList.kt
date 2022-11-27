@@ -7,6 +7,7 @@ interface ClassList {
     val errors: MutableList<Throwable>
 
     companion object {
+        @JvmStatic
         fun create(rootClass: Class<*>): ClassList {
             val packageName = rootClass.getPackage()
             val classLoader = rootClass.classLoader
