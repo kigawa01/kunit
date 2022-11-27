@@ -1,5 +1,5 @@
 name: run test
-run-name: run test in ${{GITHUB_REF_NAME}} by ${{github.actor}}
+run-name: run test in ${{env.GITHUB_REF_NAME}} by ${{github.actor}}
 on: [push]
 jobs:
   Explore-GitHub-Actions:
