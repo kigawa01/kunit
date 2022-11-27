@@ -1,0 +1,16 @@
+name: run test
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install package
+        run: apt install openjdk-17-jdk maven
+      - name: check out branch
+        uses: actions/checkout@v3
+      - name: List files in the repository
+        run: |
+          ls -a ${{ github.workspace }}
+      - name: run test
+        run: mvn test
