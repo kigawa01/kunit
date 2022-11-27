@@ -20,7 +20,7 @@ class DefaultFactory: UnitFactory {
     }
     
     override fun init(unitClass: Class<*>, unitContainer: UnitContainer): Any {
-        return init(unitClass, unitContainer)
+        return initObject(unitClass, unitContainer)
     }
     
     companion object {
