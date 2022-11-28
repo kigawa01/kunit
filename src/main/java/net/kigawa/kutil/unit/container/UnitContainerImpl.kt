@@ -75,37 +75,34 @@ class UnitContainerImpl(
     infoList.put(unitInfo)
   }
   
-  override fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
-    val errors = mutableListOf<Throwable>()
-    getUnitList(unitClass, name).forEach {unit->
-      if (unit is UnitContainerImpl) return@forEach
-      val closers = closers.filter {
-        return@filter try {
-          it.isValid(unit)
-        } catch (e: Throwable) {
-          errors.add(e)
-          false
+  override fun removeUnitAsync(unitClass: Class<*>, name: String?): FutureTask<MutableList<Throwable>> {
+    val future = FutureTask {
+      val errors = mutableListOf<Throwable>()
+      getUnitList(unitClass, name).forEach {unit->
+        if (unit is UnitContainerImpl) return@forEach
+        closers.filter {
+          return@filter try {
+            it.isValid(unit)
+          } catch (e: Throwable) {
+            errors.add(e)
+            false
+          }
+        }.map {
+          val future = FutureTask {it.closeUnit(unit)}
+          executor.run {future.run()}
+          future
+        }.forEach {
+          try {
+            it.get()
+          } catch (e: Throwable) {
+            errors.add(e)
+          }
         }
       }
-      
-      val futures = mutableListOf<Future<*>>()
-      closers.forEach {
-        val future = FutureTask {it.closeUnit(unit)}
-        futures.add(future)
-        executor.run {
-          future.run()
-        }
-      }
-      
-      futures.forEach {
-        try {
-          it.get()
-        } catch (e: Throwable) {
-          errors.add(e)
-        }
-      }
+      errors
     }
-    return errors
+    executor.run {future.run()}
+    return future
   }
   
   override fun registerUnits(classList: ClassList): MutableList<Throwable> {
@@ -130,26 +127,6 @@ class UnitContainerImpl(
     return list
   }
   
-  override fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): MutableList<Throwable> {
-    val errors = mutableListOf<Throwable>()
-    
-    initUnits(unitClass, name).forEach {
-      try {
-        it?.get(timeoutSec, TimeUnit.SECONDS)
-      } catch (e: TimeoutException) {
-        throw RuntimeUnitException(unitClass, name, "could not init unit", e)
-      } catch (e: ExecutionException) {
-        throw RuntimeUnitException(unitClass, name, "could not init unit", e.cause)
-      }
-    }
-    
-    return errors
-  }
-  
-  override fun close() {
-    removeUnit(Any::class.java).forEach {it.printStackTrace()}
-  }
-  
   private fun initUnit(unitInfo: UnitInfo): FutureTask<Unit>? {
     val future = synchronized(unitInfo) {
       if (unitInfo.status == UnitStatus.INITIALIZED) return null
@@ -166,6 +143,29 @@ class UnitContainerImpl(
     }
     executor.run(future::run)
     return future
+  }
+  
+  override fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): FutureTask<MutableList<Throwable>> {
+    val future = FutureTask {
+      val errors = mutableListOf<Throwable>()
+      val unitInfoList = infoList.getUnits(unitClass, name)
+      unitInfoList.map {initUnit(it)}.forEach {
+        try {
+          it?.get(timeoutSec, TimeUnit.SECONDS)
+        } catch (e: TimeoutException) {
+          errors.add(RuntimeUnitException(unitClass, name, "could not init unit", e))
+        } catch (e: ExecutionException) {
+          errors.add(RuntimeUnitException(unitClass, name, "could not init unit", e.cause))
+        }
+      }
+      errors
+    }
+    executor.run {future.run()}
+    return future
+  }
+  
+  override fun close() {
+    removeUnit(Any::class.java).forEach {it.printStackTrace()}
   }
   
   @Suppress("UNCHECKED_CAST")
@@ -191,10 +191,5 @@ class UnitContainerImpl(
   
   override fun <T> contain(unitClass: Class<T>, name: String?): Boolean {
     return infoList.getUnits(unitClass, name).isNotEmpty()
-  }
-  
-  override fun <T> initUnits(unitClass: Class<T>, name: String?): List<FutureTask<Unit>?> {
-    val unitInfoList = infoList.getUnits(unitClass, name)
-    return unitInfoList.map {initUnit(it)}
   }
 }

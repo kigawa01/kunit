@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.*
-import java.util.concurrent.FutureTask
+import java.util.concurrent.*
 
 interface UnitContainer: AutoCloseable {
   companion object {
@@ -48,9 +48,19 @@ interface UnitContainer: AutoCloseable {
     removeFactory(factoryClass, null)
   }
   
-  fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable>
+  fun removeUnitAsync(unitClass: Class<*>, name: String?): FutureTask<MutableList<Throwable>>
   fun removeUnit(unitClass: Class<*>): MutableList<Throwable> {
     return removeUnit(unitClass, null)
+  }
+  
+  fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
+    return try {
+      initUnitsAsync(unitClass, name).get(timeoutSec, TimeUnit.SECONDS)
+    } catch (e: TimeoutException) {
+      val cause = e.cause
+      if (cause == null) mutableListOf(e)
+      else mutableListOf(cause)
+    }
   }
   
   fun addUnit(unit: Any, name: String?)
@@ -93,15 +103,23 @@ interface UnitContainer: AutoCloseable {
   
   fun <T> contain(unitClass: Class<T>, name: String?): Boolean
   
-  fun initUnits(): List<FutureTask<Unit>?> {
+  fun initUnits(): MutableList<Throwable> {
     return initUnits(Object::class.java)
   }
   
-  fun <T> initUnits(unitClass: Class<T>): List<FutureTask<Unit>?> {
+  fun <T> initUnits(unitClass: Class<T>): MutableList<Throwable> {
     return initUnits(unitClass, null)
   }
   
+  fun <T> initUnits(unitClass: Class<T>, name: String?): MutableList<Throwable> {
+    return try {
+      initUnitsAsync(unitClass, name).get(timeoutSec, TimeUnit.SECONDS)
+    } catch (e: TimeoutException) {
+      val cause = e.cause
+      if (cause == null) mutableListOf(e)
+      else mutableListOf(cause)
+    }
+  }
   
-  fun <T> initUnits(unitClass: Class<T>, name: String?): List<FutureTask<Unit>?>
-  fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): MutableList<Throwable>
+  fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): FutureTask<MutableList<Throwable>>
 }
