@@ -18,6 +18,7 @@ class UnitContainerImpl(
   private val parent: UnitContainer? = null,
   vararg units: Any,
 ): UnitContainer {
+  @Suppress("unused")
   constructor(vararg units: Any): this(null, *units)
   
   private val infoList = UnitsList()
@@ -195,5 +196,9 @@ class UnitContainerImpl(
     })
     parent?.getUnitList(unitClass)?.let {units.addAll(it)}
     return units
+  }
+  
+  override fun <T> contain(unitClass: Class<T>, name: String?): Boolean {
+    return infoList.getUnits(unitClass, name).isNotEmpty()
   }
 }

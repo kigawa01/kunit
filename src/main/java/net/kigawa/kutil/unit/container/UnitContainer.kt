@@ -29,6 +29,7 @@ interface UnitContainer: AutoCloseable {
   }
   
   fun removeCloser(closerClass: Class<out UnitCloser>, name: String?): MutableList<Throwable>
+  @Suppress("unused")
   fun removeCloser(closerClass: Class<out UnitCloser>): MutableList<Throwable> {
     return removeCloser(closerClass, null)
   }
@@ -39,6 +40,7 @@ interface UnitContainer: AutoCloseable {
   }
   
   fun removeFactory(factoryClass: Class<out UnitFactory>, name: String?)
+  @Suppress("unused")
   fun removeFactory(factoryClass: Class<out UnitFactory>) {
     removeFactory(factoryClass, null)
   }
@@ -74,6 +76,7 @@ interface UnitContainer: AutoCloseable {
     return getUnit(unitClass, null)
   }
   
+  
   @Throws(NoSingleUnitException::class)
   fun <T> getUnit(unitClass: Class<T>, name: String?): T {
     val units = getUnitList(unitClass, name)
@@ -84,6 +87,8 @@ interface UnitContainer: AutoCloseable {
     }
     throw NoSingleUnitException(unitClass, name, "unit is not single count: ${units.size}")
   }
+  
+  fun <T> contain(unitClass: Class<T>, name: String?): Boolean
   
   fun initUnits(): MutableList<Throwable> {
     return initUnits(Object::class.java)

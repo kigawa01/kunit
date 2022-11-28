@@ -2,8 +2,6 @@ package net.kigawa.kutil.unit.concurrent
 
 import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.UnitInfo
-import net.kigawa.kutil.unit.exception.NoFoundUnitException
-import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.util.Util
 
 class UnitsList {
@@ -33,20 +31,9 @@ class UnitsList {
     }
   }
   
-  fun getUnit(unitClass: Class<*>, name: String?): UnitInfo {
-    val list = getUnits(unitClass, name)
-    if (list.isEmpty()) throw NoFoundUnitException(unitClass, name, "unit is not found")
-    if (list.size != 1) throw NoSingleUnitException(unitClass, name, "not only single unit found")
-    return list[0]
-  }
-  
   fun unitKeys(): List<UnitIdentify> {
     return synchronized(infoList) {
       infoList.map {UnitIdentify(it.unitClass, it.name)}
     }
-  }
-  
-  fun isSameIdentify(unitClass: Class<*>?, unitClass1: Class<*>?, name: String?, name1: String?): Boolean {
-    return unitClass == unitClass1 && (name ?: "") == (name1 ?: "")
   }
 }
