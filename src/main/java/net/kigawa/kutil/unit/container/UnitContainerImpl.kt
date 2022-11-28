@@ -130,16 +130,16 @@ class UnitContainerImpl(
     return list
   }
   
-  @Synchronized
-  override fun <T> initUnits(unitClass: Class<T>, name: String?): MutableList<Throwable> {
+  override fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): MutableList<Throwable> {
     val errors = mutableListOf<Throwable>()
-    val unitInfoList = infoList.getUnits(unitClass, name)
     
-    unitInfoList.forEach {
+    initUnits(unitClass, name).forEach {
       try {
-        initUnit(it)
-      } catch (e: Throwable) {
-        errors.add(e)
+        it?.get(timeoutSec, TimeUnit.SECONDS)
+      } catch (e: TimeoutException) {
+        throw RuntimeUnitException(unitClass, name, "could not init unit", e)
+      } catch (e: ExecutionException) {
+        throw RuntimeUnitException(unitClass, name, "could not init unit", e.cause)
       }
     }
     
@@ -150,31 +150,22 @@ class UnitContainerImpl(
     removeUnit(Any::class.java).forEach {it.printStackTrace()}
   }
   
-  private fun initUnit(unitInfo: UnitInfo) {
+  private fun initUnit(unitInfo: UnitInfo): FutureTask<Unit>? {
     val future = synchronized(unitInfo) {
-      if (unitInfo.status == UnitStatus.INITIALIZED) return
-      if (unitInfo.status == UnitStatus.INITIALIZING) return
-      if (unitInfo.status != UnitStatus.LOADED) throw RuntimeUnitException(
-        unitInfo.unitClass,
-        "unit status is not valid name: ${unitInfo.name}"
-      )
+      if (unitInfo.status == UnitStatus.INITIALIZED) return null
+      if (unitInfo.status == UnitStatus.INITIALIZING) return null
+      if (unitInfo.status != UnitStatus.LOADED) return null
       
       val factory = unitInfo.factory!!
       
       val future = FutureTask {
-        factory.init(unitInfo.unitClass, this)
+        unitInfo.unit = factory.init(unitInfo.unitClass, this)
       }
       unitInfo.future = future
       future
     }
     executor.run(future::run)
-    try {
-      unitInfo.unit = future.get(timeoutSec, TimeUnit.SECONDS)
-    } catch (e: TimeoutException) {
-      throw RuntimeUnitException(unitInfo, "could not init unit: ${unitInfo.unitClass}", e)
-    } catch (e: ExecutionException) {
-      throw RuntimeUnitException(unitInfo, "could not init unit: ${unitInfo.unitClass}", e.cause)
-    }
+    return future
   }
   
   @Suppress("UNCHECKED_CAST")
@@ -200,5 +191,10 @@ class UnitContainerImpl(
   
   override fun <T> contain(unitClass: Class<T>, name: String?): Boolean {
     return infoList.getUnits(unitClass, name).isNotEmpty()
+  }
+  
+  override fun <T> initUnits(unitClass: Class<T>, name: String?): List<FutureTask<Unit>?> {
+    val unitInfoList = infoList.getUnits(unitClass, name)
+    return unitInfoList.map {initUnit(it)}
   }
 }

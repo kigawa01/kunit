@@ -7,6 +7,7 @@ import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.*
+import java.util.concurrent.FutureTask
 
 interface UnitContainer: AutoCloseable {
   companion object {
@@ -29,6 +30,7 @@ interface UnitContainer: AutoCloseable {
   }
   
   fun removeCloser(closerClass: Class<out UnitCloser>, name: String?): MutableList<Throwable>
+  
   @Suppress("unused")
   fun removeCloser(closerClass: Class<out UnitCloser>): MutableList<Throwable> {
     return removeCloser(closerClass, null)
@@ -40,6 +42,7 @@ interface UnitContainer: AutoCloseable {
   }
   
   fun removeFactory(factoryClass: Class<out UnitFactory>, name: String?)
+  
   @Suppress("unused")
   fun removeFactory(factoryClass: Class<out UnitFactory>) {
     removeFactory(factoryClass, null)
@@ -90,13 +93,15 @@ interface UnitContainer: AutoCloseable {
   
   fun <T> contain(unitClass: Class<T>, name: String?): Boolean
   
-  fun initUnits(): MutableList<Throwable> {
+  fun initUnits(): List<FutureTask<Unit>?> {
     return initUnits(Object::class.java)
   }
   
-  fun <T> initUnits(unitClass: Class<T>): MutableList<Throwable> {
+  fun <T> initUnits(unitClass: Class<T>): List<FutureTask<Unit>?> {
     return initUnits(unitClass, null)
   }
   
-  fun <T> initUnits(unitClass: Class<T>, name: String?): MutableList<Throwable>
+  
+  fun <T> initUnits(unitClass: Class<T>, name: String?): List<FutureTask<Unit>?>
+  fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): MutableList<Throwable>
 }
