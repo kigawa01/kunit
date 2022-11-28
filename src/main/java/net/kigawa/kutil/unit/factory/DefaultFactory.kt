@@ -20,12 +20,12 @@ class DefaultFactory: UnitFactory {
   }
   
   override fun init(unitClass: Class<*>, unitContainer: UnitContainer): Any {
-    return initObject(unitClass, unitContainer)
+    return initByContainer(unitClass, unitContainer)
   }
   
   companion object {
     @JvmStatic
-    fun initObject(unitClass: Class<*>, unitContainer: UnitContainer): Any {
+    fun initByContainer(unitClass: Class<*>, unitContainer: UnitContainer): Any {
       val dependencies = unitClass.getAnnotation(Dependencies::class.java)
       dependencies?.value?.forEach {
         unitContainer.getUnitList(it.value.java, it.name)

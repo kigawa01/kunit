@@ -55,7 +55,7 @@ class UnitContainerImpl(
         errors.add(e)
         false
       }
-    } ?: throw RuntimeUnitException(unitClass, "valid unit factory is not found")
+    } ?: return errors
     unitInfo.factory = factory
     infoList.put(unitInfo)
     return errors
@@ -184,7 +184,7 @@ class UnitContainerImpl(
     val units = mutableListOf<T>()
     units.addAll(unitInfoList.map {
       if (it.status == UnitStatus.INITIALIZED) return@map it.unit as T
-      if (it.status == UnitStatus.FAIL) throw UnitNotInitException("unit is not initialized")
+      if (it.status == UnitStatus.FAIL) throw UnitNotInitException(it, "unit is not initialized")
       if (it.status == UnitStatus.LOADED) initUnit(it)
       try {
         return@map it.future!!.get(timeoutSec, TimeUnit.SECONDS) as T

@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit
 
+import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.concurrent.FutureTask
 
@@ -7,8 +8,11 @@ class UnitInfo(val unitClass: Class<*>, name: String?) {
   val name: String
   
   init {
-    this.name = if (name == null || name == "") unitClass.name
-    else name
+    this.name = if (name == null || name == "") {
+      val unitAnnotation = unitClass.getAnnotation(Unit::class.java)
+      if (unitAnnotation == null || unitAnnotation.name == "") unitClass.name
+      else unitAnnotation.name
+    } else name
   }
   
   var status: UnitStatus = UnitStatus.NOT_LOADED

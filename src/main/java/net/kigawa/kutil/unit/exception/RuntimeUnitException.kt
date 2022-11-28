@@ -21,4 +21,7 @@ open class RuntimeUnitException: RuntimeException {
   
   constructor(unitInfo: UnitInfo, message: String, cause: Throwable?):
           this(unitInfo.unitClass, unitInfo.name, message, cause)
+  
+  constructor(unitInfo: UnitInfo, message: String):
+          this(unitInfo, message, null)
 }

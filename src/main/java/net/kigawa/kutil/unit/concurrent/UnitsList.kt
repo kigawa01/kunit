@@ -26,7 +26,7 @@ class UnitsList {
         if (!Util.instanceOf(it.unitClass, unitClass)) return@filter false
         if (name == null) return@filter true
         if (name == "") return@filter true
-        true
+        it.name == name
       }
     }
   }
