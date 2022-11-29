@@ -4,34 +4,40 @@ import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.concurrent.FutureTask
 
-class UnitInfo(val unitClass: Class<*>, name: String?) {
-  val name: String
+class UnitInfo(unitIdentify: UnitIdentify) {
+  val unitIdentify: UnitIdentify
   
   init {
-    this.name = if (name == null || name == "") {
-      val unitAnnotation = unitClass.getAnnotation(Unit::class.java)
-      if (unitAnnotation == null || unitAnnotation.name == "") unitClass.name
+    val name = if (unitIdentify.name == null || unitIdentify.name == "") {
+      val unitAnnotation = unitIdentify.unitClass.getAnnotation(Unit::class.java)
+      if (unitAnnotation == null || unitAnnotation.name == "") unitIdentify.unitClass.name
       else unitAnnotation.name
-    } else name
+    } else unitIdentify.name
+    
+    this.unitIdentify = UnitIdentify(unitIdentify.unitClass, name)
   }
   
-  var status: UnitStatus = UnitStatus.NOT_LOADED
-    private set
+  private var status: UnitStatus = UnitStatus.NOT_LOADED
   
   var unit: Any? = null
-    set(value) {
+    @Synchronized set(value) {
       field = value
       status = UnitStatus.INITIALIZED
     }
   var future: FutureTask<*>? = null
-    set(value) {
+    @Synchronized set(value) {
       field = value
       status = UnitStatus.INITIALIZING
     }
   var factory: UnitFactory? = null
-    set(value) {
+    @Synchronized set(value) {
       field = value
       status = if (field == null) UnitStatus.NOT_LOADED
       else UnitStatus.LOADED
     }
+  
+  @Synchronized
+  fun <T> useStatus(function: (UnitStatus)->T): T {
+   return function(status)
+  }
 }

@@ -79,8 +79,8 @@ class DefaultFactory: UnitFactory {
         throw UnitException(
           "could not init " +
           "unit: $unitClass " +
-          "\n parameter: ${parameters.map {it}} " +
-          "\n objects: ${objects.map {it.javaClass}}",
+          "\n parameter: ${parameters.map {it.type}} " +
+          "\n objects:   ${objects.map {it.javaClass}}",
           e
         )
       }

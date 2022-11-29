@@ -3,6 +3,7 @@ package net.kigawa.kutil.unit.container
 import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.classlist.ClassList
 import net.kigawa.kutil.unit.closer.UnitCloser
+import net.kigawa.kutil.unit.dependency.DependencyDatabase
 import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.factory.UnitFactory
@@ -24,6 +25,7 @@ interface UnitContainer: AutoCloseable {
   
   var executor: ((Runnable)->Any)
   var timeoutSec: Long
+  var dependencyDatabase: DependencyDatabase
   fun addCloser(closer: UnitCloser, name: String?)
   fun addCloser(closer: UnitCloser) {
     addCloser(closer, null)

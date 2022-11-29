@@ -5,8 +5,9 @@ import net.kigawa.kutil.unit.classlist.ClassList
 import net.kigawa.kutil.unit.closer.AutoCloseAbleCloser
 import net.kigawa.kutil.unit.closer.UnitCloser
 import net.kigawa.kutil.unit.concurrent.ConcurrentUnitList
-import net.kigawa.kutil.unit.concurrent.UnitsList
 import net.kigawa.kutil.unit.container.*
+import net.kigawa.kutil.unit.dependency.DependencyDatabase
+import net.kigawa.kutil.unit.dependency.DependencyDatabaseImpl
 import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import net.kigawa.kutil.unit.exception.UnitNotInitException
 import net.kigawa.kutil.unit.factory.DefaultFactory
@@ -21,10 +22,10 @@ class UnitContainerImpl(
   @Suppress("unused")
   constructor(vararg units: Any): this(null, *units)
   
-  private val infoList = UnitsList()
   private val factories = ConcurrentUnitList<UnitFactory>(this)
   private val closers = ConcurrentUnitList<UnitCloser>(this)
-  override var timeoutSec: Long = 100
+  override var timeoutSec: Long = 10
+  override var dependencyDatabase: DependencyDatabase = DependencyDatabaseImpl()
   override var executor: (Runnable)->Any = {it.run()}
   
   init {
@@ -44,20 +45,27 @@ class UnitContainerImpl(
   }
   
   override fun registerUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
-    val unitInfo = UnitInfo(unitClass, name)
-    if (infoList.contain(unitInfo)) return mutableListOf()
+    val unitIdentify = UnitIdentify(unitClass, name)
+    if (dependencyDatabase.contain(unitIdentify)) return mutableListOf()
+    val info = UnitInfo(unitIdentify)
     
     val errors = mutableListOf<Throwable>()
     val factory = factories.last {
       try {
-        it.isValid(unitClass)
+        it.isValid(unitIdentify)
       } catch (e: Throwable) {
         errors.add(e)
         false
       }
     } ?: return errors
-    unitInfo.factory = factory
-    infoList.put(unitInfo)
+    info.factory = factory
+    
+    try {
+      dependencyDatabase.register(info, factory.dependencies(unitIdentify))
+    } catch (e: Throwable) {
+      errors.add(e)
+    }
+    
     return errors
   }
   
@@ -70,9 +78,10 @@ class UnitContainerImpl(
   }
   
   override fun addUnit(unit: Any, name: String?) {
-    val unitInfo = UnitInfo(unit.javaClass, name)
+    val unitIdentify = UnitIdentify(unit.javaClass, name)
+    val unitInfo = UnitInfo(unitIdentify)
     unitInfo.unit = unit
-    infoList.put(unitInfo)
+    dependencyDatabase.register(unitInfo, mutableListOf())
   }
   
   override fun removeUnitAsync(unitClass: Class<*>, name: String?): FutureTask<MutableList<Throwable>> {
@@ -122,7 +131,7 @@ class UnitContainerImpl(
   
   override fun getIdentifies(): MutableList<UnitIdentify> {
     val list = mutableListOf<UnitIdentify>()
-    list.addAll(infoList.unitKeys())
+    list.addAll(dependencyDatabase.identifyList())
     parent?.let {list.addAll(it.getIdentifies())}
     return list
   }
@@ -136,7 +145,7 @@ class UnitContainerImpl(
       val factory = unitInfo.factory!!
       
       val future = FutureTask {
-        unitInfo.unit = factory.init(unitInfo.unitClass, this)
+        unitInfo.unit = factory.init(unitInfo.unitIdentify, this)
       }
       unitInfo.future = future
       future
@@ -146,12 +155,12 @@ class UnitContainerImpl(
   }
   
   override fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): FutureTask<MutableList<Throwable>> {
+    val unitIdentify = UnitIdentify(unitClass, name)
     val future = FutureTask {
       val errors = mutableListOf<Throwable>()
-      val unitInfoList = infoList.getUnits(unitClass, name)
-      unitInfoList.map {initUnit(it)}.forEach {
+      dependencyDatabase.findInfo(unitIdentify).map {initUnit(it)}.forEach {
         try {
-          it?.get(timeoutSec, TimeUnit.SECONDS)
+          it?.get(timeoutSec + 1, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
           errors.add(RuntimeUnitException(unitClass, name, "could not init unit", e))
         } catch (e: ExecutionException) {
@@ -170,26 +179,24 @@ class UnitContainerImpl(
   
   @Suppress("UNCHECKED_CAST")
   override fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T> {
-    val unitInfoList = infoList.getUnits(unitClass, name)
+    val identify = UnitIdentify(unitClass, name)
+    val unitInfoList = dependencyDatabase.findInfo(identify)
     
     val units = mutableListOf<T>()
-    units.addAll(unitInfoList.map {
-      if (it.status == UnitStatus.INITIALIZED) return@map it.unit as T
-      if (it.status == UnitStatus.FAIL) throw UnitNotInitException(it, "unit is not initialized")
-      if (it.status == UnitStatus.LOADED) initUnit(it)
-      try {
-        return@map it.future!!.get(timeoutSec, TimeUnit.SECONDS) as T
-      } catch (e: TimeoutException) {
-        throw RuntimeUnitException(unitClass, name, "could not get unit", e)
-      } catch (e: ExecutionException) {
-        throw RuntimeUnitException(unitClass, name, "could not get unit", e.cause)
-      }
-    })
+    
+    for (info in unitInfoList) {
+      units.add(info.useStatus {
+        if (it == UnitStatus.INITIALIZED) {
+          return@useStatus info.unit as T
+        }
+        throw UnitNotInitException(info, "unit is not initialized\n\tstatus: $it")
+      })
+    }
     parent?.getUnitList(unitClass)?.let {units.addAll(it)}
     return units
   }
   
   override fun <T> contain(unitClass: Class<T>, name: String?): Boolean {
-    return infoList.getUnits(unitClass, name).isNotEmpty()
+    return dependencyDatabase.findInfo(UnitIdentify(unitClass, name)).isNotEmpty()
   }
 }
