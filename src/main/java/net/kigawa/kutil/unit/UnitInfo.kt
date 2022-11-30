@@ -1,11 +1,14 @@
 package net.kigawa.kutil.unit
 
 import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.concurrent.ThreadBlocker
+import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import net.kigawa.kutil.unit.factory.UnitFactory
-import java.util.concurrent.FutureTask
+import java.util.concurrent.TimeUnit
 
 class UnitInfo(unitIdentify: UnitIdentify) {
   val unitIdentify: UnitIdentify
+  private val initializedLock = ThreadBlocker()
   
   init {
     val name = if (unitIdentify.name == null || unitIdentify.name == "") {
@@ -17,27 +20,49 @@ class UnitInfo(unitIdentify: UnitIdentify) {
     this.unitIdentify = UnitIdentify(unitIdentify.unitClass, name)
   }
   
-  private var status: UnitStatus = UnitStatus.NOT_LOADED
+  var status: UnitStatus = UnitStatus.NOT_LOADED
+    private set
+  private var unit: Any? = null
+  private var factory: UnitFactory? = null
   
-  var unit: Any? = null
-    @Synchronized set(value) {
-      field = value
-      status = UnitStatus.INITIALIZED
-    }
-  var future: FutureTask<*>? = null
-    @Synchronized set(value) {
-      field = value
-      status = UnitStatus.INITIALIZING
-    }
-  var factory: UnitFactory? = null
-    @Synchronized set(value) {
-      field = value
-      status = if (field == null) UnitStatus.NOT_LOADED
-      else UnitStatus.LOADED
-    }
+  fun getFactory(): UnitFactory {
+    if (status == UnitStatus.NOT_LOADED) throw RuntimeUnitException(this, "unit is not valid status\n\tstatus: $status")
+    return factory ?: throw RuntimeUnitException(this, "factory is not exists\n\tstatus: $status")
+  }
+  
+  fun getUnit(): Any {
+    if (status != UnitStatus.INITIALIZED)
+      throw RuntimeUnitException(this, "unit is not valid status\n\tstatus: $status")
+    return factory ?: throw RuntimeUnitException(this, "factory is not exists\n\tstatus: $status")
+  }
   
   @Synchronized
-  fun <T> useStatus(function: (UnitStatus)->T): T {
-   return function(status)
+  fun initialized(unit: Any): MutableList<Throwable> {
+    status = UnitStatus.INITIALIZED
+    this.unit = unit
+    val errors = mutableListOf<Throwable>()
+    initializedLock.signeAll()
+    return errors
+  }
+  
+  fun initializedBlock(time: Long, timeUnit: TimeUnit) {
+    initializedLock.block(time, timeUnit)
+  }
+  
+  @Synchronized
+  fun initializing() {
+    status = UnitStatus.INITIALIZED
+  }
+  
+  @Synchronized
+  fun loaded(factory: UnitFactory) {
+    status = UnitStatus.LOADED
+    this.factory = factory
+  }
+  
+  @Synchronized
+  fun fail() {
+    status = UnitStatus.FAIL
+    initializedLock.signeAll()
   }
 }

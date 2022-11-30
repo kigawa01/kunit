@@ -4,7 +4,7 @@ import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.UnitInfo
 
 class DependencyDatabaseImpl: DependencyDatabase {
-  override fun register(unitInfo: UnitInfo, dependencies: MutableList<UnitIdentify>) {
+  override fun register(unitInfo: UnitInfo) {
     TODO("Not yet implemented")
   }
   

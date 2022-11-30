@@ -11,4 +11,5 @@ class NoFoundUnitException: RuntimeUnitException {
   constructor(unitClass: Class<*>, message: String, cause: Throwable?): super(unitClass, message, cause)
   constructor(unitClass: Class<*>, message: String): super(unitClass, message)
   constructor(unitInfo: UnitInfo, message: String, cause: Throwable?): super(unitInfo, message, cause)
+  constructor(unitClass: UnitInfo, message: String): super(unitClass, message)
 }

@@ -94,9 +94,11 @@ interface UnitContainer: AutoCloseable {
   
   @Throws(NoSingleUnitException::class)
   fun <T> getUnit(unitClass: Class<T>, name: String?): T {
-    val units = getUnitList(unitClass, name)
-    if (units.isEmpty())
-      throw NoFoundUnitException(unitClass, name, "unit is not found")
+    var units = getUnitList(unitClass, name)
+    if (units.isEmpty()) {
+      units = getUnitList(unitClass)
+      if (units.isEmpty()) throw NoFoundUnitException(unitClass, name, "unit is not found")
+    }
     if (units.size == 1) {
       return units[0]
     }

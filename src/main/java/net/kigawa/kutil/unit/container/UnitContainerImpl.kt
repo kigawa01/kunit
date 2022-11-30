@@ -8,8 +8,7 @@ import net.kigawa.kutil.unit.concurrent.ConcurrentUnitList
 import net.kigawa.kutil.unit.container.*
 import net.kigawa.kutil.unit.dependency.DependencyDatabase
 import net.kigawa.kutil.unit.dependency.DependencyDatabaseImpl
-import net.kigawa.kutil.unit.exception.RuntimeUnitException
-import net.kigawa.kutil.unit.exception.UnitNotInitException
+import net.kigawa.kutil.unit.exception.*
 import net.kigawa.kutil.unit.factory.DefaultFactory
 import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.*
@@ -58,10 +57,10 @@ class UnitContainerImpl(
         false
       }
     } ?: return errors
-    info.factory = factory
+    info.loaded(factory)
     
     try {
-      dependencyDatabase.register(info, factory.dependencies(unitIdentify))
+      dependencyDatabase.register(info)
     } catch (e: Throwable) {
       errors.add(e)
     }
@@ -80,8 +79,8 @@ class UnitContainerImpl(
   override fun addUnit(unit: Any, name: String?) {
     val unitIdentify = UnitIdentify(unit.javaClass, name)
     val unitInfo = UnitInfo(unitIdentify)
-    unitInfo.unit = unit
-    dependencyDatabase.register(unitInfo, mutableListOf())
+    unitInfo.initialized(unit)
+    dependencyDatabase.register(unitInfo)
   }
   
   override fun removeUnitAsync(unitClass: Class<*>, name: String?): FutureTask<MutableList<Throwable>> {
@@ -136,41 +135,83 @@ class UnitContainerImpl(
     return list
   }
   
-  private fun initUnit(unitInfo: UnitInfo): FutureTask<Unit>? {
-    val future = synchronized(unitInfo) {
-      if (unitInfo.status == UnitStatus.INITIALIZED) return null
-      if (unitInfo.status == UnitStatus.INITIALIZING) return null
-      if (unitInfo.status != UnitStatus.LOADED) return null
-      
-      val factory = unitInfo.factory!!
-      
-      val future = FutureTask {
-        unitInfo.unit = factory.init(unitInfo.unitIdentify, this)
-      }
-      unitInfo.future = future
-      future
-    }
-    executor.run(future::run)
-    return future
-  }
-  
   override fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): FutureTask<MutableList<Throwable>> {
     val unitIdentify = UnitIdentify(unitClass, name)
     val future = FutureTask {
       val errors = mutableListOf<Throwable>()
-      dependencyDatabase.findInfo(unitIdentify).map {initUnit(it)}.forEach {
+      dependencyDatabase.findInfo(unitIdentify).map {
+        val future = FutureTask {
+          try {
+            initTask(it)
+          } catch (e: Throwable) {
+            errors.add(e)
+            it.fail()
+            null
+          }
+        }
+        executor {future.run()}
+        return@map future
+      }.forEach {
         try {
-          it?.get(timeoutSec + 1, TimeUnit.SECONDS)
+          it.get(timeoutSec + 1, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
           errors.add(RuntimeUnitException(unitClass, name, "could not init unit", e))
         } catch (e: ExecutionException) {
           errors.add(RuntimeUnitException(unitClass, name, "could not init unit", e.cause))
         }
       }
-      errors
+      return@FutureTask errors
     }
     executor.run {future.run()}
     return future
+  }
+  
+  private fun initTask(info: UnitInfo): MutableList<Throwable> {
+    val errors = mutableListOf<Throwable>()
+    synchronized(info) {
+      if (info.status == UnitStatus.INITIALIZED || info.status == UnitStatus.INITIALIZING || info.status == UnitStatus.FAIL)
+        return errors
+      if (info.status != UnitStatus.LOADED) {
+        errors.add(RuntimeUnitException(info, "could not init unit\n\tstatus: ${info.status}"))
+        return errors
+      }
+      info.initializing()
+    }
+    val factory = info.getFactory()
+    val dependencyInfo = factory.dependencies(info.unitIdentify).map {
+      var dependencyInfoList = dependencyDatabase.findInfo(it)
+      if (dependencyInfoList.isEmpty()) dependencyInfoList =
+        dependencyDatabase.findInfo(UnitIdentify(it.unitClass, null))
+      if (dependencyInfoList.isEmpty()) {
+        errors.add(NoFoundUnitException(info, "unit dependency not found"))
+        return errors
+      }
+      if (dependencyInfoList.size != 1) {
+        errors.add(NoSingleUnitException(info, "unit dependency found no single"))
+        return errors
+      }
+      return@map dependencyInfoList[0]
+    }
+    dependencyInfo.map {
+      if (it.status == UnitStatus.LOADED) initUnitsAsync(it.unitIdentify.unitClass, it.unitIdentify.name)
+      else null
+    }.forEach {
+      try {
+        it?.let {errors.addAll(it.get())}
+      } catch (e: Throwable) {
+        errors.add(e)
+        return errors
+      }
+    }
+    
+    val dependencies = dependencyInfo.map {
+      synchronized(it) {
+        if (it.status == UnitStatus.INITIALIZING) it.initializedBlock(timeoutSec, TimeUnit.SECONDS)
+        return@map it.getUnit()
+      }
+    }
+    info.initialized(factory.init(info.unitIdentify, dependencies))
+    return errors
   }
   
   override fun close() {
@@ -181,16 +222,10 @@ class UnitContainerImpl(
   override fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T> {
     val identify = UnitIdentify(unitClass, name)
     val unitInfoList = dependencyDatabase.findInfo(identify)
-    
     val units = mutableListOf<T>()
     
     for (info in unitInfoList) {
-      units.add(info.useStatus {
-        if (it == UnitStatus.INITIALIZED) {
-          return@useStatus info.unit as T
-        }
-        throw UnitNotInitException(info, "unit is not initialized\n\tstatus: $it")
-      })
+      units.add(info.getUnit() as T)
     }
     parent?.getUnitList(unitClass)?.let {units.addAll(it)}
     return units
