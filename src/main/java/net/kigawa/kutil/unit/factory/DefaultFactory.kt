@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.factory
 
+import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.annotation.Dependencies
 import net.kigawa.kutil.unit.annotation.Inject
 import net.kigawa.kutil.unit.annotation.Unit
@@ -15,12 +16,12 @@ import kotlin.Throwable
 import kotlin.Throws
 
 class DefaultFactory: UnitFactory {
-  override fun isValid(unitClass: Class<*>): Boolean {
-    return unitClass.isAnnotationPresent(Unit::class.java)
+  override fun isValid(unitIdentify: UnitIdentify): Boolean {
+    return unitIdentify.unitClass.isAnnotationPresent(Unit::class.java)
   }
   
-  override fun init(unitClass: Class<*>, unitContainer: UnitContainer): Any {
-    return initByContainer(unitClass, unitContainer)
+  override fun init(unitIdentify: UnitIdentify, dependencies: List<Any>): Any {
+    return initByContainer(unitIdentify.unitClass, dependencies)
   }
   
   companion object {
@@ -37,6 +38,14 @@ class DefaultFactory: UnitFactory {
     }
     
     @JvmStatic
+    fun initByContainer(unitClass: Class<*>, dependencies: List<Any>): Any {
+      if (unitClass.isAnnotationPresent(Metadata::class.java)) {
+        return initKotlinClass(unitClass, dependencies)
+      }
+      return initNormalClass(unitClass, dependencies)
+    }
+    
+    @JvmStatic
     fun getConstructor(unitClass: Class<*>): Constructor<*> {
       val constructors = unitClass.constructors
       if (constructors.size == 1) return constructors[0]
@@ -50,12 +59,12 @@ class DefaultFactory: UnitFactory {
     
     @JvmStatic
     @Throws(UnitException::class)
-    private fun initKotlinClass(unitClass: Class<*>, unitContainer: UnitContainer): Any {
+    private fun initKotlinClass(unitClass: Class<*>, dependencies: List<Any>): Any {
       return try {
         val field = unitClass.getField("INSTANCE")
         field[null]
       } catch (e: NoSuchFieldException) {
-        initNormalClass(unitClass, unitContainer)
+        initNormalClass(unitClass, dependencies)
       } catch (e: IllegalAccessException) {
         throw UnitException(
           "could not access INSTANCE field: $unitClass",
@@ -66,21 +75,17 @@ class DefaultFactory: UnitFactory {
     
     @JvmStatic
     @Throws(UnitException::class)
-    private fun initNormalClass(unitClass: Class<*>, unitContainer: UnitContainer): Any {
+    private fun initNormalClass(unitClass: Class<*>, dependencies: List<Any>): Any {
       val constructor = getConstructor(unitClass)
       val parameters = constructor.parameters
-      val objects = parameters.map {
-        if (unitContainer.contain(it.type, it.name)) unitContainer.getUnit(it.type, it.name)
-        else unitContainer.getUnit(it.type)
-      }.toTypedArray()
       return try {
-        constructor.newInstance(*objects)
+        constructor.newInstance(*dependencies.toTypedArray())
       } catch (e: Throwable) {
         throw UnitException(
           "could not init " +
           "unit: $unitClass " +
           "\n parameter: ${parameters.map {it.type}} " +
-          "\n objects:   ${objects.map {it.javaClass}}",
+          "\n objects:   ${dependencies.map {it.javaClass}}",
           e
         )
       }

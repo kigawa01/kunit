@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.exception
 
+import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.UnitInfo
 
 open class RuntimeUnitException: RuntimeException {
@@ -20,7 +21,10 @@ open class RuntimeUnitException: RuntimeException {
           this(unitClass, null, message, null)
   
   constructor(unitInfo: UnitInfo, message: String, cause: Throwable?):
-          this(unitInfo.unitClass, unitInfo.name, message, cause)
+          this(unitInfo.identify, message, cause)
+  
+  constructor(identify: UnitIdentify, message: String, cause: Throwable?):
+          this(identify.unitClass, identify.name, message, cause)
   
   constructor(unitInfo: UnitInfo, message: String):
           this(unitInfo, message, null)

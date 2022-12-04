@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit
 
+import net.kigawa.kutil.unit.util.Util
 import java.util.*
 
 class UnitIdentify(
@@ -9,8 +10,15 @@ class UnitIdentify(
   override fun equals(other: Any?): Boolean {
     if (other !is UnitIdentify) return false
     if (javaClass != other.javaClass) return false
-    
-    if (unitClass != other.unitClass) return false
+    return equalsName(other)
+  }
+  
+  fun equalsOrSuperClass(superClassInfo: UnitIdentify): Boolean {
+    if (!Util.instanceOf(unitClass, superClassInfo.unitClass)) return false
+    return equalsName(superClassInfo)
+  }
+  
+  fun equalsName(other: UnitIdentify): Boolean {
     if (name == null || other.name == null) return true
     if (name == "" || other.name == "") return true
     

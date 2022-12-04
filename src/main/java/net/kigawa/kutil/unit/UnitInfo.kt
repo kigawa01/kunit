@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.factory.UnitFactory
 import java.util.concurrent.TimeUnit
 
 class UnitInfo(unitIdentify: UnitIdentify) {
-  val unitIdentify: UnitIdentify
+  val identify: UnitIdentify
   private val initializedLock = ThreadBlocker()
   
   init {
@@ -17,7 +17,7 @@ class UnitInfo(unitIdentify: UnitIdentify) {
       else unitAnnotation.name
     } else unitIdentify.name
     
-    this.unitIdentify = UnitIdentify(unitIdentify.unitClass, name)
+    this.identify = UnitIdentify(unitIdentify.unitClass, name)
   }
   
   var status: UnitStatus = UnitStatus.NOT_LOADED

@@ -178,10 +178,8 @@ class UnitContainerImpl(
       info.initializing()
     }
     val factory = info.getFactory()
-    val dependencyInfo = factory.dependencies(info.unitIdentify).map {
-      var dependencyInfoList = dependencyDatabase.findInfo(it)
-      if (dependencyInfoList.isEmpty()) dependencyInfoList =
-        dependencyDatabase.findInfo(UnitIdentify(it.unitClass, null))
+    val dependencyInfo = factory.dependencies(info.identify).map {
+      val dependencyInfoList = dependencyDatabase.findInfoAmbiguous(it)
       if (dependencyInfoList.isEmpty()) {
         errors.add(NoFoundUnitException(info, "unit dependency not found"))
         return errors
@@ -193,7 +191,7 @@ class UnitContainerImpl(
       return@map dependencyInfoList[0]
     }
     dependencyInfo.map {
-      if (it.status == UnitStatus.LOADED) initUnitsAsync(it.unitIdentify.unitClass, it.unitIdentify.name)
+      if (it.status == UnitStatus.LOADED) initUnitsAsync(it.identify.unitClass, it.identify.name)
       else null
     }.forEach {
       try {
@@ -210,7 +208,7 @@ class UnitContainerImpl(
         return@map it.getUnit()
       }
     }
-    info.initialized(factory.init(info.unitIdentify, dependencies))
+    info.initialized(factory.init(info.identify, dependencies))
     return errors
   }
   
@@ -221,13 +219,11 @@ class UnitContainerImpl(
   @Suppress("UNCHECKED_CAST")
   override fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T> {
     val identify = UnitIdentify(unitClass, name)
-    val unitInfoList = dependencyDatabase.findInfo(identify)
-    val units = mutableListOf<T>()
-    
-    for (info in unitInfoList) {
-      units.add(info.getUnit() as T)
-    }
+    val units = dependencyDatabase.findInfo(identify).map {
+      it.getUnit() as T
+    }.toMutableList()
     parent?.getUnitList(unitClass)?.let {units.addAll(it)}
+    
     return units
   }
   
