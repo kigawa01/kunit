@@ -178,7 +178,7 @@ class UnitContainerImpl(
       info.initializing()
     }
     val factory = info.getFactory()
-    val dependencyInfo = factory.dependencies(info.identify).map {
+    val dependencyInfo = factory.configureDependencies(info.identify).map {
       val dependencyInfoList = dependencyDatabase.findInfoAmbiguous(it)
       if (dependencyInfoList.isEmpty()) {
         errors.add(NoFoundUnitException(info, "unit dependency not found"))

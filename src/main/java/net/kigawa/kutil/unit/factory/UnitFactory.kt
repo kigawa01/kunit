@@ -2,8 +2,12 @@ package net.kigawa.kutil.unit.factory
 
 import net.kigawa.kutil.unit.UnitIdentify
 
-interface UnitFactory {
-  fun isValid(unitIdentify: UnitIdentify): Boolean
-  fun init(unitIdentify: UnitIdentify, dependencies: List<Any>): Any
-  fun dependencies(unitIdentify: UnitIdentify): MutableList<UnitIdentify>
+abstract class UnitFactory {
+  abstract fun isValid(unitIdentify: UnitIdentify<*>): Boolean
+  abstract fun init(unitIdentify: UnitIdentify<*>): Any
+  abstract fun configureDependencies(unitIdentify: UnitIdentify<*>, get: DependencyGetter)
+}
+
+interface DependencyGetter {
+  fun <T> get(unitIdentify: UnitIdentify<T>): T?
 }
