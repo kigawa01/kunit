@@ -2,7 +2,8 @@
 
 ## About
 
-* add DIContainer for java app
+* add DI Container for java app
+* inject dependency instance to unit constructor
 * manage unit by container
 
 ## Usage
