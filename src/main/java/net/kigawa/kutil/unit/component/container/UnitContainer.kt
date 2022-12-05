@@ -1,9 +1,8 @@
-package net.kigawa.kutil.unit.componate.container
+package net.kigawa.kutil.unit.component.container
 
-import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.extension.classlist.ClassList
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
-import net.kigawa.kutil.unit.componate.dependency.UnitDatabase
+import net.kigawa.kutil.unit.component.database.UnitDatabase
 import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.extension.factory.UnitFactory

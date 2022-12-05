@@ -1,13 +1,12 @@
-package net.kigawa.kutil.unit.componate.container
+package net.kigawa.kutil.unit.component.container
 
 import net.kigawa.kutil.unit.*
+import net.kigawa.kutil.unit.component.database.*
 import net.kigawa.kutil.unit.extension.classlist.ClassList
 import net.kigawa.kutil.unit.extension.closer.AutoCloseAbleCloser
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
 import net.kigawa.kutil.unit.concurrent.ConcurrentUnitList
 import net.kigawa.kutil.unit.container.*
-import net.kigawa.kutil.unit.componate.dependency.UnitDatabase
-import net.kigawa.kutil.unit.componate.dependency.UnitDatabaseImpl
 import net.kigawa.kutil.unit.exception.*
 import net.kigawa.kutil.unit.extension.factory.DefaultFactory
 import net.kigawa.kutil.unit.extension.factory.UnitFactory

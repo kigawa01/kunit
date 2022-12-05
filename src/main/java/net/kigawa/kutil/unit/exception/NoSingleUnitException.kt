@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.exception
 
-import net.kigawa.kutil.unit.UnitInfo
+import net.kigawa.kutil.unit.component.database.UnitInfo
 
 @Suppress("unused")
 class NoSingleUnitException: RuntimeUnitException {

@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.dummy;
 
 import net.kigawa.kutil.unit.annotation.*;
-import net.kigawa.kutil.unit.componate.container.*;
+import net.kigawa.kutil.unit.component.container.*;
 import net.kigawa.kutil.unit.container.*;
 import net.kigawa.kutil.unit.dummy.parent.*;
 

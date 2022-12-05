@@ -1,7 +1,6 @@
-package net.kigawa.kutil.unit.componate.dependency
+package net.kigawa.kutil.unit.component.database
 
-import net.kigawa.kutil.unit.UnitIdentify
-import net.kigawa.kutil.unit.UnitInfo
+import net.kigawa.kutil.unit.component.container.UnitIdentify
 
 interface UnitDatabase {
   fun register(unitInfo: UnitInfo)

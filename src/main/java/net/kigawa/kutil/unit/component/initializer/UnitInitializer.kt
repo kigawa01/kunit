@@ -1,6 +1,9 @@
-package net.kigawa.kutil.unit.componate.initializer
+package net.kigawa.kutil.unit.component.initializer
 
 import net.kigawa.kutil.unit.*
+import net.kigawa.kutil.unit.component.container.UnitIdentify
+import net.kigawa.kutil.unit.component.database.UnitInfo
+import net.kigawa.kutil.unit.component.database.UnitStatus
 import net.kigawa.kutil.unit.exception.*
 import java.util.concurrent.*
 

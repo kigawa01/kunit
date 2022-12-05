@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit
+package net.kigawa.kutil.unit.component.database
 
 enum class UnitStatus {
     FAIL,

@@ -47,7 +47,7 @@ load units and init them
 
 ```java
 import net.kigawa.kutil.unit.classlist.*;
-import net.kigawa.kutil.unit.componate.container.*;
+import net.kigawa.kutil.unit.component.container.*;
 import net.kigawa.kutil.unit.container.*;
 import net.kigawa.kutil.unit.extension.classlist.*;
 
@@ -75,7 +75,7 @@ use as async
 ```java
 
 
-import net.kigawa.kutil.unit.componate.container.*;
+import net.kigawa.kutil.unit.component.container.*;
 import net.kigawa.kutil.unit.container.*;
 
 import java.util.concurrent.*;

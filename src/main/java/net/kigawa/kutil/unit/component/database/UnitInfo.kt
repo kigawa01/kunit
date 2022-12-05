@@ -1,6 +1,7 @@
-package net.kigawa.kutil.unit
+package net.kigawa.kutil.unit.component.database
 
 import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.component.container.UnitIdentify
 import net.kigawa.kutil.unit.concurrent.ThreadBlocker
 import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import net.kigawa.kutil.unit.extension.factory.UnitFactory

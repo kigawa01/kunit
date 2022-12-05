@@ -1,4 +1,6 @@
-package net.kigawa.kutil.unit
+package net.kigawa.kutil.unit.component.dependency
+
+import net.kigawa.kutil.unit.component.container.UnitIdentify
 
 class DependencyResolver {
   fun <T> add(dependencyClass: UnitIdentify<T>, setter: (T)->Unit) {
