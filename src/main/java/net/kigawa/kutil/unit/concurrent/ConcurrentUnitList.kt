@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.concurrent
 
-import net.kigawa.kutil.unit.container.UnitContainer
+import net.kigawa.kutil.unit.componate.container.UnitContainer
 
 class ConcurrentUnitList<T: Any>(private val container: UnitContainer) {
   private val list = mutableSetOf<T>()

@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unit.classlist.ClassList
-import net.kigawa.kutil.unit.container.UnitContainer
+import net.kigawa.kutil.unit.extension.classlist.ClassList
+import net.kigawa.kutil.unit.componate.container.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
-import net.kigawa.kutil.unit.factory.DefaultFactory
+import net.kigawa.kutil.unit.extension.factory.DefaultFactory
 import net.kigawa.kutil.unit.util.Assertions
 import org.junit.jupiter.api.*
 import java.util.concurrent.ExecutorService

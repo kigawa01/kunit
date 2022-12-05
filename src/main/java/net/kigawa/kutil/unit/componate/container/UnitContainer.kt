@@ -1,12 +1,12 @@
-package net.kigawa.kutil.unit.container
+package net.kigawa.kutil.unit.componate.container
 
 import net.kigawa.kutil.unit.UnitIdentify
-import net.kigawa.kutil.unit.classlist.ClassList
-import net.kigawa.kutil.unit.closer.UnitCloser
-import net.kigawa.kutil.unit.dependency.DependencyDatabase
+import net.kigawa.kutil.unit.extension.classlist.ClassList
+import net.kigawa.kutil.unit.extension.closer.UnitCloser
+import net.kigawa.kutil.unit.componate.dependency.UnitDatabase
 import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
-import net.kigawa.kutil.unit.factory.UnitFactory
+import net.kigawa.kutil.unit.extension.factory.UnitFactory
 import java.util.*
 import java.util.concurrent.*
 
@@ -25,7 +25,7 @@ interface UnitContainer: AutoCloseable {
   
   var executor: ((Runnable)->Any)
   var timeoutSec: Long
-  var dependencyDatabase: DependencyDatabase
+  var unitDatabase: UnitDatabase
   fun addCloser(closer: UnitCloser, name: String?)
   fun addCloser(closer: UnitCloser) {
     addCloser(closer, null)

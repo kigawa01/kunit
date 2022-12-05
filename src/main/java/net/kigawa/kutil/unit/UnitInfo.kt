@@ -3,7 +3,7 @@ package net.kigawa.kutil.unit
 import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.concurrent.ThreadBlocker
 import net.kigawa.kutil.unit.exception.RuntimeUnitException
-import net.kigawa.kutil.unit.factory.UnitFactory
+import net.kigawa.kutil.unit.extension.factory.UnitFactory
 import java.util.concurrent.TimeUnit
 
 class UnitInfo(unitIdentify: UnitIdentify) {

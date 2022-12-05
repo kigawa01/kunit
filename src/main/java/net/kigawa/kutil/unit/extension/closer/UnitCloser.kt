@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.closer
+package net.kigawa.kutil.unit.extension.closer
 
 interface UnitCloser {
     fun closeUnit(unit: Any)

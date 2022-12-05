@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.closer
+package net.kigawa.kutil.unit.extension.closer
 
 import net.kigawa.kutil.unit.util.Util
 

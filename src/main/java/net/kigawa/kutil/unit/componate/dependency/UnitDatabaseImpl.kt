@@ -1,9 +1,9 @@
-package net.kigawa.kutil.unit.dependency
+package net.kigawa.kutil.unit.componate.dependency
 
 import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.UnitInfo
 
-class DependencyDatabaseImpl: DependencyDatabase {
+class UnitDatabaseImpl: UnitDatabase {
   private val infoList = mutableListOf<UnitInfo>()
   override fun register(unitInfo: UnitInfo) {
     synchronized(infoList) {

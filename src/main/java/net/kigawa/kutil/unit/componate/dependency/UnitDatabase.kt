@@ -1,9 +1,9 @@
-package net.kigawa.kutil.unit.dependency
+package net.kigawa.kutil.unit.componate.dependency
 
 import net.kigawa.kutil.unit.UnitIdentify
 import net.kigawa.kutil.unit.UnitInfo
 
-interface DependencyDatabase {
+interface UnitDatabase {
   fun register(unitInfo: UnitInfo)
   fun containAmbiguous(identify: UnitIdentify): Boolean {
     return findInfoAmbiguous(identify).isNotEmpty()

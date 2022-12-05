@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.factory
+package net.kigawa.kutil.unit.extension.factory
 
 import net.kigawa.kutil.unit.UnitIdentify
 
