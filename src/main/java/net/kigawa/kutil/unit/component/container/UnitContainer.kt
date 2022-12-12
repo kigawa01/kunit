@@ -1,15 +1,19 @@
 package net.kigawa.kutil.unit.component.container
 
-import net.kigawa.kutil.unit.extension.classlist.ClassList
-import net.kigawa.kutil.unit.extension.closer.UnitCloser
+import net.kigawa.kutil.unit.component.closer.UnitCloserComponent
+import net.kigawa.kutil.unit.component.UnitContainerConponents
+import net.kigawa.kutil.unit.component.UnitContainerConponentsHolder
 import net.kigawa.kutil.unit.component.database.UnitDatabase
+import net.kigawa.kutil.unit.component.initializer.UnitInitializer
+import net.kigawa.kutil.unit.component.initializer.UnitInitializerImpl
+import net.kigawa.kutil.unit.component.register.UnitRegister
+import net.kigawa.kutil.unit.component.resolver.DependencyResolver
 import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
-import net.kigawa.kutil.unit.extension.factory.UnitFactory
 import java.util.*
 import java.util.concurrent.*
 
-interface UnitContainer: AutoCloseable {
+interface UnitContainer: AutoCloseable, UnitInitializer, UnitRegister, UnitContainerConponentsHolder {
   companion object {
     @JvmStatic
     fun create(vararg units: Any): UnitContainer {
@@ -22,32 +26,6 @@ interface UnitContainer: AutoCloseable {
     }
   }
   
-  var executor: ((Runnable)->Any)
-  var timeoutSec: Long
-  var unitDatabase: UnitDatabase
-  fun addCloser(closer: UnitCloser, name: String?)
-  fun addCloser(closer: UnitCloser) {
-    addCloser(closer, null)
-  }
-  
-  fun removeCloser(closerClass: Class<out UnitCloser>, name: String?): MutableList<Throwable>
-  
-  @Suppress("unused")
-  fun removeCloser(closerClass: Class<out UnitCloser>): MutableList<Throwable> {
-    return removeCloser(closerClass, null)
-  }
-  
-  fun addFactory(unitFactory: UnitFactory, name: String?)
-  fun addFactory(unitFactory: UnitFactory) {
-    addFactory(unitFactory, null)
-  }
-  
-  fun removeFactory(factoryClass: Class<out UnitFactory>, name: String?)
-  
-  @Suppress("unused")
-  fun removeFactory(factoryClass: Class<out UnitFactory>) {
-    removeFactory(factoryClass, null)
-  }
   
   fun removeUnitAsync(unitClass: Class<*>, name: String?): FutureTask<MutableList<Throwable>>
   fun removeUnit(unitClass: Class<*>): MutableList<Throwable> {
@@ -56,7 +34,7 @@ interface UnitContainer: AutoCloseable {
   
   fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
     return try {
-      initUnitsAsync(unitClass, name).get(timeoutSec, TimeUnit.SECONDS)
+      initUnitsAsync(unitClass, name).get(conponents.timeoutSec, TimeUnit.SECONDS)
     } catch (e: TimeoutException) {
       val cause = e.cause
       if (cause == null) mutableListOf(e)
@@ -69,13 +47,7 @@ interface UnitContainer: AutoCloseable {
     addUnit(unit, null)
   }
   
-  fun registerUnits(classList: ClassList): MutableList<Throwable>
-  fun registerUnit(unitClass: Class<*>, name: String?): MutableList<Throwable>
-  fun registerUnit(unitClass: Class<*>): MutableList<Throwable> {
-    return registerUnit(unitClass, null)
-  }
-  
-  fun getIdentifies(): MutableList<UnitIdentify>
+  fun getIdentifies(): MutableList<UnitIdentify<*>>
   
   @Throws(NoSingleUnitException::class)
   fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T>
@@ -105,24 +77,4 @@ interface UnitContainer: AutoCloseable {
   }
   
   fun <T> contain(unitClass: Class<T>, name: String?): Boolean
-  
-  fun initUnits(): MutableList<Throwable> {
-    return initUnits(Object::class.java)
-  }
-  
-  fun <T> initUnits(unitClass: Class<T>): MutableList<Throwable> {
-    return initUnits(unitClass, null)
-  }
-  
-  fun <T> initUnits(unitClass: Class<T>, name: String?): MutableList<Throwable> {
-    return try {
-      initUnitsAsync(unitClass, name).get(timeoutSec, TimeUnit.SECONDS)
-    } catch (e: TimeoutException) {
-      val cause = e.cause
-      if (cause == null) mutableListOf(e)
-      else mutableListOf(cause)
-    }
-  }
-  
-  fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): FutureTask<MutableList<Throwable>>
 }

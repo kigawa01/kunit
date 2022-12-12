@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.component.dependency
+package net.kigawa.kutil.unit.component.resolver
 
 import net.kigawa.kutil.unit.component.container.UnitIdentify
 

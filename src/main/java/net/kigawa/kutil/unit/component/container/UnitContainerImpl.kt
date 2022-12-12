@@ -1,13 +1,15 @@
 package net.kigawa.kutil.unit.component.container
 
 import net.kigawa.kutil.unit.*
+import net.kigawa.kutil.unit.component.UnitContainerConponents
+import net.kigawa.kutil.unit.component.UnitContainerConponentsImpl
 import net.kigawa.kutil.unit.component.database.*
-import net.kigawa.kutil.unit.extension.classlist.ClassList
-import net.kigawa.kutil.unit.extension.closer.AutoCloseAbleCloser
-import net.kigawa.kutil.unit.extension.closer.UnitCloser
 import net.kigawa.kutil.unit.concurrent.ConcurrentUnitList
 import net.kigawa.kutil.unit.container.*
 import net.kigawa.kutil.unit.exception.*
+import net.kigawa.kutil.unit.extension.classlist.ClassList
+import net.kigawa.kutil.unit.extension.closer.AutoCloseAbleCloser
+import net.kigawa.kutil.unit.extension.closer.UnitCloser
 import net.kigawa.kutil.unit.extension.factory.DefaultFactory
 import net.kigawa.kutil.unit.extension.factory.UnitFactory
 import java.util.*
@@ -22,9 +24,7 @@ class UnitContainerImpl(
   
   private val factories = ConcurrentUnitList<UnitFactory>(this)
   private val closers = ConcurrentUnitList<UnitCloser>(this)
-  override var timeoutSec: Long = 10
-  var unitDatabase: UnitDatabase = UnitDatabaseImpl()
-  override var executor: (Runnable)->Any = {it.run()}
+  override var conponents: UnitContainerConponents = UnitContainerConponentsImpl(this)
   
   init {
     addUnit(this, null)
@@ -40,31 +40,6 @@ class UnitContainerImpl(
   
   override fun removeCloser(closerClass: Class<out UnitCloser>, name: String?): MutableList<Throwable> {
     return closers.remove(closerClass, name)
-  }
-  
-  override fun registerUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
-    val unitIdentify = UnitIdentify(unitClass, name)
-    if (unitDatabase.contain(unitIdentify)) return mutableListOf()
-    val info = UnitInfo(unitIdentify)
-    
-    val errors = mutableListOf<Throwable>()
-    val factory = factories.last {
-      try {
-        it.isValid(unitIdentify)
-      } catch (e: Throwable) {
-        errors.add(e)
-        false
-      }
-    } ?: return errors
-    info.loaded(factory)
-    
-    try {
-      unitDatabase.register(info)
-    } catch (e: Throwable) {
-      errors.add(e)
-    }
-    
-    return errors
   }
   
   override fun addFactory(unitFactory: UnitFactory, name: String?) {
@@ -112,21 +87,6 @@ class UnitContainerImpl(
     return future
   }
   
-  override fun registerUnits(classList: ClassList): MutableList<Throwable> {
-    val errors = mutableListOf<Throwable>()
-    errors.addAll(classList.errors)
-    
-    classList.classes.forEach {
-      try {
-        registerUnit(it, null)
-      } catch (e: Throwable) {
-        errors.add(e)
-      }
-    }
-    
-    return errors
-  }
-  
   override fun getIdentifies(): MutableList<UnitIdentify> {
     val list = mutableListOf<UnitIdentify>()
     list.addAll(unitDatabase.identifyList())
@@ -135,12 +95,24 @@ class UnitContainerImpl(
   }
   
   override fun <T> initUnitsAsync(unitClass: Class<T>, name: String?): FutureTask<MutableList<Throwable>> {
-   
+    
     return future
+  }
+  
+  override fun registerUnits(classList: ClassList): MutableList<Throwable> {
+    TODO("Not yet implemented")
+  }
+  
+  override fun registerUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
+    TODO("Not yet implemented")
   }
   
   override fun close() {
     removeUnit(Any::class.java).forEach {it.printStackTrace()}
+  }
+  
+  override fun <T> initUnits(unitClass: Class<T>, name: String?): MutableList<Throwable> {
+    TODO("Not yet implemented")
   }
   
   @Suppress("UNCHECKED_CAST")
