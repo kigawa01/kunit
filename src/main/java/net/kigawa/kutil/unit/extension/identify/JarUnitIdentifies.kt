@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.unitconfig
+package net.kigawa.kutil.unit.extension.identify
 
 import net.kigawa.kutil.unit.exception.UnitException
 import java.io.File
@@ -7,9 +7,9 @@ import java.net.JarURLConnection
 import java.net.URL
 import java.util.*
 
-class JarfileClassList(resource: URL, packageName: String): UnitConfigs {
+class JarUnitIdentifies(resource: URL, packageName: String): UnitIdentifies {
   
-  override val classes: MutableList<UnitConfig> = mutableListOf()
+  override val classes: MutableList<UnitIdentify<*>> = mutableListOf()
   override val errors: MutableList<Throwable> = mutableListOf()
   
   companion object {
@@ -32,7 +32,7 @@ class JarfileClassList(resource: URL, packageName: String): UnitConfigs {
           if (!name.endsWith(".class")) continue
           name = name.replace('/', '.').replace(".class$".toRegex(), "")
           try {
-            classes.add(UnitConfig(Class.forName(name)))
+            classes.add(UnitIdentify(Class.forName(name), null))
           } catch (e: Throwable) {
             errors.add(UnitException("could not load unit: $name", e))
           }
