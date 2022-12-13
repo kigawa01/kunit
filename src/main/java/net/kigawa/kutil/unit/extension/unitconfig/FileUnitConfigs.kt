@@ -1,11 +1,11 @@
-package net.kigawa.kutil.unit.extension.classlist
+package net.kigawa.kutil.unit.extension.unitconfig
 
 import net.kigawa.kutil.unit.exception.UnitException
 import java.io.File
 import java.net.URL
 
-class FileClassList(resource: URL, packageName: Package): ClassList {
-  override val classes: MutableList<Class<*>> = mutableListOf()
+class FileUnitConfigs(resource: URL, packageName: Package): UnitConfigs {
+  override val classes: MutableList<UnitConfig> = mutableListOf()
   override val errors: MutableList<Throwable> = mutableListOf()
   
   companion object {
@@ -33,7 +33,7 @@ class FileClassList(resource: URL, packageName: Package): ClassList {
       name = name.replace(".class$".toRegex(), "")
       name = "$packageName.$name"
       try {
-        classes.add(Class.forName(name))
+        classes.add(UnitConfig(Class.forName(name)))
       } catch (e: Throwable) {
         errors.add(
           UnitException(
