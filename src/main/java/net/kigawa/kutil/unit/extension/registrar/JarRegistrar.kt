@@ -1,17 +1,14 @@
-package net.kigawa.kutil.unit.extension.identify
+package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.exception.UnitException
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
 import java.net.URL
 import java.util.*
 
-class JarUnitIdentifies(resource: URL, packageName: String): UnitIdentifies {
-  
-  override val classes: MutableList<UnitIdentify<*>> = mutableListOf()
-  override val errors: MutableList<Throwable> = mutableListOf()
-  
+class JarRegistrar(resource: URL, packageName: String): AbstractRegistrar() {
   companion object {
     const val PROTOCOL = "jar"
   }
@@ -32,14 +29,14 @@ class JarUnitIdentifies(resource: URL, packageName: String): UnitIdentifies {
           if (!name.endsWith(".class")) continue
           name = name.replace('/', '.').replace(".class$".toRegex(), "")
           try {
-            classes.add(UnitIdentify(Class.forName(name), null))
+            identifies.add(UnitIdentify(Class.forName(name), null))
           } catch (e: Throwable) {
             errors.add(UnitException("could not load unit: $name", e))
           }
         }
       }
     } catch (e: IOException) {
-      errors.add(RuntimeException("could not load units file", e))
+      throw RuntimeException("could not load units file", e)
     }
   }
 }
