@@ -8,7 +8,7 @@ import java.net.JarURLConnection
 import java.net.URL
 import java.util.*
 
-class JarRegistrar(resource: URL, packageName: String): AbstractRegistrar() {
+class JarRegistrarInfo(resource: URL, packageName: String): AbstractRegistrarInfo() {
   companion object {
     const val PROTOCOL = "jar"
   }

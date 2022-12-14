@@ -5,13 +5,13 @@ import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.io.File
 import java.net.URL
 
-class FileRegistrar(resource: URL, packageName: Package): AbstractRegistrar() {
+class FileRegistrarInfo(resource: URL, packageName: Package): AbstractRegistrarInfo() {
   companion object {
     const val PROTOCOL = "file"
   }
   
   init {
-    if (FileUnitIdentifies.PROTOCOL != resource.protocol) throw RuntimeException("could not support file type")
+    if (PROTOCOL != resource.protocol) throw RuntimeException("could not support file type")
     loadUnit(File(resource.file), packageName.name)
   }
   
