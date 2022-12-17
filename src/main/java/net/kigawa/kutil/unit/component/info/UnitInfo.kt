@@ -11,10 +11,6 @@ interface UnitInfo<T: Any> {
     }
   }
   
-  fun init() {
-    getter.init(identify)
-  }
-  
   val identify: UnitIdentify<T>
   val getter: UnitGetter
 }
