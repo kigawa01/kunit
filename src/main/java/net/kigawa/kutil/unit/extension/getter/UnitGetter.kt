@@ -1,4 +1,5 @@
 package net.kigawa.kutil.unit.extension.getter
 
-interface UnitGetter {
+interface UnitGetter<T> {
+  fun get(): T
 }

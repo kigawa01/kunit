@@ -5,7 +5,7 @@ import net.kigawa.kutil.unit.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
 interface UnitInfoDatabaseComponent {
-  fun <T> registerUnit(identify: UnitIdentify<T>): UnitInfo<T>
+  fun registerInfo(unitInfo: UnitInfo<*>)
   fun <T> findOneEquals(identify: UnitIdentify<T>): UnitInfo<T>?
   fun <T> findByClass(unitClass: Class<T>): List<UnitInfo<T>>
   fun <T> findOneByClass(unitClass: Class<T>): UnitInfo<T>? {

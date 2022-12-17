@@ -1,26 +1,31 @@
 package net.kigawa.kutil.unit.component.info
 
 import net.kigawa.kutil.unit.annotation.Unit
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.component.UnitStatus
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.factory.UnitFactory
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.util.concurrent.TimeUnit
 
-interface UnitInfoImpl<T>: UnitInfo<T> {
-  val identify: UnitIdentify<T>
+class UnitInfoImpl<T>(
+  identify: UnitIdentify<T>,
+): UnitInfo<T> {
+  override val identify: UnitIdentify<T>
+  override var fail: Boolean
+    get() = TODO("Not yet implemented")
+    set(value) {}
   var getter: UnitGetter
   var factoryClass: Class<out UnitFactory>
   
   init {
-    val name = if (unitIdentify.name == null || unitIdentify.name == "") {
-      val unitAnnotation = unitIdentify.unitClass.getAnnotation(Unit::class.java)
-      if (unitAnnotation == null || unitAnnotation.name == "") unitIdentify.unitClass.name
+    val name = if (identify.name == null || identify.name == "") {
+      val unitAnnotation = identify.unitClass.getAnnotation(Unit::class.java)
+      if (unitAnnotation == null || unitAnnotation.name == "") identify.unitClass.name
       else unitAnnotation.name
-    } else unitIdentify.name
+    } else identify.name
     
-    this.identify = UnitIdentify(unitIdentify.unitClass, name)
+    this.identify = UnitIdentify(identify.unitClass, name)
   }
   
   var status: UnitStatus = UnitStatus.NOT_LOADED
