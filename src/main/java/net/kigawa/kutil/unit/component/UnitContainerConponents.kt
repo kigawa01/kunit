@@ -6,8 +6,6 @@ import net.kigawa.kutil.unit.component.database.UnitInfoDatabaseComponent
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.component.getter.UnitGetterComponent
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
-import net.kigawa.kutil.unit.component.registrar.UnitRegistrarComponent
-import net.kigawa.kutil.unit.extension.logger.ContainerLogger
 
 interface UnitContainerConponents {
   var timeoutSec: Long

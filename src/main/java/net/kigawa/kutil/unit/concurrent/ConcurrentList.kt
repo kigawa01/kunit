@@ -9,7 +9,7 @@ class ConcurrentList<T: Any>() {
     }
   
   fun last(predicate: (T)->Boolean): T? {
-    for (item in list.reversed()) {
+    for (item in reversed()) {
       if (predicate(item)) return item
     }
     return null
@@ -36,6 +36,10 @@ class ConcurrentList<T: Any>() {
   @Synchronized
   fun filter(predicate: (T)->Boolean): List<T> {
     return list.filter(predicate)
+  }
+  
+  fun reversed(): List<T> {
+    return list.reversed()
   }
   
   fun toMutableList(): MutableList<T> {

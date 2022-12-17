@@ -4,6 +4,13 @@ import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
 open class UnitException: RuntimeException {
+  constructor(message: String, cause: Throwable?, vararg obj: Any?): super(
+    "$message\n" +
+    obj.joinToString("\n", transform = {it?.let {String.format("\t%-10s :$it", it.javaClass.name)} ?: ""}),
+    cause
+  )
+  
+  constructor(message: String, vararg obj: Any?): this(message, null, *obj)
   constructor(unitClass: Class<*>? = null, name: String? = null, message: String, cause: Throwable? = null): super(
     "$message\n" +
     "\tclass: ${unitClass?.name}\n" +
@@ -21,9 +28,9 @@ open class UnitException: RuntimeException {
           this(unitClass, null, message, null)
   
   constructor(unitInfo: UnitInfo<*>, message: String, cause: Throwable?):
-          this(unitInfo.identify, message, cause)
+          this(message, unitInfo.identify, cause)
   
-  constructor(identify: UnitIdentify<*>, message: String, cause: Throwable?):
+  constructor(message: String, identify: UnitIdentify<*>, cause: Throwable?):
           this(unitClass = identify.unitClass, name = identify.name, message = message, cause = cause)
   
   constructor(unitInfo: UnitInfo<*>, message: String):

@@ -4,7 +4,6 @@ import net.kigawa.kutil.unit.component.closer.UnitCloserComponent
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.database.UnitInfoDatabaseComponent
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
-import net.kigawa.kutil.unit.component.registrar.UnitRegistrarComponent
 
 interface UnitContainerConponentsHolder: UnitContainerConponents {
   

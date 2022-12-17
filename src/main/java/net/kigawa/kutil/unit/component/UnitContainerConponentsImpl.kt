@@ -9,8 +9,6 @@ import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponentImpl
 import net.kigawa.kutil.unit.component.getter.UnitGetterComponent
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
-import net.kigawa.kutil.unit.component.registrar.UnitRegistrarComponent
-import net.kigawa.kutil.unit.component.registrar.UnitRegistrarComponentImpl
 
 class UnitContainerConponentsImpl(override val container: UnitContainer): UnitContainerConponents {
   override var timeoutSec: Long = 10
