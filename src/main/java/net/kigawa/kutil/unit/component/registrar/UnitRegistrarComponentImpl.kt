@@ -4,7 +4,7 @@ import net.kigawa.kutil.unit.component.UnitContainerConponents
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.registrar.UnitRegistrar
-import net.kigawa.kutil.unit.extension.registrar.UnitRegistrarInfo
+import net.kigawa.kutil.unit.extension.registrarinfo.UnitRegistrarInfo
 
 class UnitRegistrarComponentImpl(private val conponents: UnitContainerConponents): UnitRegistrarComponent {
   private val registrars = ConcurrentList<Class<out UnitRegistrar>>()

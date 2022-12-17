@@ -2,6 +2,8 @@ package net.kigawa.kutil.unit.component.registrar
 
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registrar.*
+import net.kigawa.kutil.unit.extension.registrarinfo.SingleRegistrarInfo
+import net.kigawa.kutil.unit.extension.registrarinfo.UnitRegistrarInfo
 
 interface UnitRegistrarComponent {
   fun addRegistrar(registrar: Class<out UnitRegistrar>)
