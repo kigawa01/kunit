@@ -20,7 +20,7 @@ class UnitFactoryComponentImpl(
       } ?: continue
       
       return loggerComponent.catch(null, "") {
-        factory.init(identify)
+        factory.init(identify, stack)
       } ?: continue
     }
     throw UnitException("factory is not found", identify)

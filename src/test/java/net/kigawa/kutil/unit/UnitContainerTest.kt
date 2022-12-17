@@ -5,7 +5,7 @@ import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
-import net.kigawa.kutil.unit.extension.factory.DefaultFactory
+import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.util.Assertions
 import org.junit.jupiter.api.*
 import java.util.concurrent.ExecutorService
@@ -53,7 +53,7 @@ internal class UnitContainerTest: Assertions() {
   
   @Test
   fun testInitUseContainer() {
-    assertNotNull(DefaultFactory.initByContainer(NoUnitClass::class.java, con))
+    assertNotNull(NormalFactory.initByContainer(NoUnitClass::class.java, con))
   }
   
   @Test

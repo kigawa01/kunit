@@ -10,7 +10,7 @@ import net.kigawa.kutil.unit.exception.*
 import net.kigawa.kutil.unit.extension.identify.UnitIdentifies
 import net.kigawa.kutil.unit.extension.closer.AutoCloseAbleCloser
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
-import net.kigawa.kutil.unit.extension.factory.DefaultFactory
+import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.factory.UnitFactory
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.util.*
@@ -26,7 +26,7 @@ class UnitContainerImpl(
   
   init {
     addUnit(this, null)
-    addFactory(DefaultFactory())
+    addFactory(NormalFactory())
     addCloser(AutoCloseAbleCloser())
     Runtime.getRuntime().addShutdownHook(Thread {close()})
     units.forEach {addUnit(it)}
