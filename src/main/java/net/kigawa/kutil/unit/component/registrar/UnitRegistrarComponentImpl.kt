@@ -2,6 +2,7 @@ package net.kigawa.kutil.unit.component.registrar
 
 import net.kigawa.kutil.unit.component.UnitContainerConponents
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.registrar.UnitRegistrar
 import net.kigawa.kutil.unit.extension.registrar.UnitRegistrarInfo
 
@@ -17,22 +18,21 @@ class UnitRegistrarComponentImpl(private val conponents: UnitContainerConponents
     registrars.remove(registrar)
   }
   
-  override fun registerUnits(registrarInfo: UnitRegistrarInfo<*>): MutableList<Throwable> {
-    val errors = mutableListOf<Throwable>()
+  override fun registerUnits(registrarInfo: UnitRegistrarInfo<*>) {
     registrars.last {
       val registrar = conponents.getterComponent.getUnit(it)
-      registrar.register(registrarInfo, errors)
-    }
-    return errors
+      conponents.logger.catch(false, "there an error in registrar", it) {
+        registrar.register(registrarInfo)
+      }
+    } ?: throw UnitException("registrar is not found")
   }
   
-  override fun unregisterUnits(registrarInfo: UnitRegistrarInfo<*>): MutableList<Throwable> {
-    val errors = mutableListOf<Throwable>()
-    errors.addAll(registrarInfo.errors)
+  override fun unregisterUnits(registrarInfo: UnitRegistrarInfo<*>) {
     registrars.last {
       val registrar = conponents.getterComponent.getUnit(it)
-      registrar.unregister(registrarInfo, errors)
-    }
-    return errors
+      conponents.logger.catch(false, "there an error in registrar", it) {
+        registrar.unregister(registrarInfo)
+      }
+    } ?: throw UnitException("registrar is not found")
   }
 }
