@@ -14,6 +14,9 @@ class ListRegistrar(
       val getter = getterComponent.findGetter(it, mutableListOf())
       val info = UnitInfo.create(it, getter)
       databaseComponent.registerInfo(info)
+      info
+    }.forEach {
+      it.init()
     }
   }
 }

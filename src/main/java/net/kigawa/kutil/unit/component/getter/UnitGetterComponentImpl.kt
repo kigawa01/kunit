@@ -12,16 +12,16 @@ class UnitGetterComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
 ): UnitGetterComponent {
-  private val getterClasses = ConcurrentList<Class<out UnitGetter<Any>>>()
-  override fun addGetter(getterClass: Class<out UnitGetter<Any>>) {
+  private val getterClasses = ConcurrentList<Class<out UnitGetter>>()
+  override fun addGetter(getterClass: Class<out UnitGetter>) {
     getterClasses.add(getterClass)
   }
   
-  override fun removeGetter(getterClass: Class<out UnitGetter<Any>>) {
+  override fun removeGetter(getterClass: Class<out UnitGetter>) {
     getterClasses.remove(getterClass)
   }
   
-  override fun <T: Any> findGetter(identify: UnitIdentify<T>, options: List<RegisterOption>): UnitGetter<T> {
+  override fun findGetter(identify: UnitIdentify<Any>, options: List<RegisterOption>): UnitGetter {
     for (getterClass in getterClasses.reversed()) {
       val getter = loggerComponent.catch(null, "") {
         container.getUnit(getterClass)
@@ -29,8 +29,8 @@ class UnitGetterComponentImpl(
       
       @Suppress("UNCHECKED_CAST")
       if (loggerComponent.catch(false, "") {
-          getter.register(identify,options)
-        }) return getter as UnitGetter<T>
+          getter.register(identify, options)
+        }) return getter
     }
     throw UnitException("getter is not found", identify, options)
   }

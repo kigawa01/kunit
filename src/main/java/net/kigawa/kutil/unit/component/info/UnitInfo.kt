@@ -3,16 +3,18 @@ package net.kigawa.kutil.unit.component.info
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
-interface UnitInfo<T> {
+interface UnitInfo<T: Any> {
   companion object {
     @JvmStatic
-    fun <T> create(identify: UnitIdentify<T>, getter: UnitGetter<T>): UnitInfo<T> {
+    fun <T: Any> create(identify: UnitIdentify<T>, getter: UnitGetter): UnitInfo<T> {
       return UnitInfoImpl(identify)
     }
   }
   
+  fun init() {
+    getter.init(identify)
+  }
+  
   val identify: UnitIdentify<T>
-  val getter: UnitGetter<T>
-  var fail: Boolean
-  var ready: Boolean
+  val getter: UnitGetter
 }
