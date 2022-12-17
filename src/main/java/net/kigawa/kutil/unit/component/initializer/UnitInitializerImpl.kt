@@ -2,9 +2,11 @@ package net.kigawa.kutil.unit.component.initializer
 
 import net.kigawa.kutil.unit.*
 import net.kigawa.kutil.unit.component.UnitContainerConponents
-import net.kigawa.kutil.unit.component.container.UnitIdentify
+import net.kigawa.kutil.unit.component.info.UnitInfo
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.component.database.*
 import net.kigawa.kutil.unit.exception.*
+import net.kigawa.kutil.unit.component.UnitStatus
 import java.util.concurrent.*
 
 class UnitInitializerImpl(private val config: UnitContainerConponents): UnitInitializer {
@@ -38,9 +40,9 @@ class UnitInitializerImpl(private val config: UnitContainerConponents): UnitInit
         try {
           it.get(config.timeoutSec + 1, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
-          errors.add(RuntimeUnitException(unitClass, name, "could not init unit", e))
+          errors.add(UnitException(unitClass, name, "could not init unit", e))
         } catch (e: ExecutionException) {
-          errors.add(RuntimeUnitException(unitClass, name, "could not init unit", e.cause))
+          errors.add(UnitException(unitClass, name, "could not init unit", e.cause))
         }
       }
       return@FutureTask errors
@@ -55,7 +57,7 @@ class UnitInitializerImpl(private val config: UnitContainerConponents): UnitInit
       if (info.status == UnitStatus.INITIALIZED || info.status == UnitStatus.INITIALIZING || info.status == UnitStatus.FAIL)
         return errors
       if (info.status != UnitStatus.LOADED) {
-        errors.add(RuntimeUnitException(info, "could not init unit\n\tstatus: ${info.status}"))
+        errors.add(UnitException(info, "could not init unit\n\tstatus: ${info.status}"))
         return errors
       }
       info.initializing()

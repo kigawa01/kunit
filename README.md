@@ -49,7 +49,7 @@ load units and init them
 import net.kigawa.kutil.unit.classlist.*;
 import net.kigawa.kutil.unit.component.container.*;
 import net.kigawa.kutil.unit.container.*;
-import net.kigawa.kutil.unit.extension.classlist.*;
+import net.kigawa.kutil.unit.extension.identify.*;
 
 import java.util.*;
 
@@ -58,7 +58,7 @@ class Main
   public static void main(String[] args)
   {
     var errors = new ArrayList<Throwable>();
-    var classList = ClassList.create(getClass());
+    var classList = UnitIdentifies.create(getClass());
     var container = UnitContainer.create();
     errors.addAll(container.registerUnits(classList));
     errors.addAll(container.initUnits());

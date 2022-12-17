@@ -1,15 +1,9 @@
 package net.kigawa.kutil.unit.component.container
 
-import net.kigawa.kutil.unit.component.closer.UnitCloserComponent
-import net.kigawa.kutil.unit.component.UnitContainerConponents
 import net.kigawa.kutil.unit.component.UnitContainerConponentsHolder
-import net.kigawa.kutil.unit.component.database.UnitDatabase
-import net.kigawa.kutil.unit.component.initializer.UnitInitializer
-import net.kigawa.kutil.unit.component.initializer.UnitInitializerImpl
-import net.kigawa.kutil.unit.component.register.UnitRegister
-import net.kigawa.kutil.unit.component.resolver.DependencyResolver
 import net.kigawa.kutil.unit.exception.NoFoundUnitException
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.util.*
 import java.util.concurrent.*
 
@@ -25,7 +19,6 @@ interface UnitContainer: AutoCloseable, UnitInitializer, UnitRegister, UnitConta
       return UnitContainerImpl(parent, *units)
     }
   }
-  
   
   fun removeUnitAsync(unitClass: Class<*>, name: String?): FutureTask<MutableList<Throwable>>
   fun removeUnit(unitClass: Class<*>): MutableList<Throwable> {

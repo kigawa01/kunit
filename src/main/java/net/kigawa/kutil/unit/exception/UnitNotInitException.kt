@@ -1,9 +1,9 @@
 package net.kigawa.kutil.unit.exception
 
-import net.kigawa.kutil.unit.component.database.UnitInfo
+import net.kigawa.kutil.unit.component.info.UnitInfo
 
 @Suppress("unused")
-class UnitNotInitException: RuntimeUnitException {
+class UnitNotInitException: UnitException {
   constructor(unitClass: Class<*>, name: String?, message: String, cause: Throwable?):
           super(unitClass, name, message, cause)
   

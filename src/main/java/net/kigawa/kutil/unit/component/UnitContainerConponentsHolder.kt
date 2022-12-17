@@ -2,10 +2,9 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.component.closer.UnitCloserComponent
 import net.kigawa.kutil.unit.component.container.UnitContainer
-import net.kigawa.kutil.unit.component.database.UnitDatabase
-import net.kigawa.kutil.unit.component.initializer.UnitInitializerImpl
-import net.kigawa.kutil.unit.component.register.UnitRegister
-import net.kigawa.kutil.unit.component.resolver.DependencyResolver
+import net.kigawa.kutil.unit.component.database.UnitInfoDatabaseComponent
+import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
+import net.kigawa.kutil.unit.component.registrar.UnitRegistrarComponent
 
 interface UnitContainerConponentsHolder: UnitContainerConponents {
   
@@ -20,30 +19,25 @@ interface UnitContainerConponentsHolder: UnitContainerConponents {
     set(value) {
       conponents.executor = value
     }
-  override var database: UnitDatabase
-    get() = conponents.database
+  override var databaseComponent: UnitInfoDatabaseComponent
+    get() = conponents.databaseComponent
     set(value) {
-      conponents.database = value
+      conponents.databaseComponent = value
     }
   override var closerComponent: UnitCloserComponent
     get() = conponents.closerComponent
     set(value) {
       conponents.closerComponent = value
     }
-  override var resolver: DependencyResolver
-    get() = conponents.resolver
+  override var factoryComponent: UnitFactoryComponent
+    get() = conponents.factoryComponent
     set(value) {
-      conponents.resolver = value
+      conponents.factoryComponent = value
     }
-  override var initializer: UnitInitializerImpl
-    get() = conponents.initializer
+  override var registerComponent: UnitRegistrarComponent
+    get() = conponents.registerComponent
     set(value) {
-      conponents.initializer = value
-    }
-  override var register: UnitRegister
-    get() = conponents.register
-    set(value) {
-      conponents.register = value
+      conponents.registerComponent = value
     }
   override val container: UnitContainer
     get() = conponents.container

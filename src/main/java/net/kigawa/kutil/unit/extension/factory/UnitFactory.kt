@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.factory
 
-import net.kigawa.kutil.unit.component.container.UnitIdentify
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
 abstract class UnitFactory {
   abstract fun isValid(unitIdentify: UnitIdentify<*>): Boolean

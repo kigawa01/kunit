@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unit.extension.classlist.ClassList
+import net.kigawa.kutil.unit.extension.identify.UnitIdentifies
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
@@ -74,7 +74,7 @@ internal class UnitContainerTest: Assertions() {
       con.timeoutSec = 5
       con.executor = executor::execute
       con.getIdentifies()
-      con.registerUnits(ClassList.create(UnitContainerTest::class.java)).forEach {throw Exception(it)}
+      con.registerUnits(UnitIdentifies.create(UnitContainerTest::class.java)).forEach {throw Exception(it)}
       con.registerUnit(NamedUnit::class.java, "b")
       con.initUnits().forEach {throw Exception(it)}
     }

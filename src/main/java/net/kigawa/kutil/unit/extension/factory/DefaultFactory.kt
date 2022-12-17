@@ -1,11 +1,10 @@
 package net.kigawa.kutil.unit.extension.factory
 
-import net.kigawa.kutil.unit.component.container.UnitIdentify
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.annotation.Dependencies
 import net.kigawa.kutil.unit.annotation.Inject
 import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.component.container.UnitContainer
-import net.kigawa.kutil.unit.exception.RuntimeUnitException
 import net.kigawa.kutil.unit.exception.UnitException
 import java.lang.reflect.Constructor
 import java.util.*
@@ -54,7 +53,7 @@ class DefaultFactory: UnitFactory {
           return constructor
         }
       }
-      throw RuntimeUnitException(unitClass, "could not get constructor")
+      throw UnitException(unitClass, "could not get constructor")
     }
     
     @JvmStatic

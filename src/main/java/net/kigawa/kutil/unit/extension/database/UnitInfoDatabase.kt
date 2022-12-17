@@ -1,8 +1,9 @@
-package net.kigawa.kutil.unit.component.database
+package net.kigawa.kutil.unit.extension.database
 
-import net.kigawa.kutil.unit.component.container.UnitIdentify
+import net.kigawa.kutil.unit.component.info.UnitInfo
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
-interface UnitDatabase {
+interface UnitInfoDatabase {
   fun register(unitInfo: UnitInfo)
   fun containAmbiguous(identify: UnitIdentify): Boolean {
     return findInfoAmbiguous(identify).isNotEmpty()

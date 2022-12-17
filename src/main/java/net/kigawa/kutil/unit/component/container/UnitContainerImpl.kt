@@ -1,17 +1,18 @@
 package net.kigawa.kutil.unit.component.container
 
 import net.kigawa.kutil.unit.*
-import net.kigawa.kutil.unit.component.UnitContainerConponents
-import net.kigawa.kutil.unit.component.UnitContainerConponentsImpl
+import net.kigawa.kutil.unit.component.*
 import net.kigawa.kutil.unit.component.database.*
+import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentUnitList
 import net.kigawa.kutil.unit.container.*
 import net.kigawa.kutil.unit.exception.*
-import net.kigawa.kutil.unit.extension.classlist.ClassList
+import net.kigawa.kutil.unit.extension.identify.UnitIdentifies
 import net.kigawa.kutil.unit.extension.closer.AutoCloseAbleCloser
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
 import net.kigawa.kutil.unit.extension.factory.DefaultFactory
 import net.kigawa.kutil.unit.extension.factory.UnitFactory
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.util.*
 import java.util.concurrent.*
 
@@ -19,9 +20,6 @@ class UnitContainerImpl(
   private val parent: UnitContainer? = null,
   vararg units: Any,
 ): UnitContainer {
-  @Suppress("unused")
-  constructor(vararg units: Any): this(null, *units)
-  
   private val factories = ConcurrentUnitList<UnitFactory>(this)
   private val closers = ConcurrentUnitList<UnitCloser>(this)
   override var conponents: UnitContainerConponents = UnitContainerConponentsImpl(this)
@@ -99,7 +97,7 @@ class UnitContainerImpl(
     return future
   }
   
-  override fun registerUnits(classList: ClassList): MutableList<Throwable> {
+  override fun registerUnits(classList: UnitIdentifies): MutableList<Throwable> {
     TODO("Not yet implemented")
   }
   

@@ -1,6 +1,5 @@
 package net.kigawa.kutil.unit.concurrent
 
-import net.kigawa.kutil.unit.component.container.UnitContainer
 import java.util.*
 
 class ConcurrentList<T: Any>() {
@@ -10,7 +9,10 @@ class ConcurrentList<T: Any>() {
     }
   
   fun last(predicate: (T)->Boolean): T? {
-    return list.lastOrNull(predicate)
+    for (item in list.reversed()) {
+      if (predicate(item)) return item
+    }
+    return null
   }
   
   fun add(item: T): Boolean {
