@@ -4,7 +4,7 @@ import net.kigawa.kutil.unit.*
 import net.kigawa.kutil.unit.component.*
 import net.kigawa.kutil.unit.component.database.*
 import net.kigawa.kutil.unit.component.info.UnitInfo
-import net.kigawa.kutil.unit.concurrent.ConcurrentUnitList
+import net.kigawa.kutil.unit.concurrent.UnitClassList
 import net.kigawa.kutil.unit.container.*
 import net.kigawa.kutil.unit.exception.*
 import net.kigawa.kutil.unit.extension.identify.UnitIdentifies
@@ -20,8 +20,8 @@ class UnitContainerImpl(
   private val parent: UnitContainer? = null,
   vararg units: Any,
 ): UnitContainer {
-  private val factories = ConcurrentUnitList<UnitFactory>(this)
-  private val closers = ConcurrentUnitList<UnitCloser>(this)
+  private val factories = UnitClassList<UnitFactory>(this)
+  private val closers = UnitClassList<UnitCloser>(this)
   override var conponents: UnitContainerConponents = UnitContainerConponentsImpl(this)
   
   init {

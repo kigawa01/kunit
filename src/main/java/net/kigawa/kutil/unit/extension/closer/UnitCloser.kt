@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit.extension.closer
 
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+
 interface UnitCloser {
-    fun closeUnit(unit: Any)
-    fun isValid(unit: Any): Boolean
+  fun closeUnit(identify: UnitIdentify<Any>): Boolean
 }

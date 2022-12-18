@@ -14,7 +14,7 @@ class NormalFactory(
   
   override fun <T: Any> init(unitIdentify: UnitIdentify<T>, initStack: InitStack): T {
     @Suppress("UNCHECKED_CAST")
-    return executorComponent.callExecutable(getConstructor(unitIdentify.unitClass), initStack) as T
+    return executorComponent.callConstructor(getConstructor(unitIdentify.unitClass), initStack) as T
   }
   
   companion object {

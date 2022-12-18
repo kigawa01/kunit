@@ -1,17 +1,10 @@
 package net.kigawa.kutil.unit.component.closer
 
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
 interface UnitCloserComponent {
-  fun addCloser(closer: UnitCloser, name: String?)
-  fun addCloser(closer: UnitCloser) {
-    addCloser(closer, null)
-  }
-  
-  fun removeCloser(closerClass: Class<out UnitCloser>, name: String?): MutableList<Throwable>
-  
-  @Suppress("unused")
-  fun removeCloser(closerClass: Class<out UnitCloser>): MutableList<Throwable> {
-    return removeCloser(closerClass, null)
-  }
+  fun closeUnit(identify: UnitIdentify<Any>)
+  fun addCloser(closerClass: Class<out UnitCloser>)
+  fun removeCloser(closerClass: Class<out UnitCloser>)
 }

@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.util.*
 import java.util.concurrent.*
 
-interface UnitContainer: AutoCloseable, UnitInitializer, UnitRegister, UnitContainerConponentsHolder {
+interface UnitContainer: AutoCloseable {
   companion object {
     @JvmStatic
     fun create(vararg units: Any): UnitContainer {

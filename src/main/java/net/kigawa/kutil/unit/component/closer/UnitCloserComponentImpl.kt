@@ -1,18 +1,32 @@
 package net.kigawa.kutil.unit.component.closer
 
-import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
+import net.kigawa.kutil.unit.component.container.UnitContainer
+import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
+import net.kigawa.kutil.unit.concurrent.UnitClassList
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
+import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
-class UnitCloserComponentImpl: UnitCloserComponent {
-  fun addCloser(closer: UnitCloser, name: String?)
-  fun addCloser(closer: UnitCloser) {
-    addCloser(closer, null)
+class UnitCloserComponentImpl(
+  private val container: UnitContainer,
+  private val loggerComponent: ContainerLoggerComponent,
+): UnitCloserComponent {
+  private val closerClasses = UnitClassList<UnitCloser>(container)
+  override fun closeUnit(identify: UnitIdentify<Any>) {
+    closerClasses.last {
+      val closer = loggerComponent.catch(null, "") {
+        container.getUnit(it)
+      } ?: return@last false
+      return@last loggerComponent.catch(false, "") {
+        closer.closeUnit(identify)
+      }
+    }
   }
-  fun removeCloser(closerClass: Class<out UnitCloser>, name: String?): MutableList<Throwable>
   
-  @Suppress("unused")
-  fun removeCloser(closerClass: Class<out UnitCloser>): MutableList<Throwable> {
-    return removeCloser(closerClass, null)
+  override fun addCloser(closerClass: Class<out UnitCloser>) {
+    closerClasses.add(closerClass)
   }
   
+  override fun removeCloser(closerClass: Class<out UnitCloser>) {
+    closerClasses.remove(closerClass)
+  }
 }

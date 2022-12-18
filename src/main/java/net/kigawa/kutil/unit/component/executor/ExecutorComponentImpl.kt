@@ -6,7 +6,7 @@ import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.executor.UnitExecutor
-import java.lang.reflect.Executable
+import java.lang.reflect.Constructor
 
 class ExecutorComponentImpl(
   private val container: UnitContainer,
@@ -21,13 +21,13 @@ class ExecutorComponentImpl(
     executorClasses.remove(executorClass)
   }
   
-  override fun callExecutable(executable: Executable, initStack: InitStack): Any {
+  override fun <T>callConstructor(constructor: Constructor<T>, initStack: InitStack): T {
     for (executorClass in executorClasses.reversed()) {
       val executor = loggerComponent.catch(null, "") {
         container.getUnit(executorClass)
       } ?: continue
       return loggerComponent.catch(null, "") {
-        executor.callConstructor(executable, initStack)
+        executor.callConstructor(constructor, initStack)
       } ?: continue
     }
     throw UnitException("could not execute executable")
