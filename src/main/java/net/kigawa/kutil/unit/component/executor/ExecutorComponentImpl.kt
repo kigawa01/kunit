@@ -27,7 +27,7 @@ class ExecutorComponentImpl(
         container.getUnit(executorClass)
       } ?: continue
       return loggerComponent.catch(null, "") {
-        executor.callExecutable(executable, initStack)
+        executor.callConstructor(executable, initStack)
       } ?: continue
     }
     throw UnitException("could not execute executable")
