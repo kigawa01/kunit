@@ -48,8 +48,8 @@ class SingletonGetter(
   
   @Synchronized
   override fun register(identify: UnitIdentify<out Any>, options: List<RegisterOption>): Boolean {
-    if (obj != null) return true
-    if (registered) return true
+    if (obj != null) return false
+    if (registered) return false
     registered = true
     return true
   }
