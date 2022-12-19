@@ -13,10 +13,10 @@ class UnitCloserComponentImpl(
   private val closerClasses = UnitClassList<UnitCloser>(container)
   override fun closeUnit(identify: UnitIdentify<Any>) {
     closerClasses.last {
-      val closer = loggerComponent.catch(null, "") {
+      val closer = loggerComponent.catch(null) {
         container.getUnit(it)
       } ?: return@last false
-      return@last loggerComponent.catch(false, "") {
+      return@last loggerComponent.catch(false) {
         closer.closeUnit(identify)
       }
     }
