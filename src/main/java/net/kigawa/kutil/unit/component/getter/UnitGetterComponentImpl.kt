@@ -7,6 +7,7 @@ import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOption
+import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 class UnitGetterComponentImpl(
   private val container: UnitContainer,
@@ -21,7 +22,7 @@ class UnitGetterComponentImpl(
     getterClasses.remove(getterClass)
   }
   
-  override fun findGetter(identify: UnitIdentify<out Any>, options: List<RegisterOption>): UnitGetter {
+  override fun findGetter(identify: UnitIdentify<out Any>, options: RegisterOptions): UnitGetter {
     for (getterClass in getterClasses.reversed()) {
       val getter = loggerComponent.catch(null, "") {
         container.getUnit(getterClass)

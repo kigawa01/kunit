@@ -3,20 +3,27 @@ package net.kigawa.kutil.unit.extension.registrar
 import net.kigawa.kutil.unit.component.database.UnitInfoDatabaseComponent
 import net.kigawa.kutil.unit.component.getter.UnitGetterComponent
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
-class ClassRegistrar(
-  private val databaseComponent: UnitInfoDatabaseComponent,
-  private val getterComponent: UnitGetterComponent,
-): ListRegistrar(databaseComponent, getterComponent) {
+open class ClassRegistrar(getterComponent: UnitGetterComponent, databaseComponent: UnitInfoDatabaseComponent):
+  AbstractRegister(getterComponent, databaseComponent) {
   fun register(unitClass: Class<out Any>) {
-    register(UnitIdentify(unitClass, null))
+    register(unitClass, null)
   }
   
   fun register(unitClass: Class<out Any>, name: String?) {
-    register(UnitIdentify(unitClass, name))
+    register(unitClass, name, RegisterOptions())
+  }
+  
+  fun register(unitClass: Class<out Any>, name: String?, registerOptions: RegisterOptions) {
+    register(UnitIdentify(unitClass, name), registerOptions)
   }
   
   fun register(identify: UnitIdentify<out Any>) {
-    register(mutableListOf(identify))
+    register(identify, RegisterOptions())
+  }
+  
+  fun register(identify: UnitIdentify<out Any>, registerOptions: RegisterOptions) {
+    registerTask(identify, registerOptions).invoke()
   }
 }
