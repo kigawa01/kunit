@@ -1,8 +1,6 @@
 package net.kigawa.kutil.unit.component.container
 
-import net.kigawa.kutil.unit.component.UnitContainerConponentsHolder
-import net.kigawa.kutil.unit.exception.NoFoundUnitException
-import net.kigawa.kutil.unit.exception.NoSingleUnitException
+import net.kigawa.kutil.unit.exception.*
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import java.util.*
 import java.util.concurrent.*
@@ -20,30 +18,19 @@ interface UnitContainer: AutoCloseable {
     }
   }
   
-  fun removeUnitAsync(unitClass: Class<*>, name: String?): FutureTask<MutableList<Throwable>>
-  fun removeUnit(unitClass: Class<*>): MutableList<Throwable> {
-    return removeUnit(unitClass, null)
+  fun removeUnit(unitClass: Class<out Any>) {
+    removeUnit(unitClass, null)
   }
   
-  fun removeUnit(unitClass: Class<*>, name: String?): MutableList<Throwable> {
-    return try {
-      initUnitsAsync(unitClass, name).get(conponents.timeoutSec, TimeUnit.SECONDS)
-    } catch (e: TimeoutException) {
-      val cause = e.cause
-      if (cause == null) mutableListOf(e)
-      else mutableListOf(cause)
-    }
+  fun removeUnit(unitClass: Class<out Any>, name: String?) {
+    removeUnit(UnitIdentify(unitClass, name))
   }
   
-  fun addUnit(unit: Any, name: String?)
-  fun addUnit(unit: Any) {
-    addUnit(unit, null)
-  }
-  
+  fun removeUnit(identify: UnitIdentify<out Any>)
   fun getIdentifies(): MutableList<UnitIdentify<*>>
   
   @Throws(NoSingleUnitException::class)
-  fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T>
+  fun <T> getUnitList(identify: UnitIdentify<T>): List<T>
   
   @Throws(NoSingleUnitException::class)
   fun <T> getUnitList(unitClass: Class<T>): List<T> {
@@ -51,23 +38,33 @@ interface UnitContainer: AutoCloseable {
   }
   
   @Throws(NoSingleUnitException::class)
+  fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T> {
+    return getUnitList(UnitIdentify(unitClass, name))
+  }
+  
+  @Throws(NoSingleUnitException::class)
   fun <T> getUnit(unitClass: Class<T>): T {
     return getUnit(unitClass, null)
   }
   
-  
   @Throws(NoSingleUnitException::class)
   fun <T> getUnit(unitClass: Class<T>, name: String?): T {
-    var units = getUnitList(unitClass, name)
+    return getUnit(UnitIdentify(unitClass, name))
+  }
+  
+  
+  @Throws(NoSingleUnitException::class)
+  fun <T> getUnit(identify: UnitIdentify<T>): T {
+    var units = getUnitList(identify)
     if (units.isEmpty()) {
-      units = getUnitList(unitClass)
-      if (units.isEmpty()) throw NoFoundUnitException(unitClass, name, "unit is not found")
+      units = getUnitList(identify.unitClass)
+      if (units.isEmpty()) throw UnitException("unit is not found", identify)
     }
     if (units.size == 1) {
       return units[0]
     }
-    throw NoSingleUnitException(unitClass, name, "unit is not single count: ${units.size}")
+    throw UnitException("unit is not single count: ${units.size}", identify)
   }
   
-  fun <T> contain(unitClass: Class<T>, name: String?): Boolean
+  fun <T> contain(identify: UnitIdentify<T>): Boolean
 }

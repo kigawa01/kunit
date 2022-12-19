@@ -21,7 +21,7 @@ class UnitGetterComponentImpl(
     getterClasses.remove(getterClass)
   }
   
-  override fun findGetter(identify: UnitIdentify<Any>, options: List<RegisterOption>): UnitGetter {
+  override fun findGetter(identify: UnitIdentify<out Any>, options: List<RegisterOption>): UnitGetter {
     for (getterClass in getterClasses.reversed()) {
       val getter = loggerComponent.catch(null, "") {
         container.getUnit(getterClass)

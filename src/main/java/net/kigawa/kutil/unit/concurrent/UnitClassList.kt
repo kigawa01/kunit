@@ -1,8 +1,10 @@
 package net.kigawa.kutil.unit.concurrent
 
 import net.kigawa.kutil.unit.component.container.UnitContainer
+import net.kigawa.kutil.unit.extension.registrar.ClassRegistrar
 
 class UnitClassList<T: Any>(private val container: UnitContainer) {
+  private val registrar = container.getUnit(ClassRegistrar::class.java)
   private val list = ConcurrentList<Class<out T>>()
   
   @Synchronized
@@ -11,7 +13,7 @@ class UnitClassList<T: Any>(private val container: UnitContainer) {
   }
   
   fun add(unitClass: Class<out T>) {
-    container.addUnit(unitClass)
+    registrar.register(unitClass)
     list.add(unitClass)
   }
   

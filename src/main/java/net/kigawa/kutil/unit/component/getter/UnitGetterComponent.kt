@@ -7,5 +7,5 @@ import net.kigawa.kutil.unit.extension.registeroption.RegisterOption
 interface UnitGetterComponent {
   fun addGetter(getterClass: Class<out UnitGetter>)
   fun removeGetter(getterClass: Class<out UnitGetter>)
-  fun findGetter(identify: UnitIdentify<Any>, options: List<RegisterOption>): UnitGetter
+  fun findGetter(identify: UnitIdentify<out Any>, options: List<RegisterOption>): UnitGetter
 }
