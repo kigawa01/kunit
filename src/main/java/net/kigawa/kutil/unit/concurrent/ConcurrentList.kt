@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.concurrent
 
 import java.util.*
 
-class ConcurrentList<T: Any>() {
+class ConcurrentList<T: Any> {
   private var list = listOf<T>()
     @Synchronized get() {
       return LinkedList(field)
@@ -44,5 +44,13 @@ class ConcurrentList<T: Any>() {
   
   fun toMutableList(): MutableList<T> {
     return list.toMutableList()
+  }
+  
+  fun forEach(action: (T)->Unit) {
+    list.forEach(action)
+  }
+  
+  fun <R> flatMap(transform: (T)->Iterable<R>): List<R> {
+    return list.flatMap(transform)
   }
 }

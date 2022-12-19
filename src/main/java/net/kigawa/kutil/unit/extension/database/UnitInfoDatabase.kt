@@ -4,38 +4,18 @@ import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
 interface UnitInfoDatabase {
-  fun register(unitInfo: UnitInfo)
-  fun containAmbiguous(identify: UnitIdentify): Boolean {
-    return findInfoAmbiguous(identify).isNotEmpty()
-  }
+  fun register(unitInfo: UnitInfo<out Any>): Boolean
+  fun unregister(unitInfo: UnitInfo<out Any>)
   
-  fun contain(identify: UnitIdentify): Boolean {
-    return findInfo(identify).isNotEmpty()
-  }
-  
-  fun containStrict(identify: UnitIdentify): Boolean {
-    return findInfoStrict(identify) != null
-  }
-  
-  fun identifyList(): MutableList<UnitIdentify>
-  
-  /**
-   * find info by class, parents class and name
-   * if not found, find by class only
-   */
-  fun findInfoAmbiguous(identify: UnitIdentify): MutableList<UnitInfo> {
-    val list = findInfo(identify)
-    if (list.isNotEmpty()) return list
-    return findInfo(UnitIdentify(identify.unitClass, null))
-  }
+  fun identifyList(): MutableList<UnitIdentify<out Any>>
   
   /**
    * find info by class, parents class and name
    */
-  fun findInfo(identify: UnitIdentify): MutableList<UnitInfo>
+  fun <T: Any> findOneEquals(identify: UnitIdentify<T>): UnitInfo<T>
   
   /**
    * find info by equal class and name
    */
-  fun findInfoStrict(identify: UnitIdentify): UnitInfo?
+  fun <T: Any> findByClass(unitClass: Class<T>): MutableList<UnitInfo<T>>
 }

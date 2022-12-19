@@ -7,7 +7,7 @@ class UnitInfoDatabaseImpl: UnitInfoDatabase {
   private val infoList = mutableListOf<UnitInfo>()
   override fun register(unitInfo: UnitInfo) {
     synchronized(infoList) {
-      findInfoStrict(unitInfo.identify)?.let {infoList.remove(it)}
+      findByClass(unitInfo.identify)?.let {infoList.remove(it)}
       infoList.add(unitInfo)
     }
   }
@@ -18,13 +18,13 @@ class UnitInfoDatabaseImpl: UnitInfoDatabase {
     }.toMutableList()
   }
   
-  override fun findInfo(identify: UnitIdentify): MutableList<UnitInfo> {
+  override fun findOneEquals(identify: UnitIdentify): MutableList<UnitInfo> {
     return synchronized(infoList) {
       infoList.filter {it.identify.equalsOrSuperClass(identify)}
     }.toMutableList()
   }
   
-  override fun findInfoStrict(identify: UnitIdentify): UnitInfo? {
+  override fun findByClass(identify: UnitIdentify): UnitInfo? {
     return infoList.find {it.identify.equalsName(identify)}
   }
 }

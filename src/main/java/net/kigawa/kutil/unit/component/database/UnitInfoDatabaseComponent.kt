@@ -8,7 +8,7 @@ import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 interface UnitInfoDatabaseComponent {
   fun addDatabase(unitInfoDatabase: UnitInfoDatabase)
   fun removeDatabase(unitInfoDatabase: UnitInfoDatabase)
-  fun registerInfo(unitInfo: UnitInfo<*>)
+  fun registerInfo(unitInfo: UnitInfo<out Any>)
   fun unregisterInfo(unitInfo: UnitInfo<*>)
   fun <T: Any> findOneEquals(identify: UnitIdentify<T>): UnitInfo<T>?
   fun <T: Any> findByClass(unitClass: Class<T>): List<UnitInfo<T>>
