@@ -2,6 +2,7 @@ package net.kigawa.kutil.unit.component.info
 
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.util.Util
 
 interface UnitInfo<T: Any> {
   companion object {
@@ -13,4 +14,11 @@ interface UnitInfo<T: Any> {
   
   val identify: UnitIdentify<T>
   val getter: UnitGetter
+  fun get(): T {
+    return getter.get(identify)
+  }
+  
+  fun instanceOf(superClass: Class<out Any>): Boolean {
+    return Util.instanceOf(identify.unitClass, superClass)
+  }
 }

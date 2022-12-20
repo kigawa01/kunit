@@ -9,10 +9,10 @@ import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registrar.InstanceRegistrar
 
 class UnitInfoDatabaseComponentImpl(
-  private val instanceRegistrar: InstanceRegistrar,
   private val container: UnitContainer,
-  private val loggerComponent: ContainerLoggerComponent,
 ): UnitInfoDatabaseComponent {
+  private val loggerComponent = container.getUnit(ContainerLoggerComponent::class.java)
+  private val instanceRegistrar = container.getUnit(InstanceRegistrar::class.java)
   private val databases = ConcurrentList<UnitInfoDatabase>()
   override fun addDatabase(unitInfoDatabase: UnitInfoDatabase) {
     instanceRegistrar.register(unitInfoDatabase)
@@ -40,19 +40,10 @@ class UnitInfoDatabaseComponentImpl(
     }
   }
   
-  override fun <T: Any> findOneEquals(identify: UnitIdentify<T>): UnitInfo<T>? {
-    for (database in databases.toMutableList()) {
-      return loggerComponent.catch(null) {
-        database.findOneEquals(identify)
-      } ?: continue
-    }
-    return null
-  }
-  
-  override fun <T: Any> findByClass(unitClass: Class<T>): List<UnitInfo<T>> {
+  override fun <T: Any> findByIdentify(identify: UnitIdentify<T>): List<UnitInfo<T>> {
     return databases.flatMap {
       loggerComponent.catch(listOf()) {
-        it.findByClass(unitClass)
+        it.findByIdentify(identify)
       }
     }
   }

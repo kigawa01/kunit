@@ -8,13 +8,13 @@ import java.util.concurrent.*
 interface UnitContainer: AutoCloseable {
   companion object {
     @JvmStatic
-    fun create(vararg units: Any): UnitContainer {
-      return create(null, *units)
+    fun create(): UnitContainer {
+      return create(null)
     }
     
     @JvmStatic
-    fun create(parent: UnitContainerImpl?, vararg units: Any): UnitContainer {
-      return UnitContainerImpl(parent, *units)
+    fun create(parent: UnitContainerImpl?): UnitContainer {
+      return UnitContainerImpl(parent)
     }
   }
   
@@ -27,34 +27,33 @@ interface UnitContainer: AutoCloseable {
   }
   
   fun removeUnit(identify: UnitIdentify<out Any>)
-  fun getIdentifies(): MutableList<UnitIdentify<*>>
   
   @Throws(NoSingleUnitException::class)
-  fun <T> getUnitList(identify: UnitIdentify<T>): List<T>
+  fun <T: Any> getUnitList(identify: UnitIdentify<T>): List<T>
   
   @Throws(NoSingleUnitException::class)
-  fun <T> getUnitList(unitClass: Class<T>): List<T> {
+  fun <T: Any> getUnitList(unitClass: Class<T>): List<T> {
     return getUnitList(unitClass, null)
   }
   
   @Throws(NoSingleUnitException::class)
-  fun <T> getUnitList(unitClass: Class<T>, name: String?): List<T> {
+  fun <T: Any> getUnitList(unitClass: Class<T>, name: String?): List<T> {
     return getUnitList(UnitIdentify(unitClass, name))
   }
   
   @Throws(NoSingleUnitException::class)
-  fun <T> getUnit(unitClass: Class<T>): T {
+  fun <T: Any> getUnit(unitClass: Class<T>): T {
     return getUnit(unitClass, null)
   }
   
   @Throws(NoSingleUnitException::class)
-  fun <T> getUnit(unitClass: Class<T>, name: String?): T {
+  fun <T: Any> getUnit(unitClass: Class<T>, name: String?): T {
     return getUnit(UnitIdentify(unitClass, name))
   }
   
   
   @Throws(NoSingleUnitException::class)
-  fun <T> getUnit(identify: UnitIdentify<T>): T {
+  fun <T: Any> getUnit(identify: UnitIdentify<T>): T {
     var units = getUnitList(identify)
     if (units.isEmpty()) {
       units = getUnitList(identify.unitClass)
@@ -66,5 +65,7 @@ interface UnitContainer: AutoCloseable {
     throw UnitException("unit is not single count: ${units.size}", identify)
   }
   
-  fun <T> contain(identify: UnitIdentify<T>): Boolean
+  fun <T: Any> contain(identify: UnitIdentify<T>): Boolean {
+    return getUnitList(identify).isNotEmpty()
+  }
 }

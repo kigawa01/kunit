@@ -2,18 +2,11 @@ package net.kigawa.kutil.unit.concurrent
 
 import java.util.*
 
-class ConcurrentList<T: Any> {
-  private var list = listOf<T>()
+class ConcurrentList<T: Any>(vararg item: T) {
+  private var list = listOf(*item)
     @Synchronized get() {
       return LinkedList(field)
     }
-  
-  fun last(predicate: (T)->Boolean): T? {
-    for (item in reversed()) {
-      if (predicate(item)) return item
-    }
-    return null
-  }
   
   fun add(item: T): Boolean {
     return synchronized(this) {
@@ -33,7 +26,29 @@ class ConcurrentList<T: Any> {
     }
   }
   
-  @Synchronized
+  fun removeLast(): T {
+    return synchronized(this) {
+      val l = toMutableList()
+      val result = l.removeLast()
+      list = l
+      result
+    }
+  }
+  
+  fun last(predicate: (T)->Boolean): T? {
+    for (item in reversed()) {
+      if (predicate(item)) return item
+    }
+    return null
+  }
+  
+  fun first(predicate: (T)->Boolean): T? {
+    for (item in list) {
+      if (predicate(item)) return item
+    }
+    return null
+  }
+  
   fun filter(predicate: (T)->Boolean): List<T> {
     return list.filter(predicate)
   }
@@ -52,5 +67,9 @@ class ConcurrentList<T: Any> {
   
   fun <R> flatMap(transform: (T)->Iterable<R>): List<R> {
     return list.flatMap(transform)
+  }
+  
+  fun contain(predicate: (T)->Boolean): Boolean {
+    return first(predicate) != null
   }
 }
