@@ -3,27 +3,23 @@ package net.kigawa.kutil.unit.concurrent
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.extension.registrar.ClassRegistrar
 
-class UnitClassList<T: Any>(private val container: UnitContainer) {
+class UnitClassList<T: Any>(private val container: UnitContainer): ConcurrentList<Class<out T>>() {
   private val registrar = container.getUnit(ClassRegistrar::class.java)
-  private val list = ConcurrentList<Class<out T>>()
   
-  @Synchronized
-  fun last(predicate: (Class<out T>)->Boolean): Class<out T>? {
-    return list.last(predicate)
-  }
-  
-  fun add(unitClass: Class<out T>) {
+  override fun add(unitClass: Class<out T>): Boolean {
     registrar.register(unitClass)
-    list.add(unitClass)
+    return super.add(unitClass)
   }
   
-  fun remove(unitClass: Class<out T>) {
-    list.remove(unitClass)
-    container.removeUnit(unitClass)
+  override fun remove(item: Class<out T>): Boolean {
+    val result = super.remove(item)
+    container.removeUnit(item)
+    return result
   }
   
-  @Synchronized
-  fun filter(predicate: (Class<out T>)->Boolean): List<Class<out T>> {
-    return list.filter(predicate)
+  override fun removeLast(): Class<out T> {
+    val result = super.removeLast()
+    container.removeUnit(result)
+    return result
   }
 }

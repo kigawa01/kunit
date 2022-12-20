@@ -2,13 +2,13 @@ package net.kigawa.kutil.unit.concurrent
 
 import java.util.*
 
-class ConcurrentList<T: Any>(vararg item: T) {
+open class ConcurrentList<T: Any>(vararg item: T) {
   private var list = listOf(*item)
     @Synchronized get() {
       return LinkedList(field)
     }
   
-  fun add(item: T): Boolean {
+  open fun add(item: T): Boolean {
     return synchronized(this) {
       val l = toMutableList()
       val result = l.add(item)
@@ -17,7 +17,7 @@ class ConcurrentList<T: Any>(vararg item: T) {
     }
   }
   
-  fun remove(item: T): Boolean {
+  open fun remove(item: T): Boolean {
     return synchronized(this) {
       val l = toMutableList()
       val result = l.remove(item)
@@ -26,7 +26,7 @@ class ConcurrentList<T: Any>(vararg item: T) {
     }
   }
   
-  fun removeLast(): T {
+  open fun removeLast(): T {
     return synchronized(this) {
       val l = toMutableList()
       val result = l.removeLast()
