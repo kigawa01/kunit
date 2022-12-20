@@ -24,10 +24,10 @@ class ExecutorComponentImpl(
   
   override fun <T>callConstructor(constructor: Constructor<T>, initStack: InitStack): T {
     for (executorClass in executorClasses.reversed()) {
-      val executor = loggerComponent.catch(null, "") {
+      val executor = loggerComponent.catch(null) {
         container.getUnit(executorClass)
       } ?: continue
-      return loggerComponent.catch(null, "") {
+      return loggerComponent.catch(null) {
         executor.callConstructor(constructor, initStack)
       } ?: continue
     }
