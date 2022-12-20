@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.component.factory
 
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
-import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.concurrent.UnitClassList
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.factory.UnitFactory
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
@@ -11,7 +11,7 @@ class UnitFactoryComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
 ): UnitFactoryComponent {
-  private val factoryClasses = ConcurrentList<Class<out UnitFactory>>()
+  private val factoryClasses = UnitClassList<UnitFactory>(container)
   override fun <T: Any> init(identify: UnitIdentify<T>, stack: InitStack): T {
     stack.addIdentify(identify)
     for (factoryClass in factoryClasses.reversed()) {

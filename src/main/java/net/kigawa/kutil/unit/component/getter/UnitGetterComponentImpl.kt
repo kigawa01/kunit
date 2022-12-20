@@ -2,18 +2,17 @@ package net.kigawa.kutil.unit.component.getter
 
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
-import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.concurrent.UnitClassList
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOption
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 class UnitGetterComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
 ): UnitGetterComponent {
-  private val getterClasses = ConcurrentList<Class<out UnitGetter>>()
+  private val getterClasses = UnitClassList<UnitGetter>(container)
   override fun addGetter(getterClass: Class<out UnitGetter>) {
     getterClasses.add(getterClass)
   }
