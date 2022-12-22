@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unit.extension.identify.UnitIdentifies
+import net.kigawa.kutil.unit.component.UnitContainerConfig
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
-import net.kigawa.kutil.unit.extension.factory.NormalFactory
+import net.kigawa.kutil.unit.extension.registrar.*
 import net.kigawa.kutil.unit.util.Assertions
 import org.junit.jupiter.api.*
 import java.util.concurrent.ExecutorService
@@ -38,22 +38,16 @@ internal class UnitContainerTest: Assertions() {
     val closeable = AutoCloseable {
       closed = true
     }
-    con.addUnit(closeable)
+    con.getUnit(InstanceRegistrar::class.java).register(closeable)
     con.removeUnit(closeable.javaClass)
-      .forEach {throw Exception(it)}
     assertTrue(closed)
   }
   
   @Test
   fun testRegisterSameUnit() {
     val unit = con.getUnit(Unit4::class.java)
-    con.registerUnit(Unit4::class.java)
+    con.getUnit(ClassRegistrar::class.java).register(Unit4::class.java)
     assertSame(unit, con.getUnit(Unit4::class.java))
-  }
-  
-  @Test
-  fun testInitUseContainer() {
-    assertNotNull(NormalFactory.initByContainer(NoUnitClass::class.java, con))
   }
   
   @Test
@@ -66,17 +60,15 @@ internal class UnitContainerTest: Assertions() {
   
   companion object {
     private val executor = Executors.newCachedThreadPool()
-    private val con: UnitContainer = UnitContainer.create(executor)
+    private val con: UnitContainer = UnitContainer.create()
     
     @JvmStatic
     @BeforeAll
     fun beforeAll() {
-      con.timeoutSec = 5
-      con.executor = executor::execute
-      con.getIdentifies()
-      con.registerUnits(UnitIdentifies.create(UnitContainerTest::class.java)).forEach {throw Exception(it)}
-      con.registerUnit(NamedUnit::class.java, "b")
-      con.initUnits().forEach {throw Exception(it)}
+      con.getUnit(InstanceRegistrar::class.java).register(executor)
+      con.getUnit(UnitContainerConfig::class.java).timeoutSec = 5
+      con.getUnit(ResourceRegistrar::class.java).register(UnitContainerTest::class.java)
+      con.getUnit(ClassRegistrar::class.java).register(NamedUnit::class.java, "b")
     }
     
     @JvmStatic
