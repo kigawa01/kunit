@@ -6,9 +6,9 @@ import net.kigawa.kutil.unit.extension.registrar.ClassRegistrar
 class UnitClassList<T: Any>(private val container: UnitContainer): ConcurrentList<Class<out T>>() {
   private val registrar = container.getUnit(ClassRegistrar::class.java)
   
-  override fun add(unitClass: Class<out T>): Boolean {
-    registrar.register(unitClass)
-    return super.add(unitClass)
+  override fun add(item: Class<out T>): Boolean {
+    registrar.register(item)
+    return super.add(item)
   }
   
   override fun remove(item: Class<out T>): Boolean {

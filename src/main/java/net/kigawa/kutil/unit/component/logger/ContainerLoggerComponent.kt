@@ -6,12 +6,8 @@ import net.kigawa.kutil.unit.extension.registrarinfo.UnitRegistrarInfo
 import java.util.logging.Level
 
 interface ContainerLoggerComponent {
-  fun addLogger(logger: UnitRegistrarInfo<out ContainerLogger>)
-  fun removeLogger(logger: UnitRegistrarInfo<out ContainerLogger>)
-  fun log(level: Level, message: String, cause: Throwable? = null, identify: UnitIdentify<*>? = null) {
-    log(level, message, cause, identify?.unitClass, identify?.name)
-  }
-  
+  fun addLogger(logger: Class<out ContainerLogger>)
+  fun removeLogger(logger: Class<out ContainerLogger>)
   fun log(level: Level, message: String, cause: Throwable? = null, vararg item: Any?)
   
   fun <T> catch(default: T, vararg item: Any?, callable: ()->T): T {
