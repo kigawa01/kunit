@@ -6,6 +6,7 @@ import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.database.UnitInfoDatabase
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 import net.kigawa.kutil.unit.extension.registrar.InstanceRegistrar
 
 class UnitInfoDatabaseComponentImpl(
@@ -24,10 +25,10 @@ class UnitInfoDatabaseComponentImpl(
     container.removeUnit(unitInfoDatabase.javaClass)
   }
   
-  override fun registerInfo(unitInfo: UnitInfo<out Any>) {
+  override fun registerInfo(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions) {
     databases.last {
       loggerComponent.catch(default = false) {
-        it.register(unitInfo)
+        it.register(unitInfo, registerOptions)
       }
     }
   }

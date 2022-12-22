@@ -72,4 +72,8 @@ open class ConcurrentList<T: Any>(vararg item: T) {
   fun contain(predicate: (T)->Boolean): Boolean {
     return first(predicate) != null
   }
+  
+  fun <R> map(transform: (T)->R): List<R> {
+    return list.map(transform)
+  }
 }

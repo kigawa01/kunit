@@ -4,11 +4,12 @@ import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.database.UnitInfoDatabase
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 interface UnitInfoDatabaseComponent {
   fun addDatabase(unitInfoDatabase: UnitInfoDatabase)
   fun removeDatabase(unitInfoDatabase: UnitInfoDatabase)
-  fun registerInfo(unitInfo: UnitInfo<out Any>)
+  fun registerInfo(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions)
   fun unregisterInfo(unitInfo: UnitInfo<*>)
   fun <T: Any> findByIdentify(identify: UnitIdentify<T>): List<UnitInfo<T>>
   fun <T: Any> findByClass(unitClass: Class<T>): List<UnitInfo<T>> {
