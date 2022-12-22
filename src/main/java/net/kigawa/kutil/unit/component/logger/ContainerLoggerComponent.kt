@@ -1,8 +1,6 @@
 package net.kigawa.kutil.unit.component.logger
 
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.logger.ContainerLogger
-import net.kigawa.kutil.unit.extension.registrarinfo.UnitRegistrarInfo
 import java.util.logging.Level
 
 interface ContainerLoggerComponent {
