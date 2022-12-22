@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.executor
 
-import net.kigawa.kutil.unit.component.UnitContainerConponents
+import net.kigawa.kutil.unit.component.UnitContainerComponents
 import net.kigawa.kutil.unit.component.database.UnitInfoDatabaseComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.exception.UnitException
@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class InjectionExecutor(
   private val database: UnitInfoDatabaseComponent,
-  private val components: UnitContainerConponents,
+  private val components: UnitContainerComponents,
 ): UnitExecutor {
   override fun <T> callConstructor(constructor: Constructor<T>, stack: InitStack): T? {
     val parameters = constructor.parameters.map {

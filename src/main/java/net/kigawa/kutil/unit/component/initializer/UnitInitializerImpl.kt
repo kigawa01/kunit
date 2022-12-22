@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.component.initializer
 
 import net.kigawa.kutil.unit.*
-import net.kigawa.kutil.unit.component.UnitContainerConponents
+import net.kigawa.kutil.unit.component.UnitContainerComponents
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.component.database.*
@@ -9,7 +9,7 @@ import net.kigawa.kutil.unit.exception.*
 import net.kigawa.kutil.unit.component.UnitStatus
 import java.util.concurrent.*
 
-class UnitInitializerImpl(private val config: UnitContainerConponents): UnitInitializer {
+class UnitInitializerImpl(private val config: UnitContainerComponents): UnitInitializer {
   override fun <T> initUnits(unitClass: Class<T>, name: String?): MutableList<Throwable> {
     return try {
       initUnitsAsync(unitClass, name).get(config.timeoutSec, TimeUnit.SECONDS)

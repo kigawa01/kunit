@@ -5,9 +5,9 @@ import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.database.UnitInfoDatabaseComponent
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 
-interface UnitContainerConponentsHolder: UnitContainerConponents {
+interface UnitContainerComponentsHolder: UnitContainerComponents {
   
-  var conponents: UnitContainerConponents
+  var conponents: UnitContainerComponents
   override var timeoutSec: Long
     get() = conponents.timeoutSec
     set(value) {
