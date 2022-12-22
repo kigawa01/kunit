@@ -1,14 +1,11 @@
 package net.kigawa.kutil.unit.extension.closer
 
-import net.kigawa.kutil.unit.util.Util
+import net.kigawa.kutil.unit.component.info.UnitInfo
 
-class AutoCloseAbleCloser : UnitCloser {
-    override fun closeUnit(unit: Any) {
-        if (!isValid(unit)) return
-        (unit as AutoCloseable).close()
-    }
-
-    override fun isValid(unit: Any): Boolean {
-        return Util.instanceOf(unit.javaClass, AutoCloseable::class.java)
-    }
+class AutoCloseAbleCloser: UnitCloser {
+  override fun closeUnit(info: UnitInfo<out Any>): Boolean {
+    if (!info.instanceOf(AutoCloseable::class.java)) return false
+    (info.get() as AutoCloseable).close()
+    return true
+  }
 }
