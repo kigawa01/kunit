@@ -10,7 +10,7 @@ import java.util.concurrent.FutureTask
 class InstanceGetter(): UnitGetter {
   private var obj: Any? = null
   
-  override fun <T> get(identify: UnitIdentify<T>): T {
+  override fun <T: Any> get(identify: UnitIdentify<T>): T {
     @Suppress("UNCHECKED_CAST")
     return obj as T? ?: throw UnitException("unit is not initialized", identify)
   }
@@ -21,13 +21,13 @@ class InstanceGetter(): UnitGetter {
     return future
   }
   
-  override fun init(identify: UnitIdentify<out Any>, initStack: InitStack) {
+  override fun initGetter(identify: UnitIdentify<out Any>, initStack: InitStack) {
   }
   
   @Synchronized
   override fun register(identify: UnitIdentify<out Any>, options: RegisterOptions): Boolean {
     if (obj != null) return false
-    val instanceOption = options.find(InstanceOption::class.java) ?: return false
+    val instanceOption = options.firstOrNull(InstanceOption::class.java) ?: return false
     obj = instanceOption.instance
     return true
   }

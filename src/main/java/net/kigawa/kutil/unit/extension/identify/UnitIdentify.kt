@@ -28,4 +28,8 @@ class UnitIdentify<T>(
   override fun hashCode(): Int {
     return Objects.hash(unitClass, name)
   }
+  
+  fun instanceOf(superClass: Class<out Any>): Boolean {
+    return Util.instanceOf(unitClass, superClass)
+  }
 }

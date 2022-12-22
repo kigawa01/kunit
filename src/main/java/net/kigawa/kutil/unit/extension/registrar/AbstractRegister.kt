@@ -15,6 +15,6 @@ abstract class AbstractRegister(
     val getter = getterComponent.findGetter(identify, registerOptions)
     val info = UnitInfo.create(identify, getter)
     databaseComponent.registerInfo(info, registerOptions)
-    return {info.getter.init(identify, InitStack())}
+    return {info.getter.initGetter(identify, InitStack())}
   }
 }

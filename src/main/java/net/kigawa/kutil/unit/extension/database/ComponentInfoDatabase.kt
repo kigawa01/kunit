@@ -9,8 +9,7 @@ import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 class ComponentInfoDatabase: UnitInfoDatabase {
   private val infoList = ConcurrentList<UnitInfo<out Any>>()
   override fun register(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions): Boolean {
-    val opt = registerOptions.find(DefaultRegisterOption::class.java) ?: return false
-    if (opt != DefaultRegisterOption.COMPONENT) return false
+    if (registerOptions.contain(DefaultRegisterOption.COMPONENT)) return false
     infoList.add(unitInfo)
     return true
   }

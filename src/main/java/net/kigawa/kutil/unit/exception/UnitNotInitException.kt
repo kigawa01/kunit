@@ -10,6 +10,4 @@ class UnitNotInitException: UnitException {
   constructor(unitClass: Class<*>, name: String?, message: String): super(unitClass, name, message)
   constructor(unitClass: Class<*>, message: String, cause: Throwable?): super(unitClass, message, cause)
   constructor(unitClass: Class<*>, message: String): super(unitClass, message)
-  constructor(unitInfo: UnitInfo, message: String, cause: Throwable?): super(unitInfo, message, cause)
-  constructor(unitInfo: UnitInfo, message: String): super(unitInfo, message)
 }

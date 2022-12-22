@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.concurrent.ThreadLock
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOption
+import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
@@ -20,19 +20,19 @@ class SingletonGetter(
   private var registered = false
   private var initLock: ThreadLock? = null
   
-  override fun <T> get(identify: UnitIdentify<T>): T {
+  override fun <T: Any> get(identify: UnitIdentify<T>): T {
     @Suppress("UNCHECKED_CAST")
     return obj as T? ?: throw UnitException("unit is not initialized", identify)
   }
   
   override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): Future<T> {
-    return async.submit(identify){
-      init(identify,initStack)
+    return async.submit(identify) {
+      initGetter(identify, initStack)
       get(identify)
     }
   }
   
-  override fun init(identify: UnitIdentify<out Any>, initStack: InitStack) {
+  override fun initGetter(identify: UnitIdentify<out Any>, initStack: InitStack) {
     initLock?.block(components.timeoutSec, TimeUnit.SECONDS)
     synchronized(this) {
       if (obj != null) return
@@ -46,8 +46,7 @@ class SingletonGetter(
     }
   }
   
-  @Synchronized
-  override fun register(identify: UnitIdentify<out Any>, options: List<RegisterOption>): Boolean {
+  override fun register(identify: UnitIdentify<out Any>, options: RegisterOptions): Boolean {
     if (obj != null) return false
     if (registered) return false
     registered = true
