@@ -1,19 +1,43 @@
 package net.kigawa.kutil.unit.component.container
 
+import net.kigawa.kutil.unit.component.async.AsyncComponentImpl
 import net.kigawa.kutil.unit.component.closer.UnitCloserComponent
+import net.kigawa.kutil.unit.component.closer.UnitCloserComponentImpl
+import net.kigawa.kutil.unit.component.config.UnitContainerConfigImpl
 import net.kigawa.kutil.unit.component.database.UnitInfoDatabaseComponentImpl
+import net.kigawa.kutil.unit.component.executor.ExecutorComponentImpl
+import net.kigawa.kutil.unit.component.factory.UnitFactoryComponentImpl
+import net.kigawa.kutil.unit.component.getter.UnitGetterComponentImpl
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
+import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponentImpl
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.extension.registrar.ClassRegistrar
+import net.kigawa.kutil.unit.extension.registrar.InstanceRegistrar
 
 class UnitContainerImpl(
   private val parent: UnitContainer? = null,
 ): UnitContainer {
-  private val database = UnitInfoDatabaseComponentImpl(this)
   private val closerComponent = getUnit(UnitCloserComponent::class.java)
   private val componentClasses = ConcurrentList<Class<out Any>>()
-  private val loggerComponent = getUnit(ContainerLoggerComponent::class.java)
+  private val loggerComponent: ContainerLoggerComponent
+  private val database: UnitInfoDatabaseComponentImpl
+  
+  init {
+    loggerComponent = ContainerLoggerComponentImpl(this)
+    val factoryComponent = UnitFactoryComponentImpl(this, loggerComponent)
+    val asyncComponent = AsyncComponentImpl(this, loggerComponent)
+    database = UnitInfoDatabaseComponentImpl(this, loggerComponent)
+    val classRegistrar = ClassRegistrar(getterComponent, database)
+    val getterComponent = UnitGetterComponentImpl(this, loggerComponent, factoryComponent,asyncComponent,classRegistrar)
+    val closerComponent = UnitCloserComponentImpl(this, loggerComponent)
+    val config = UnitContainerConfigImpl()
+    val executorComponent = ExecutorComponentImpl(this, loggerComponent)
+    
+    val instanceRegistrar = InstanceRegistrar(classRegistrar)
+  }
+  
   override fun removeUnit(identify: UnitIdentify<out Any>) {
     database.findByIdentify(identify).filter {info->
       if (componentClasses.contain {info.instanceOf(it)}) return@filter true

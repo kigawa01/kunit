@@ -3,7 +3,6 @@ package net.kigawa.kutil.unit.component.executor
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
-import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.concurrent.UnitClassList
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.executor.UnitExecutor
@@ -15,11 +14,11 @@ class ExecutorComponentImpl(
 ): ExecutorComponent {
   private val executorClasses = UnitClassList<UnitExecutor>(container)
   override fun addExecutor(executorClass: Class<out UnitExecutor>) {
-    executorClasses.add(executorClass)
+    executorClasses.addContainer(executorClass)
   }
   
   override fun removeExecutor(executorClass: Class<out UnitExecutor>) {
-    executorClasses.remove(executorClass)
+    executorClasses.removeContainer(executorClass)
   }
   
   override fun <T>callConstructor(constructor: Constructor<T>, initStack: InitStack): T {

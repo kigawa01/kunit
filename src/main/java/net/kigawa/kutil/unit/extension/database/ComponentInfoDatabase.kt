@@ -2,9 +2,10 @@ package net.kigawa.kutil.unit.extension.database
 
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.extension.getter.InstanceGetter
+import net.kigawa.kutil.unit.extension.getter.UnitGetter
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
-import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
+import net.kigawa.kutil.unit.extension.registeroption.*
 
 class ComponentInfoDatabase: UnitInfoDatabase {
   private val infoList = ConcurrentList<UnitInfo<out Any>>()
@@ -15,6 +16,17 @@ class ComponentInfoDatabase: UnitInfoDatabase {
   }
   
   override fun unregister(unitInfo: UnitInfo<out Any>) {
+  }
+  
+  fun registerComponent(item: Any) {
+    val instanceGetter = InstanceGetter()
+    instanceGetter.register(UnitIdentify(item.javaClass, null), RegisterOptions(InstanceOption(item)))
+    registerComponent(item.javaClass, instanceGetter)
+  }
+  
+  fun registerComponent(itemClass: Class<out Any>, getter: UnitGetter) {
+    val unitInfo = UnitInfo.create(UnitIdentify(itemClass, null), getter)
+    infoList.add(unitInfo)
   }
   
   fun unregisterComponent(identify: UnitIdentify<out Any>) {

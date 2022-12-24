@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unit.component.UnitContainerConfig
+import net.kigawa.kutil.unit.component.config.UnitContainerConfig
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*

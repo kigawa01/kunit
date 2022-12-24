@@ -5,7 +5,6 @@ import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.UnitClassList
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 
 class UnitCloserComponentImpl(
   private val container: UnitContainer,
@@ -24,10 +23,10 @@ class UnitCloserComponentImpl(
   }
   
   override fun addCloser(closerClass: Class<out UnitCloser>) {
-    closerClasses.add(closerClass)
+    closerClasses.addContainer(closerClass)
   }
   
   override fun removeCloser(closerClass: Class<out UnitCloser>) {
-    closerClasses.remove(closerClass)
+    closerClasses.removeContainer(closerClass)
   }
 }

@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.getter
 
-import net.kigawa.kutil.unit.component.UnitContainerConfig
+import net.kigawa.kutil.unit.component.config.UnitContainerConfig
 import net.kigawa.kutil.unit.component.async.AsyncComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent

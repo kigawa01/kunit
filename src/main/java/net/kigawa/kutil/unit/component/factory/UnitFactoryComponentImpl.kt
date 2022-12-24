@@ -27,10 +27,10 @@ class UnitFactoryComponentImpl(
   }
   
   override fun addFactory(factoryClass: Class<out UnitFactory>) {
-    factoryClasses.remove(factoryClass)
+    factoryClasses.removeContainer(factoryClass)
   }
   
   override fun removeFactory(factoryClass: Class<out UnitFactory>) {
-    factoryClasses.add(factoryClass)
+    factoryClasses.addContainer(factoryClass)
   }
 }

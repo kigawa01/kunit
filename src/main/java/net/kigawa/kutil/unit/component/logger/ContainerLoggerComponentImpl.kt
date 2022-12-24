@@ -10,11 +10,11 @@ class ContainerLoggerComponentImpl(
 ): ContainerLoggerComponent {
   private val loggerClasses = UnitClassList<ContainerLogger>(container)
   override fun addLogger(logger: Class<out ContainerLogger>) {
-    loggerClasses.add(logger)
+    loggerClasses.addContainer(logger)
   }
   
   override fun removeLogger(logger: Class<out ContainerLogger>) {
-    loggerClasses.remove(logger)
+    loggerClasses.removeContainer(logger)
   }
   
   override fun log(level: Level, message: String, cause: Throwable?, vararg item: Any?) {

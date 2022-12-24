@@ -10,8 +10,9 @@ import net.kigawa.kutil.unit.extension.registrar.InstanceRegistrar
 class AsyncComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
-  private val instanceRegistrar: InstanceRegistrar,
 ): AsyncComponent {
+  private val instanceRegistrar
+    get() = container.getUnit(InstanceRegistrar::class.java)
   private val executors = ConcurrentList<AsyncExecutor>()
   override fun addAsyncExecutor(async: AsyncExecutor) {
     instanceRegistrar.register(async)
