@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.component.getter
 
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 interface UnitGetterComponent {

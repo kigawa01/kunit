@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.extension.database
 
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 class DefaultInfoDatabase: UnitInfoDatabase {

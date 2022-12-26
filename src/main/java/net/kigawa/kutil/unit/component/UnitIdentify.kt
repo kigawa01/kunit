@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.identify
+package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.util.Util
 import java.util.*

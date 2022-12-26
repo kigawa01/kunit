@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.exception.UnitException
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 import java.io.File
 import java.net.URL
 

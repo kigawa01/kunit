@@ -3,22 +3,22 @@ package net.kigawa.kutil.unit.component.async
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unit.extension.async.AsyncExecutor
+import net.kigawa.kutil.unit.extension.async.UnitAsyncExecutor
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 
 class UnitAsyncComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
   private val database: ComponentInfoDatabase,
 ): UnitAsyncComponent {
-  private val executors = ConcurrentList<Class<out AsyncExecutor>>()
-  override fun addAsyncExecutor(asyncClass: Class<out AsyncExecutor>) {
+  private val executors = ConcurrentList<Class<out UnitAsyncExecutor>>()
+  override fun addAsyncExecutor(asyncClass: Class<out UnitAsyncExecutor>) {
     database.registerComponentClass(asyncClass)
     executors.add(asyncClass)
   }
   
-  override fun removeAsyncExecutor(asyncClass: Class<out AsyncExecutor>) {
+  override fun removeAsyncExecutor(asyncClass: Class<out UnitAsyncExecutor>) {
     executors.remove(asyncClass)
     database.unregisterComponent(asyncClass)
   }

@@ -4,14 +4,14 @@ import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.database.UnitDatabaseComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.exception.UnitException
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 import java.lang.reflect.Constructor
 import java.util.concurrent.TimeUnit
 
-class InjectionExecutor(
+class InjectionReflectionExecutor(
   private val database: UnitDatabaseComponent,
   private val components: UnitConfigComponent,
-): UnitExecutor {
+): UnitReflectionExecutor {
   override fun <T> callConstructor(constructor: Constructor<T>, stack: InitStack): T? {
     val parameters = constructor.parameters.map {
       val identify = UnitIdentify(it.type, it.name)

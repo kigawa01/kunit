@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.component.factory
 
 import net.kigawa.kutil.unit.exception.UnitException
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 import java.util.*
 
 class InitStack(

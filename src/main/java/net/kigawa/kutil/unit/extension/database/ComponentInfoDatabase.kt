@@ -5,7 +5,7 @@ import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.getter.InstanceGetter
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.*
 
 class ComponentInfoDatabase(

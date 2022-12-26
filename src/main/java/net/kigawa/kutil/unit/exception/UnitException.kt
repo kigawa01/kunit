@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.exception
 
 import net.kigawa.kutil.unit.component.info.UnitInfo
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 
 open class UnitException: RuntimeException {
   constructor(message: String, cause: Throwable?, vararg obj: Any?): super(

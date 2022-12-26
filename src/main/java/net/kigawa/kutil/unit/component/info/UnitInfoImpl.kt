@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.component.info
 
 import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 
 class UnitInfoImpl<T: Any>(
   identify: UnitIdentify<T>,

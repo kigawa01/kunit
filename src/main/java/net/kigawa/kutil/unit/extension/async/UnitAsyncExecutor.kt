@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.extension.async
 
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 
-interface AsyncExecutor {
+interface UnitAsyncExecutor {
   fun execute(identify: UnitIdentify<out Any>, runnable: Runnable):Boolean
 }

@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.component.container
 
 import net.kigawa.kutil.unit.exception.*
-import net.kigawa.kutil.unit.extension.identify.UnitIdentify
+import net.kigawa.kutil.unit.component.UnitIdentify
 import java.util.*
 import java.util.concurrent.*
 
