@@ -1,35 +1,33 @@
 package net.kigawa.kutil.unit.component.database
 
-import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.extension.database.UnitInfoDatabase
+import net.kigawa.kutil.unit.extension.database.*
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
-import net.kigawa.kutil.unit.extension.registrar.InstanceRegistrar
 
 class UnitInfoDatabaseComponentImpl(
-  private val container: UnitContainer,
-  private val loggerComponent: ContainerLoggerComponent,
+  private val componentDatabase: ComponentInfoDatabase,
 ): UnitInfoDatabaseComponent {
-  private val instanceRegistrar
-    get() = container.getUnit(InstanceRegistrar::class.java)
-  private val databases = ConcurrentList<UnitInfoDatabase>()
+  lateinit var loggerComponent: ContainerLoggerComponent
+  private val databases = ConcurrentList<UnitInfoDatabase>(componentDatabase)
   
   init {
-    val componentDatabase = ComponentInfoDatabase()
-    databases.add(componentDatabase)
+    addDatabase(DefaultInfoDatabase())
+  }
+  
+  override fun getComponentDatabase(): ComponentInfoDatabase {
+    return componentDatabase
   }
   
   override fun addDatabase(unitInfoDatabase: UnitInfoDatabase) {
     databases.add(unitInfoDatabase)
-    instanceRegistrar.register(unitInfoDatabase)
+    componentDatabase.registerComponent(unitInfoDatabase)
   }
   
   override fun removeDatabase(unitInfoDatabase: UnitInfoDatabase) {
-    container.removeUnit(unitInfoDatabase.javaClass)
+    componentDatabase.unregisterComponent(unitInfoDatabase.javaClass)
     databases.remove(unitInfoDatabase)
   }
   

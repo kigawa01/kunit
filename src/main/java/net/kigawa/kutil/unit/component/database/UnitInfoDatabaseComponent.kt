@@ -2,11 +2,14 @@ package net.kigawa.kutil.unit.component.database
 
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.exception.UnitException
+import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.database.UnitInfoDatabase
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 interface UnitInfoDatabaseComponent {
+  fun getComponentDatabase(): ComponentInfoDatabase
+  
   fun addDatabase(unitInfoDatabase: UnitInfoDatabase)
   fun removeDatabase(unitInfoDatabase: UnitInfoDatabase)
   fun registerInfo(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions)

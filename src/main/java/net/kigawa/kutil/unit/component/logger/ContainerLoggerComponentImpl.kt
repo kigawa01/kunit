@@ -1,20 +1,31 @@
 package net.kigawa.kutil.unit.component.logger
 
 import net.kigawa.kutil.unit.component.container.UnitContainer
-import net.kigawa.kutil.unit.concurrent.UnitClassList
+import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.logger.ContainerLogger
+import net.kigawa.kutil.unit.extension.logger.ContainerMessageStore
 import java.util.logging.Level
 
 class ContainerLoggerComponentImpl(
   private val container: UnitContainer,
+  private val database: ComponentInfoDatabase,
 ): ContainerLoggerComponent {
-  private val loggerClasses = UnitClassList<ContainerLogger>(container)
+  private val loggerClasses = ConcurrentList<Class<out ContainerLogger>>()
+  
+  init {
+    database.registerComponent(ContainerMessageStore())
+    loggerClasses.add(ContainerMessageStore::class.java)
+  }
+  
   override fun addLogger(logger: Class<out ContainerLogger>) {
-    loggerClasses.addContainer(logger)
+    database.registerComponentClass(logger)
+    loggerClasses.add(logger)
   }
   
   override fun removeLogger(logger: Class<out ContainerLogger>) {
-    loggerClasses.removeContainer(logger)
+    loggerClasses.remove(logger)
+    database.unregisterComponent(logger)
   }
   
   override fun log(level: Level, message: String, cause: Throwable?, vararg item: Any?) {

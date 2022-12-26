@@ -12,6 +12,7 @@ import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponentImpl
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registrar.ClassRegistrar
 import net.kigawa.kutil.unit.extension.registrar.InstanceRegistrar
@@ -25,12 +26,17 @@ class UnitContainerImpl(
   private val database: UnitInfoDatabaseComponentImpl
   
   init {
-    loggerComponent = ContainerLoggerComponentImpl(this)
+    val componentInfoDatabase = ComponentInfoDatabase()
+    database = UnitInfoDatabaseComponentImpl(componentInfoDatabase)
+    loggerComponent = ContainerLoggerComponentImpl(this, componentInfoDatabase)
+    database.loggerComponent = loggerComponent
     val factoryComponent = UnitFactoryComponentImpl(this, loggerComponent)
     val asyncComponent = AsyncComponentImpl(this, loggerComponent)
-    database = UnitInfoDatabaseComponentImpl(this, loggerComponent)
+    val getterComponent =
+      UnitGetterComponentImpl(this, loggerComponent, factoryComponent, asyncComponent, componentInfoDatabase)
+    componentInfoDatabase.getterComponent = getterComponent
+    
     val classRegistrar = ClassRegistrar(getterComponent, database)
-    val getterComponent = UnitGetterComponentImpl(this, loggerComponent, factoryComponent,asyncComponent,classRegistrar)
     val closerComponent = UnitCloserComponentImpl(this, loggerComponent)
     val config = UnitContainerConfigImpl()
     val executorComponent = ExecutorComponentImpl(this, loggerComponent)

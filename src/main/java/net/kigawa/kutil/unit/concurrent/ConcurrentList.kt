@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit.concurrent
 
-import java.util.*
-
-open class ConcurrentList<T: Any>(vararg item: T) {
-  private var list = listOf(*item)
+open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
+  private var list = listOf<T>()
     @Synchronized get() {
-      return LinkedList(field)
+      val list = mutableListOf(*immutableItem)
+      list.addAll(field)
+      return list
     }
   
   open fun add(item: T): Boolean {
