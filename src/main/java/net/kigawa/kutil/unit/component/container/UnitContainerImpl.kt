@@ -50,9 +50,9 @@ class UnitContainerImpl(
     factoryComponent.addFactory(KotlinObjectFactory::class.java)
     
     // その他
-    val closerComponent = UnitCloserComponentImpl(this, loggerComponent)
+    val closerComponent = UnitCloserComponentImpl(this, loggerComponent, componentDatabase)
     val unitConfigComponent = UnitConfigComponentImpl()
-    val reflectionComponent = UnitReflectionComponentImpl(this, loggerComponent)
+    val reflectionComponent = UnitReflectionComponentImpl(this, loggerComponent, componentDatabase)
     
     // コンポーネントの登録
     componentDatabase.registerComponent(componentDatabase)
