@@ -6,9 +6,9 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 
-interface AsyncComponent {
-  fun addAsyncExecutor(async: AsyncExecutor)
-  fun removeAsyncExecutor(async: AsyncExecutor)
+interface UnitAsyncComponent {
+  fun addAsyncExecutor(asyncClass: Class<out AsyncExecutor>)
+  fun removeAsyncExecutor(asyncClass: Class<out AsyncExecutor>)
   fun execute(identify: UnitIdentify<out Any>, runnable: Runnable)
   fun <T> submit(identify: UnitIdentify<out Any>, callable: Callable<T>): Future<T> {
     val future = FutureTask(callable)

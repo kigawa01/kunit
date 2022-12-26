@@ -4,30 +4,29 @@ import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.async.AsyncExecutor
+import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
-import net.kigawa.kutil.unit.extension.registrar.InstanceRegistrar
 
-class AsyncComponentImpl(
+class UnitAsyncComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
-): AsyncComponent {
-  private val instanceRegistrar
-    get() = container.getUnit(InstanceRegistrar::class.java)
-  private val executors = ConcurrentList<AsyncExecutor>()
-  override fun addAsyncExecutor(async: AsyncExecutor) {
-    instanceRegistrar.register(async)
-    executors.add(async)
+  private val database: ComponentInfoDatabase,
+): UnitAsyncComponent {
+  private val executors = ConcurrentList<Class<out AsyncExecutor>>()
+  override fun addAsyncExecutor(asyncClass: Class<out AsyncExecutor>) {
+    database.registerComponentClass(asyncClass)
+    executors.add(asyncClass)
   }
   
-  override fun removeAsyncExecutor(async: AsyncExecutor) {
-    executors.remove(async)
-    container.removeUnit(async.javaClass)
+  override fun removeAsyncExecutor(asyncClass: Class<out AsyncExecutor>) {
+    executors.remove(asyncClass)
+    database.unregisterComponent(asyncClass)
   }
   
   override fun execute(identify: UnitIdentify<out Any>, runnable: Runnable) {
     executors.last {
       loggerComponent.catch(false) {
-        it.execute(identify, runnable)
+        container.getUnit(it).execute(identify, runnable)
       }
     }
   }

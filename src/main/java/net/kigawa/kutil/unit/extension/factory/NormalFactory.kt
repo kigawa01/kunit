@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.extension.factory
 
 import net.kigawa.kutil.unit.annotation.Inject
-import net.kigawa.kutil.unit.component.executor.ExecutorComponent
+import net.kigawa.kutil.unit.component.executor.UnitExecutorComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
@@ -9,7 +9,7 @@ import java.lang.reflect.Constructor
 import java.util.*
 
 class NormalFactory(
-  private val executorComponent: ExecutorComponent,
+  private val executorComponent: UnitExecutorComponent,
 ): UnitFactory {
   
   override fun <T: Any> init(identify: UnitIdentify<T>, initStack: InitStack): T {

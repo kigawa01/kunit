@@ -8,10 +8,10 @@ import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.executor.UnitExecutor
 import java.lang.reflect.Constructor
 
-class ExecutorComponentImpl(
+class UnitExecutorComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
-): ExecutorComponent {
+): UnitExecutorComponent {
   private val executorClasses = UnitClassList<UnitExecutor>(container)
   override fun addExecutor(executorClass: Class<out UnitExecutor>) {
     executorClasses.addContainer(executorClass)

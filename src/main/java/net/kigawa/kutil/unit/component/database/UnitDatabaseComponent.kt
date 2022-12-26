@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.extension.database.UnitInfoDatabase
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
-interface UnitInfoDatabaseComponent {
+interface UnitDatabaseComponent {
   fun getComponentDatabase(): ComponentInfoDatabase
   
   fun addDatabase(unitInfoDatabase: UnitInfoDatabase)

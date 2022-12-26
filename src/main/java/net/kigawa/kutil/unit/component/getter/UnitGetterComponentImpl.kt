@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.component.getter
 
-import net.kigawa.kutil.unit.component.async.AsyncComponent
+import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
@@ -15,7 +15,7 @@ class UnitGetterComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,
   factoryComponent: UnitFactoryComponent,
-  asyncComponent: AsyncComponent,
+  asyncComponent: UnitAsyncComponent,
   private val database: ComponentInfoDatabase,
 ): UnitGetterComponent {
   private val getterClasses = ConcurrentList<Class<out UnitGetter>>()

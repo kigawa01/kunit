@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.extension.getter
 
-import net.kigawa.kutil.unit.component.config.UnitContainerConfig
-import net.kigawa.kutil.unit.component.async.AsyncComponent
+import net.kigawa.kutil.unit.component.config.UnitConfigComponent
+import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.concurrent.ThreadLock
@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit
 
 class SingletonGetter(
   private val factoryComponent: UnitFactoryComponent,
-  private val async: AsyncComponent,
-  private val components: UnitContainerConfig,
+  private val async: UnitAsyncComponent,
+  private val components: UnitConfigComponent,
 ): UnitGetter {
   private var obj: Any? = null
   private var registered = false

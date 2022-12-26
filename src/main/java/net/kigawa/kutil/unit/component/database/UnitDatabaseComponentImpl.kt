@@ -7,9 +7,9 @@ import net.kigawa.kutil.unit.extension.database.*
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
-class UnitInfoDatabaseComponentImpl(
+class UnitDatabaseComponentImpl(
   private val componentDatabase: ComponentInfoDatabase,
-): UnitInfoDatabaseComponent {
+): UnitDatabaseComponent {
   lateinit var loggerComponent: ContainerLoggerComponent
   private val databases = ConcurrentList<UnitInfoDatabase>(componentDatabase)
   

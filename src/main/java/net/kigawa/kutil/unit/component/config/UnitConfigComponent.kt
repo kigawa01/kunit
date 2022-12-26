@@ -1,5 +1,5 @@
 package net.kigawa.kutil.unit.component.config
 
-interface UnitContainerConfig {
+interface UnitConfigComponent {
   var timeoutSec: Long
 }

@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unit.component.config.UnitContainerConfig
+import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
@@ -66,7 +66,7 @@ internal class UnitContainerTest: Assertions() {
     @BeforeAll
     fun beforeAll() {
       con.getUnit(InstanceRegistrar::class.java).register(executor)
-      con.getUnit(UnitContainerConfig::class.java).timeoutSec = 5
+      con.getUnit(UnitConfigComponent::class.java).timeoutSec = 5
       con.getUnit(ResourceRegistrar::class.java).register(UnitContainerTest::class.java)
       con.getUnit(ClassRegistrar::class.java).register(NamedUnit::class.java, "b")
     }

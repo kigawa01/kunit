@@ -1,5 +1,5 @@
 package net.kigawa.kutil.unit.component.config
 
-class UnitContainerConfigImpl(): UnitContainerConfig {
+class UnitConfigComponentImpl(): UnitConfigComponent {
   override var timeoutSec: Long = 10
 }

@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.getter
 
-import net.kigawa.kutil.unit.component.async.AsyncComponent
+import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.extension.identify.UnitIdentify
@@ -10,7 +10,7 @@ import java.util.concurrent.Future
 
 class InitializeGetter(
   private val factoryComponent: UnitFactoryComponent,
-  private val asyncComponent: AsyncComponent,
+  private val asyncComponent: UnitAsyncComponent,
 ): UnitGetter {
   override fun <T: Any> get(identify: UnitIdentify<T>): T {
     return factoryComponent.init(identify, InitStack())
