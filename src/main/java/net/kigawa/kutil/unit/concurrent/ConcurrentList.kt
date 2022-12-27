@@ -76,4 +76,8 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   fun <R> map(transform: (T)->R): List<R> {
     return list.map(transform)
   }
+  
+  override fun toString(): String {
+    return "ConcurrentList(immutableItem=${immutableItem.contentToString()}, list=$list)"
+  }
 }

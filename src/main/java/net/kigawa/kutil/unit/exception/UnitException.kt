@@ -6,7 +6,7 @@ import net.kigawa.kutil.unit.component.UnitIdentify
 open class UnitException: RuntimeException {
   constructor(message: String, cause: Throwable?, vararg obj: Any?): super(
     "$message\n" +
-    obj.joinToString("\n", transform = {it?.let {String.format("\t%-10s :$it", it.javaClass.name)} ?: ""}),
+    obj.joinToString("\n", transform = {it?.let {String.format("\t %-10s :$it", it.javaClass.name)} ?: ""}),
     cause
   )
   

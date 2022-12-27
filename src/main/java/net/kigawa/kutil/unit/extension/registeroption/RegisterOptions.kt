@@ -19,4 +19,8 @@ class RegisterOptions(vararg option: RegisterOption) {
     if (contain(option)) return true
     return false
   }
+  
+  override fun toString(): String {
+    return "RegisterOptions(options=$options)"
+  }
 }

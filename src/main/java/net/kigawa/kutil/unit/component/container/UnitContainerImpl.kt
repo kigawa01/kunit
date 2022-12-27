@@ -21,11 +21,12 @@ import net.kigawa.kutil.unit.extension.executor.InjectionReflectionExecutor
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.registrar.*
+import java.util.concurrent.Callable
 
 class UnitContainerImpl(
   private val parent: UnitContainer? = null,
 ): UnitContainer {
-  private val closerComponent = getUnit(UnitCloserComponent::class.java)
+  private val closerComponent: UnitCloserComponent
   private val componentClasses = ConcurrentList<Class<out Any>>()
   private val loggerComponent: ContainerLoggerComponent
   private val databaseComponent: UnitDatabaseComponent
@@ -33,16 +34,23 @@ class UnitContainerImpl(
   init {
     // 登録に最低限必要
     val componentDatabase = ComponentInfoDatabase()
+    componentDatabase.registerComponent(componentDatabase)
     
-    databaseComponent = UnitDatabaseComponentImpl(componentDatabase)
-    loggerComponent = ContainerLoggerComponentImpl(this, componentDatabase)
+    databaseComponent = initComponent(componentDatabase) {UnitDatabaseComponentImpl(componentDatabase)}
+    loggerComponent = initComponent(componentDatabase) {ContainerLoggerComponentImpl(this, componentDatabase)}
     
     databaseComponent.loggerComponent = loggerComponent
     
-    val factoryComponent = UnitFactoryComponentImpl(this, loggerComponent, componentDatabase)
-    val asyncComponent = UnitAsyncComponentImpl(this, loggerComponent, componentDatabase)
-    val getterComponent =
+    val factoryComponent = initComponent(componentDatabase) {
+      UnitFactoryComponentImpl(this, loggerComponent, componentDatabase)
+    }
+    val asyncComponent = initComponent(componentDatabase) {
+      UnitAsyncComponentImpl(this, loggerComponent, componentDatabase)
+    }
+    val getterComponent = initComponent(componentDatabase) {
       UnitGetterComponentImpl(this, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
+    }
+    
     
     componentDatabase.getterComponent = getterComponent
     asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)
@@ -50,20 +58,13 @@ class UnitContainerImpl(
     factoryComponent.addFactory(KotlinObjectFactory::class.java)
     
     // その他
-    val closerComponent = UnitCloserComponentImpl(this, loggerComponent, componentDatabase)
-    val unitConfigComponent = UnitConfigComponentImpl()
-    val reflectionComponent = UnitReflectionComponentImpl(this, loggerComponent, componentDatabase)
-    
-    // コンポーネントの登録
-    componentDatabase.registerComponent(componentDatabase)
-    componentDatabase.registerComponent(databaseComponent)
-    componentDatabase.registerComponent(loggerComponent)
-    componentDatabase.registerComponent(factoryComponent)
-    componentDatabase.registerComponent(asyncComponent)
-    componentDatabase.registerComponent(getterComponent)
-    componentDatabase.registerComponent(closerComponent)
-    componentDatabase.registerComponent(unitConfigComponent)
-    componentDatabase.registerComponent(reflectionComponent)
+    closerComponent = initComponent(componentDatabase) {
+      UnitCloserComponentImpl(this, loggerComponent, componentDatabase)
+    }
+    initComponent(componentDatabase) {UnitConfigComponentImpl()}
+    val reflectionComponent = initComponent(componentDatabase) {
+      UnitReflectionComponentImpl(this, loggerComponent, componentDatabase)
+    }
     
     // 拡張機能の登録
     closerComponent.addCloser(AutoCloseAbleCloser::class.java)
@@ -75,6 +76,12 @@ class UnitContainerImpl(
     componentDatabase.registerComponentClass(FileClassRegistrar::class.java)
     componentDatabase.registerComponentClass(JarRegistrar::class.java)
     componentDatabase.registerComponentClass(ResourceRegistrar::class.java)
+  }
+  
+  private fun <T: Any> initComponent(componentInfoDatabase: ComponentInfoDatabase, callable: Callable<T>): T {
+    val result = callable.call()
+    componentInfoDatabase.registerComponent(result)
+    return result
   }
   
   override fun removeUnit(identify: UnitIdentify<out Any>) {

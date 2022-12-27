@@ -9,7 +9,7 @@ class UnitIdentify<T>(
 ) {
   override fun equals(other: Any?): Boolean {
     if (other !is UnitIdentify<*>) return false
-    if (javaClass != other.javaClass) return false
+    if (unitClass != other.unitClass) return false
     return equalsName(other)
   }
   
@@ -31,5 +31,9 @@ class UnitIdentify<T>(
   
   fun instanceOf(superClass: Class<out Any>): Boolean {
     return Util.instanceOf(unitClass, superClass)
+  }
+  
+  override fun toString(): String {
+    return "UnitIdentify(unitClass=$unitClass, name=$name)"
   }
 }
