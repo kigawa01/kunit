@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit.concurrent
 
+import java.util.*
+
 open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   private var list = listOf<T>()
     @Synchronized get() {
-      val list = mutableListOf(*immutableItem)
-      list.addAll(field)
-      return list
+      return LinkedList(field)
     }
   
   open fun add(item: T): Boolean {
@@ -43,30 +43,32 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   }
   
   fun first(predicate: (T)->Boolean): T? {
-    for (item in list) {
+    for (item in toMutableList()) {
       if (predicate(item)) return item
     }
     return null
   }
   
   fun filter(predicate: (T)->Boolean): List<T> {
-    return list.filter(predicate)
+    return toMutableList().filter(predicate)
   }
   
   fun reversed(): List<T> {
-    return list.reversed()
+    return toMutableList().reversed()
   }
   
   fun toMutableList(): MutableList<T> {
-    return list.toMutableList()
+    val list = mutableListOf(*immutableItem)
+    list.addAll(list)
+    return list
   }
   
   fun forEach(action: (T)->Unit) {
-    list.forEach(action)
+    toMutableList().forEach(action)
   }
   
   fun <R> flatMap(transform: (T)->Iterable<R>): List<R> {
-    return list.flatMap(transform)
+    return toMutableList().flatMap(transform)
   }
   
   fun contain(predicate: (T)->Boolean): Boolean {
@@ -74,7 +76,7 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   }
   
   fun <R> map(transform: (T)->R): List<R> {
-    return list.map(transform)
+    return toMutableList().map(transform)
   }
   
   override fun toString(): String {

@@ -34,7 +34,6 @@ class UnitContainerImpl(
   init {
     // 登録に最低限必要
     val componentDatabase = ComponentInfoDatabase()
-    componentDatabase.registerComponent(componentDatabase)
     
     databaseComponent = initComponent(componentDatabase) {UnitDatabaseComponentImpl(componentDatabase)}
     loggerComponent = initComponent(componentDatabase) {ContainerLoggerComponentImpl(this, componentDatabase)}

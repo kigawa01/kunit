@@ -1,14 +1,14 @@
 package net.kigawa.kutil.unit.component.info
 
 import net.kigawa.kutil.unit.annotation.Unit
-import net.kigawa.kutil.unit.extension.getter.UnitGetter
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.extension.getter.UnitGetter
 
 class UnitInfoImpl<T: Any>(
   identify: UnitIdentify<T>,
+  override val getter: UnitGetter,
 ): UnitInfo<T> {
   override val identify: UnitIdentify<T>
-  override lateinit var getter: UnitGetter
   
   init {
     val name = if (identify.name == null || identify.name == "") {
