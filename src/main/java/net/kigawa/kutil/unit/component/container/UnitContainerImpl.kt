@@ -52,18 +52,20 @@ class UnitContainerImpl(
     
     
     componentDatabase.getterComponent = getterComponent
-    asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)
-    factoryComponent.addFactory(NormalFactory::class.java)
+    
+    val reflectionComponent = initComponent(componentDatabase) {
+      UnitReflectionComponentImpl(this, loggerComponent, componentDatabase)
+    }
+    
+    factoryComponent.addFactory(NormalFactory(reflectionComponent))
     factoryComponent.addFactory(KotlinObjectFactory::class.java)
+    asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)
     
     // その他
     closerComponent = initComponent(componentDatabase) {
       UnitCloserComponentImpl(this, loggerComponent, componentDatabase)
     }
     initComponent(componentDatabase) {UnitConfigComponentImpl()}
-    val reflectionComponent = initComponent(componentDatabase) {
-      UnitReflectionComponentImpl(this, loggerComponent, componentDatabase)
-    }
     
     // 拡張機能の登録
     closerComponent.addCloser(AutoCloseAbleCloser::class.java)

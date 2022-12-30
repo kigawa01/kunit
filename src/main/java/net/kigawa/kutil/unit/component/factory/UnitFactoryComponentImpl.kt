@@ -1,12 +1,12 @@
 package net.kigawa.kutil.unit.component.factory
 
+import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.factory.UnitFactory
-import net.kigawa.kutil.unit.component.UnitIdentify
 
 class UnitFactoryComponentImpl(
   private val container: UnitContainer,
@@ -31,6 +31,11 @@ class UnitFactoryComponentImpl(
   override fun addFactory(factoryClass: Class<out UnitFactory>) {
     database.registerComponentClass(factoryClass)
     factoryClasses.add(factoryClass)
+  }
+  
+  fun addFactory(factory: UnitFactory) {
+    database.registerComponent(factory)
+    factoryClasses.add(factory.javaClass)
   }
   
   override fun removeFactory(factoryClass: Class<out UnitFactory>) {

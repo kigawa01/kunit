@@ -10,7 +10,7 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   
   open fun add(item: T): Boolean {
     return synchronized(this) {
-      val l = toMutableList()
+      val l = list.toMutableList()
       val result = l.add(item)
       list = l
       result
@@ -19,7 +19,7 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   
   open fun remove(item: T): Boolean {
     return synchronized(this) {
-      val l = toMutableList()
+      val l = list.toMutableList()
       val result = l.remove(item)
       list = l
       result
@@ -28,7 +28,7 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   
   open fun removeLast(): T {
     return synchronized(this) {
-      val l = toMutableList()
+      val l = list.toMutableList()
       val result = l.removeLast()
       list = l
       result
@@ -58,9 +58,9 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
   }
   
   fun toMutableList(): MutableList<T> {
-    val list = mutableListOf(*immutableItem)
-    list.addAll(list)
-    return list
+    val result = mutableListOf(*immutableItem)
+    result.addAll(list)
+    return result
   }
   
   fun forEach(action: (T)->Unit) {
