@@ -15,6 +15,11 @@ class UnitReflectionComponentImpl(
   private val database: ComponentInfoDatabase,
 ): UnitReflectionComponent {
   private val executorClasses = ConcurrentList<Class<out UnitReflectionExecutor>>()
+  fun addExecutor(executor: UnitReflectionExecutor) {
+    database.registerComponent(executor)
+    executorClasses.add(executor.javaClass)
+  }
+  
   override fun addExecutor(executorClass: Class<out UnitReflectionExecutor>) {
     database.registerComponentClass(executorClass)
     executorClasses.add(executorClass)
