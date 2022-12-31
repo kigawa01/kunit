@@ -1,22 +1,18 @@
 package net.kigawa.kutil.unit.exception
 
-import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.component.info.UnitInfo
 
 open class UnitException: RuntimeException {
   constructor(message: String, cause: Throwable?, vararg obj: Any?): super(
     "$message\n" +
-    obj.joinToString("\n", transform = {it?.let {String.format("\t %-10s :$it", it.javaClass.name)} ?: ""}),
+    obj.joinToString("\n", transform = {it?.let {String.format("\t %-20s :$it", it.javaClass.simpleName)} ?: ""}),
     cause
   )
   
   constructor(message: String, vararg obj: Any?): this(message, null, *obj)
-  constructor(unitClass: Class<*>? = null, name: String? = null, message: String, cause: Throwable? = null): super(
-    "$message\n" +
-    "\tclass: ${unitClass?.name}\n" +
-    "\tname: $name",
-    cause
-  )
+  constructor(unitClass: Class<*>? = null, name: String? = null, message: String, cause: Throwable? = null):
+          this(message = message, cause = cause, unitClass, name)
   
   constructor(unitClass: Class<*>, name: String?, message: String):
           this(unitClass, name, message, null)
