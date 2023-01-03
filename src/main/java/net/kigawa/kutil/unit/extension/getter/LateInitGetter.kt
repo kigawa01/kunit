@@ -1,26 +1,37 @@
 package net.kigawa.kutil.unit.extension.getter
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.AlwaysInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
+import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 import java.util.concurrent.Future
 
-@LateInit
-class InitializeGetter(
+@AlwaysInit
+class LateInitGetter(
   private val factoryComponent: UnitFactoryComponent,
-  private val asyncComponent: UnitAsyncComponent,
+  private val async: UnitAsyncComponent,
+  private val components: UnitConfigComponent,
 ): UnitGetter {
+  private var obj: Any? = null
+  private var registered = false
+  
   override fun <T: Any> get(identify: UnitIdentify<T>): T {
-    return factoryComponent.init(identify, InitStack())
+    synchronized(this) {
+      @Suppress("UNCHECKED_CAST")
+      if (obj != null) return obj as T
+      val obj = factoryComponent.init(identify, InitStack())
+      this.obj = obj
+      return obj
+    }
   }
   
   override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): Future<T> {
-    return asyncComponent.submit(identify) {
-      factoryComponent.init(identify, initStack)
+    return async.submit(identify) {
+      get(identify)
     }
   }
   
@@ -28,6 +39,9 @@ class InitializeGetter(
   }
   
   override fun register(identify: UnitIdentify<out Any>, options: RegisterOptions): Boolean {
-    return options.match(DefaultRegisterOption.ALWAYS_INIT, identify.unitClass)
+    if (obj != null) return false
+    if (registered) return false
+    registered = true
+    return options.match(DefaultRegisterOption.LATE_INIT, identify.unitClass)
   }
 }
