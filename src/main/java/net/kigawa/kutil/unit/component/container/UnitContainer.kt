@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.component.container
 
-import net.kigawa.kutil.unit.exception.*
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.exception.*
 import java.util.*
 import java.util.concurrent.*
 
@@ -57,7 +57,8 @@ interface UnitContainer: AutoCloseable {
     var units = getUnitList(identify)
     if (units.isEmpty()) {
       units = getUnitList(identify.unitClass)
-      if (units.isEmpty()) throw UnitException("unit is not found", identify)
+      if (units.isEmpty())
+        throw UnitException("unit is not found", identify)
     }
     if (units.size == 1) {
       return units[0]

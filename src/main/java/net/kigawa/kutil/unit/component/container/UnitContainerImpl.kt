@@ -14,7 +14,6 @@ import net.kigawa.kutil.unit.component.getter.UnitGetterComponentImpl
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponentImpl
-import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.closer.AutoCloseAbleCloser
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
@@ -29,7 +28,6 @@ class UnitContainerImpl(
   private val parent: UnitContainer? = null,
 ): UnitContainer {
   private val closerComponent: UnitCloserComponent
-  private val componentClasses = ConcurrentList<Class<out Any>>()
   private val loggerComponent: ContainerLoggerComponent
   private val databaseComponent: UnitDatabaseComponent
   
@@ -40,7 +38,7 @@ class UnitContainerImpl(
     databaseComponent = initComponent(componentDatabase) {UnitDatabaseComponentImpl(componentDatabase)}
     loggerComponent = initComponent(componentDatabase) {ContainerLoggerComponentImpl(this, componentDatabase)}
     
-    databaseComponent.loggerComponent = loggerComponent
+    databaseComponent.setLoggerComponent(loggerComponent)
     
     val factoryComponent = initComponent(componentDatabase) {
       UnitFactoryComponentImpl(this, loggerComponent, componentDatabase)
@@ -89,12 +87,10 @@ class UnitContainerImpl(
   }
   
   override fun removeUnit(identify: UnitIdentify<out Any>) {
-    databaseComponent.findByIdentify(identify).filter {info->
-      if (componentClasses.contain {info.instanceOf(it)}) return@filter true
+    databaseComponent.findByIdentify(identify).forEach {info->
       loggerComponent.catch(null) {
         removeInfo(info)
       }
-      false
     }
   }
   

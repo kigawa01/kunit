@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit.component.database
 
 import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.database.*
-import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 @LateInit
@@ -17,6 +17,10 @@ class UnitDatabaseComponentImpl(
   
   init {
     addDatabase(DefaultInfoDatabase())
+  }
+  
+  fun setLoggerComponent(loggerComponent: ContainerLoggerComponent) {
+    this.loggerComponent = loggerComponent
   }
   
   override fun getComponentDatabase(): ComponentInfoDatabase {

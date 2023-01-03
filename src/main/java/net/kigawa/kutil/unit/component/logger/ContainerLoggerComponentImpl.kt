@@ -4,7 +4,8 @@ import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.extension.logger.*
+import net.kigawa.kutil.unit.extension.logger.ContainerLogger
+import net.kigawa.kutil.unit.extension.logger.ContainerStdLogger
 import java.util.logging.Level
 
 @LateInit
@@ -15,8 +16,8 @@ class ContainerLoggerComponentImpl(
   private val loggerClasses = ConcurrentList<Class<out ContainerLogger>>()
   
   init {
-    database.registerComponent(ContainerMessageStore())
-    loggerClasses.add(ContainerMessageStore::class.java)
+    database.registerComponent(ContainerStdLogger())
+    loggerClasses.add(ContainerStdLogger::class.java)
   }
   
   override fun addLogger(logger: Class<out ContainerLogger>) {
