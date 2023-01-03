@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit.extension.logger
 
 import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.util.Util
 import java.io.PrintStream
 import java.util.logging.Level
 
@@ -16,10 +17,7 @@ class ContainerStdLogger: ContainerLogger {
   
   @Synchronized
   private fun log(stream: PrintStream, message: Message) {
-    message.message?.let(stream::println)
-    message.item.forEach {
-      it.let {stream.printf("\t %-20s :$it", it?.javaClass?.simpleName)}
-    }
+    Util.createLogMessageList(message.message, message.item).forEach(stream::println)
     message.cause?.printStackTrace(stream)
   }
 }

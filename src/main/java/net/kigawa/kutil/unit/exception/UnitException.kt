@@ -2,11 +2,11 @@ package net.kigawa.kutil.unit.exception
 
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.info.UnitInfo
+import net.kigawa.kutil.unit.util.Util
 
 open class UnitException: RuntimeException {
   constructor(message: String, cause: Throwable?, vararg obj: Any?): super(
-    "$message\n" +
-    obj.joinToString("\n", transform = {it?.let {String.format("\t %-20s :$it", it.javaClass.simpleName)} ?: ""}),
+    Util.createLogMessage(message, obj.toList()),
     cause
   )
   
