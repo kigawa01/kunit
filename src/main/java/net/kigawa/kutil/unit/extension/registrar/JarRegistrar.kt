@@ -1,8 +1,9 @@
 package net.kigawa.kutil.unit.extension.registrar
 
-import net.kigawa.kutil.unit.annotation.LateInit
-import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
+import net.kigawa.kutil.unit.annotation.*
+import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import java.net.JarURLConnection
 import java.net.URL
 import java.util.*
@@ -27,7 +28,9 @@ class JarRegistrar(
         if (!name.endsWith(".class")) continue
         name = name.replace('/', '.').replace(".class$".toRegex(), "")
         loggerComponent.catch(null) {
-          identifies.add(UnitIdentify(Class.forName(name), null))
+          val unitClass = Class.forName(name)
+          if (unitClass.isAnnotationPresent(Unit::class.java) || unitClass.isAnnotationPresent(Kunit::class.java))
+            identifies.add(UnitIdentify(unitClass, null))
         }
       }
     }
