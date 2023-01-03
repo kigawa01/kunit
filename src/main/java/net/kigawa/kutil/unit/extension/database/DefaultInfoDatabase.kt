@@ -1,9 +1,9 @@
 package net.kigawa.kutil.unit.extension.database
 
 import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 @LateInit
@@ -26,6 +26,6 @@ class DefaultInfoDatabase: UnitInfoDatabase {
   
   override fun <T: Any> findByIdentify(identify: UnitIdentify<T>): List<UnitInfo<T>> {
     @Suppress("UNCHECKED_CAST")
-    return infoList.filter {it.identify == identify} as List<UnitInfo<T>>
+    return infoList.filter {it.identify.equalsOrSuperClass(identify)} as List<UnitInfo<T>>
   }
 }

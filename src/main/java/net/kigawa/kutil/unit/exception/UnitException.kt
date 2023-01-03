@@ -34,7 +34,4 @@ open class UnitException: RuntimeException {
   
   constructor(message: String, cause: Throwable?):
           this(unitClass = null, message = message, cause = cause)
-  
-  constructor(message: String):
-          this(unitClass = null, message = message)
 }
