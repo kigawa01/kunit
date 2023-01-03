@@ -60,7 +60,7 @@ class UnitContainerImpl(
     val configComponent = initComponent(componentDatabase) {UnitConfigComponentImpl()}
     
     factoryComponent.addFactory(NormalFactory(reflectionComponent))
-    reflectionComponent.addExecutor(InjectionReflectionExecutor(databaseComponent, configComponent))
+    reflectionComponent.addExecutor(InjectionReflectionExecutor(databaseComponent, configComponent, loggerComponent))
     
     factoryComponent.addFactory(KotlinObjectFactory::class.java)
     asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)

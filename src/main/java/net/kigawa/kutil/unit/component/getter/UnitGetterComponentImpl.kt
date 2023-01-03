@@ -44,12 +44,12 @@ class UnitGetterComponentImpl(
   
   override fun findGetter(identify: UnitIdentify<out Any>, options: RegisterOptions): UnitGetter {
     for (getterClass in getterClasses.reversed()) {
-      val getter = loggerComponent.catch(null, "") {
+      val getter = loggerComponent.catch(null) {
         container.getUnit(getterClass)
       } ?: continue
       
       @Suppress("UNCHECKED_CAST")
-      if (loggerComponent.catch(false, "") {
+      if (loggerComponent.catch(false) {
           getter.register(identify, options)
         }) return getter
     }

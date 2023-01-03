@@ -19,11 +19,11 @@ class UnitFactoryComponentImpl(
   override fun <T: Any> init(identify: UnitIdentify<T>, stack: InitStack): T {
     stack.addIdentify(identify)
     for (factoryClass in factoryClasses.reversed()) {
-      val factory = loggerComponent.catch(null, "") {
+      val factory = loggerComponent.catch(null) {
         container.getUnit(factoryClass)
       } ?: continue
       
-      return loggerComponent.catch(null, "") {
+      return loggerComponent.catch(null) {
         factory.init(identify, stack)
       } ?: continue
     }

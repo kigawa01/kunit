@@ -41,6 +41,6 @@ class UnitReflectionComponentImpl(
         executor.callConstructor(constructor, initStack)
       } ?: continue
     }
-    throw UnitException("could not execute executable")
+    throw UnitException("could not execute executable", constructor, initStack)
   }
 }

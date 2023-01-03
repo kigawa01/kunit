@@ -16,10 +16,10 @@ class ContainerStdLogger: ContainerLogger {
   
   @Synchronized
   private fun log(stream: PrintStream, message: Message) {
-    stream.println(message.message)
-    message.cause?.printStackTrace(stream)
+    message.message?.let(stream::println)
     message.item.forEach {
       it.let {stream.printf("\t %-20s :$it", it?.javaClass?.simpleName)}
     }
+    message.cause?.printStackTrace(stream)
   }
 }

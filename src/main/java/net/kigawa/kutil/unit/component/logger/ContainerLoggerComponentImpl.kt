@@ -30,7 +30,7 @@ class ContainerLoggerComponentImpl(
     database.unregisterComponent(logger)
   }
   
-  override fun log(level: Level, message: String, cause: Throwable?, vararg item: Any?) {
+  override fun log(level: Level, message: String?, cause: Throwable?, vararg item: Any?) {
     loggerClasses.forEach {
       try {
         container.getUnit(it).log(level, message, cause, *item)
