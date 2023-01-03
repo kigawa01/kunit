@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.component.container
 
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.async.UnitAsyncComponentImpl
 import net.kigawa.kutil.unit.component.closer.UnitCloserComponent
@@ -23,6 +24,7 @@ import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.registrar.*
 import java.util.concurrent.Callable
 
+@LateInit
 class UnitContainerImpl(
   private val parent: UnitContainer? = null,
 ): UnitContainer {

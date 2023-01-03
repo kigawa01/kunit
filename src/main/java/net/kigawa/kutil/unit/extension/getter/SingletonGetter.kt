@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.extension.getter
 
+import net.kigawa.kutil.unit.annotation.AlwaysInit
 import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
@@ -11,6 +12,7 @@ import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
+@AlwaysInit
 class SingletonGetter(
   private val factoryComponent: UnitFactoryComponent,
   private val async: UnitAsyncComponent,

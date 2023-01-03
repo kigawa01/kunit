@@ -1,11 +1,13 @@
 package net.kigawa.kutil.unit.extension.registrar
 
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.component.UnitIdentify
 import java.net.JarURLConnection
 import java.net.URL
 import java.util.*
 
+@LateInit
 class JarRegistrar(
   private val listRegistrar: ListRegistrar,
   private val loggerComponent: ContainerLoggerComponent,

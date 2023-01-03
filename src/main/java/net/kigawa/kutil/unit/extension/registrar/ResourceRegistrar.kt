@@ -1,7 +1,9 @@
 package net.kigawa.kutil.unit.extension.registrar
 
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.exception.UnitException
 
+@LateInit
 class ResourceRegistrar(
   private val jarRegistrar: JarRegistrar,
   private val fileClassRegistrar: FileClassRegistrar,

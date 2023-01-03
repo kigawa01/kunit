@@ -1,10 +1,12 @@
 package net.kigawa.kutil.unit.extension.registrar
 
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.database.UnitDatabaseComponent
 import net.kigawa.kutil.unit.component.getter.UnitGetterComponent
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
+@LateInit
 open class ClassRegistrar(getterComponent: UnitGetterComponent, databaseComponent: UnitDatabaseComponent):
   AbstractRegister(getterComponent, databaseComponent) {
   fun register(unitClass: Class<out Any>) {

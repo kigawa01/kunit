@@ -1,10 +1,12 @@
 package net.kigawa.kutil.unit.extension.database
 
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
+@LateInit
 class DefaultInfoDatabase: UnitInfoDatabase {
   private val infoList = ConcurrentList<UnitInfo<out Any>>()
   override fun register(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions): Boolean {

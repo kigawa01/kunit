@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.extension.getter
 
+import net.kigawa.kutil.unit.annotation.AlwaysInit
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.component.UnitIdentify
@@ -7,6 +8,7 @@ import net.kigawa.kutil.unit.extension.registeroption.*
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 
+@AlwaysInit
 class InstanceGetter(): UnitGetter {
   private var obj: Any? = null
   

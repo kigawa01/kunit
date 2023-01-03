@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.component.getter
 
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
 import net.kigawa.kutil.unit.component.container.UnitContainer
@@ -11,6 +12,7 @@ import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.getter.*
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
+@LateInit
 class UnitGetterComponentImpl(
   private val container: UnitContainer,
   private val loggerComponent: ContainerLoggerComponent,

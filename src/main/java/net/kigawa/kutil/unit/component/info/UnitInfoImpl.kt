@@ -1,9 +1,11 @@
 package net.kigawa.kutil.unit.component.info
 
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.annotation.Unit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
 
+@LateInit
 class UnitInfoImpl<T: Any>(
   identify: UnitIdentify<T>,
   override val getter: UnitGetter,
