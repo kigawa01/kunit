@@ -2,6 +2,7 @@ package net.kigawa.kutil.unit.extension.database
 
 import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.component.getter.UnitGetterComponent
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
@@ -37,7 +38,12 @@ class ComponentInfoDatabase(
   }
   
   fun registerComponent(itemClass: Class<out Any>, getter: UnitGetter) {
-    val unitInfo = UnitInfo.create(UnitIdentify(itemClass, null), getter)
+    registerComponent(UnitIdentify(itemClass, null), getter)
+  }
+  
+  fun registerComponent(identify: UnitIdentify<out Any>, getter: UnitGetter) {
+    val unitInfo = UnitInfo.create(identify, getter)
+    getter.initGetter(identify, InitStack())
     infoList.add(unitInfo)
   }
   

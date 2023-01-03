@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.component.factory
 
-import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.exception.UnitException
 import java.util.*
 
 class InitStack(
@@ -16,5 +16,9 @@ class InitStack(
   
   fun clone(): InitStack {
     return InitStack(LinkedList(identifies))
+  }
+  
+  override fun toString(): String {
+    return "InitStack(identifies=${identifies.joinToString {"\n\t \t$it"}}"
   }
 }

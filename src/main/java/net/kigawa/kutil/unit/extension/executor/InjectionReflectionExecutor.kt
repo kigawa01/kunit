@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit.extension.executor
 
 import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.database.UnitDatabaseComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.exception.UnitException
-import net.kigawa.kutil.unit.component.UnitIdentify
 import java.lang.reflect.Constructor
 import java.util.concurrent.TimeUnit
 
@@ -18,8 +18,9 @@ class InjectionReflectionExecutor(
     val parameters = constructor.parameters.map {
       val identify = UnitIdentify(it.type, it.name)
       
-      database.findOneByEqualsOrClass(identify)?.getter?.initOrGet(identify, stack.clone())
-      ?: throw UnitException("parameter is not found", identify)
+      val info = database.findOneByEqualsOrClass(identify)
+                 ?: throw UnitException("parameter is not found", identify, stack)
+      info.getter.initOrGet(identify, stack.clone())
     }.map {it.get(components.timeoutSec, TimeUnit.SECONDS)}.toTypedArray()
     return constructor.newInstance(*parameters)
   }
