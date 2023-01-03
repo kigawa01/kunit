@@ -44,10 +44,10 @@ internal class UnitContainerTest: Assertions() {
   }
   
   @Test
-  fun testRegisterSameUnit() {
+  fun testRegisterChangeUnit() {
     val unit = con.getUnit(Unit4::class.java)
     con.getUnit(ClassRegistrar::class.java).register(Unit4::class.java)
-    assertSame(unit, con.getUnit(Unit4::class.java))
+    assertNotSame(unit, con.getUnit(Unit4::class.java))
   }
   
   @Test
