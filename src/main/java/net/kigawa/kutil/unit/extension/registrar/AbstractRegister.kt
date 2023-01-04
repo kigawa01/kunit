@@ -22,6 +22,6 @@ abstract class AbstractRegister(
     }
     
     databaseComponent.registerInfo(info, registerOptions)
-    return {info.getter.initGetter(identify, InitStack())}
+    return {info.initGetter(InitStack())}
   }
 }

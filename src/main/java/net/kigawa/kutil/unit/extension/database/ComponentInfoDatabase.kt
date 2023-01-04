@@ -43,7 +43,7 @@ class ComponentInfoDatabase(
   
   fun registerComponent(identify: UnitIdentify<out Any>, getter: UnitGetter) {
     val unitInfo = UnitInfo.create(identify, getter)
-    getter.initGetter(identify, InitStack())
+    unitInfo.initGetter(InitStack())
     infoList.add(unitInfo)
   }
   

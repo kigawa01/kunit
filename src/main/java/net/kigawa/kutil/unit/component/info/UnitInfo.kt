@@ -1,7 +1,9 @@
 package net.kigawa.kutil.unit.component.info
 
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
+import java.util.concurrent.Future
 
 interface UnitInfo<T: Any> {
   companion object {
@@ -13,6 +15,14 @@ interface UnitInfo<T: Any> {
   
   val identify: UnitIdentify<T>
   val getter: UnitGetter
+  fun initGetter(initStack: InitStack) {
+    getter.initGetter(identify, initStack)
+  }
+  
+  fun initOrGet(initStack: InitStack): Future<T> {
+    return getter.initOrGet(identify, initStack)
+  }
+  
   fun get(): T {
     return getter.get(identify)
   }

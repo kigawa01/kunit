@@ -22,7 +22,7 @@ class InjectionReflectionExecutor(
       
       val info = database.findOneByEqualsOrClass(identify)
                  ?: throw UnitException("parameter is not found", constructor, identify, stack)
-      info.getter.initOrGet(identify, stack.clone())
+      info.initOrGet(stack.clone())
     }.map {it.get(components.timeoutSec, TimeUnit.SECONDS)}.toTypedArray()
     return loggerComponent.catch(null, constructor, stack) {
       constructor.newInstance(*parameters)
