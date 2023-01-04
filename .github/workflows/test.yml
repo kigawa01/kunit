@@ -12,6 +12,9 @@ jobs:
           distribution: 'adopt'
       - name: check out branch
         uses: actions/checkout@v3
+      - name: git status
+        run: |
+          git status
       - name: List files in the repository
         run: |
           ls -a ${{github.workspace}}
