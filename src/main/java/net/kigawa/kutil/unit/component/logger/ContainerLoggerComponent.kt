@@ -12,12 +12,7 @@ interface ContainerLoggerComponent {
     return catch(default, null, *item, callable = callable)
   }
   
-  fun <T> catch(
-    default: T,
-    message: String?,
-    vararg item: Any?,
-    callable: ()->T,
-  ): T {
+  fun <T> catch(default: T, message: String?, vararg item: Any?, callable: ()->T): T {
     return try {
       callable.invoke()
     } catch (e: Throwable) {

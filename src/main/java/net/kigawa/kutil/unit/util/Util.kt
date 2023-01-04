@@ -1,17 +1,30 @@
 package net.kigawa.kutil.unit.util
 
 object Util {
-  fun createLogMessageList(message: String?, item: List<Any?>): List<String> {
-    val result = message?.split('\n')?.toMutableList() ?: mutableListOf()
-    result.addAll(item.flatMap {
-      it ?: return@flatMap mutableListOf<String>()
-      String.format("\t %-20s :$it", it.javaClass.simpleName).split('\n')
-    })
+  fun createStringList(items: Iterable<Any?>): List<String> {
+    val list = mutableListOf<Any>()
+    items.forEach {
+      it?.let {list.add(it)}
+    }
+    val result = mutableListOf<String>()
+    
+    list.forEach {item->
+      if (item is Iterable<*>) {
+        result.add(">${item.javaClass.simpleName}")
+        result.addAll(createStringList(item).map {"  $it"})
+      } else result.add(">$item")
+    }
     return result
   }
   
-  fun createLogMessage(message: String?, item: List<Any?>): String {
-    return createLogMessageList(message, item).joinToString("\n")
+  fun createStringList(message: String, items: Iterable<Any?>): List<String> {
+    val list = createStringList(items).toMutableList()
+    list.add(0, message)
+    return list
+  }
+  
+  fun createMessage(message: String, item: Iterable<Any?>): String {
+    return createStringList(message, item).joinToString("\n ")
   }
   
   fun instanceOf(clazz: Class<*>, superClass: Class<*>): Boolean {
@@ -24,5 +37,11 @@ object Util {
     if (clazz.superclass.equals(superClass)) return true
     if (instanceOf(clazz.superclass, superClass)) return true
     return false
+  }
+}
+
+class Message private constructor(val message: String, private val child: Iterable<Message>) {
+  override fun toString(): String {
+    return "$message> $child"
   }
 }

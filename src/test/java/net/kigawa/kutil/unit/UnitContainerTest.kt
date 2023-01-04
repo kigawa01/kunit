@@ -58,6 +58,12 @@ internal class UnitContainerTest: Assertions() {
     assertSize(0, con.getUnitList(NamedUnit::class.java, "c"))
   }
   
+  @Test
+  fun testArgNameInjection() {
+    val registrar = con.getUnit(ClassRegistrar::class.java)
+    assertDoesNotThrow {registrar.register(Unit6::class.java)}
+  }
+  
   companion object {
     private val executor = Executors.newCachedThreadPool()
     private val con: UnitContainer = UnitContainer.create()

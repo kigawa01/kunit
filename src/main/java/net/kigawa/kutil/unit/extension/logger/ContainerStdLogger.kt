@@ -17,7 +17,9 @@ class ContainerStdLogger: ContainerLogger {
   
   @Synchronized
   private fun log(stream: PrintStream, message: Message) {
-    Util.createLogMessageList(message.message, message.item).forEach(stream::println)
+    val list = if (message.message == null) Util.createStringList(message.item)
+    else Util.createStringList(message.message, message.item)
+    list.forEach(stream::println)
     message.cause?.printStackTrace(stream)
   }
 }

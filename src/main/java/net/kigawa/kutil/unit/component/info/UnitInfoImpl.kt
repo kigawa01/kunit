@@ -18,4 +18,9 @@ class UnitInfoImpl<T: Any>(
     
     this.identify = UnitIdentify(identify.unitClass, name)
   }
+  
+  override fun toString(): String {
+    return "UnitInfoImpl(getter=$getter," +
+           "\n\t identify=$identify)"
+  }
 }
