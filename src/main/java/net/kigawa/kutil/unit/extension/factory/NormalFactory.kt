@@ -29,7 +29,7 @@ class NormalFactory(
           return constructor
         }
       }
-      throw UnitException(unitClass, "could not get constructor")
+      throw UnitException("could not get constructor", unitClass)
     }
   }
 }

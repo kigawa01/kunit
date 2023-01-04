@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package net.kigawa.kutil.unit.component.database
 
 import net.kigawa.kutil.unit.annotation.LateInit
@@ -12,7 +14,7 @@ import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 class UnitDatabaseComponentImpl(
   private val componentDatabase: ComponentInfoDatabase,
 ): UnitDatabaseComponent {
-  private lateinit var loggerComponent: ContainerLoggerComponent
+  internal lateinit var loggerComponent: ContainerLoggerComponent
   private val databases = ConcurrentList<UnitInfoDatabase>(componentDatabase)
   
   init {

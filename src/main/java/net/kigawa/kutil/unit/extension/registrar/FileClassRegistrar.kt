@@ -1,10 +1,10 @@
 package net.kigawa.kutil.unit.extension.registrar
 
-import net.kigawa.kutil.unit.annotation.*
-import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.annotation.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
 import net.kigawa.kutil.unit.exception.UnitException
+import net.kigawa.kutil.unit.util.AnnotationUtil
 import java.io.File
 import java.net.URL
 
@@ -36,8 +36,8 @@ class FileClassRegistrar(
       name = "$packageName.$name"
       loggerComponent.catch(null) {
         val unitClass = Class.forName(name)
-        if (unitClass.isAnnotationPresent(Unit::class.java) || unitClass.isAnnotationPresent(Kunit::class.java))
-          identifies.add(UnitIdentify(unitClass, null))
+        if (AnnotationUtil.hasUnitAnnotation(unitClass))
+          identifies.add(UnitIdentify(unitClass, AnnotationUtil.getUnitNameByAnnotation(unitClass)))
       }
     }
     return identifies

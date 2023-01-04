@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.dummy
 
-import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.annotation.Kunit
 
 @Suppress("UNUSED_PARAMETER")
-@Unit(name = "a")
+@Kunit(name = "a")
 class NamedUnit(unit1: Unit1)
