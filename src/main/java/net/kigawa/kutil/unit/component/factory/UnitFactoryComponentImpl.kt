@@ -23,7 +23,7 @@ class UnitFactoryComponentImpl(
         container.getUnit(factoryClass)
       } ?: continue
       
-      return loggerComponent.catch(null) {
+      return loggerComponent.catch(null, identify, stack) {
         factory.init(identify, stack)
       } ?: continue
     }
