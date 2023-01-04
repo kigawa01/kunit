@@ -10,14 +10,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+          cache: 'maven'
       - name: check out branch
         uses: actions/checkout@v3
-      - name: git status
-        run: |
-          git status
       - name: List files in the repository
         run: >
           ls -a ${{github.workspace}}
-          && cat src/main/java/net/kigawa/kutil/unit/extension/registrar/FileClassRegistrar.kt
       - name: run test
-        run: mvn --batch-mode --update-snapshots clean test
+        run: mvn -B clean test
