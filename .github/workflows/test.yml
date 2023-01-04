@@ -17,4 +17,4 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
       - name: run test
-        run: mvn -B clean test
+        run: mvn -B test
