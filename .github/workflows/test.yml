@@ -16,7 +16,8 @@ jobs:
         run: |
           git status
       - name: List files in the repository
-        run: |
+        run: >
           ls -a ${{github.workspace}}
+          && cat src/main/java/net/kigawa/kutil/unit/extension/registrar/FileClassRegistrar.kt
       - name: run test
         run: mvn --batch-mode --update-snapshots clean test
