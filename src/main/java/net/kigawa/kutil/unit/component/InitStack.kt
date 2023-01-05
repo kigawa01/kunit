@@ -1,6 +1,5 @@
-package net.kigawa.kutil.unit.component.factory
+package net.kigawa.kutil.unit.component
 
-import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.exception.UnitException
 import java.util.*
 

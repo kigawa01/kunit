@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unit.component.config.UnitConfigComponent
-import net.kigawa.kutil.unit.component.container.UnitContainer
+import net.kigawa.kutil.unit.api.component.UnitConfigComponent
+import net.kigawa.kutil.unit.api.component.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
 import net.kigawa.kutil.unit.exception.NoSingleUnitException

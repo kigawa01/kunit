@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.extension.getter
 
 import net.kigawa.kutil.unit.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.component.factory.InitStack
+import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.registeroption.*
 import java.util.concurrent.Future

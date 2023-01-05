@@ -1,7 +1,6 @@
-package net.kigawa.kutil.unit.component.info
+package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.component.factory.InitStack
+import net.kigawa.kutil.unit.component.*
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
 import java.util.concurrent.Future
 

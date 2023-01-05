@@ -1,6 +1,5 @@
-package net.kigawa.kutil.unit.component.closer
+package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.extension.closer.UnitCloser
 
 interface UnitCloserComponent {

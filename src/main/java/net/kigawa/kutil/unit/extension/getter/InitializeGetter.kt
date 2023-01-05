@@ -2,9 +2,9 @@ package net.kigawa.kutil.unit.extension.getter
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
-import net.kigawa.kutil.unit.component.factory.InitStack
-import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
+import net.kigawa.kutil.unit.api.component.UnitAsyncComponent
+import net.kigawa.kutil.unit.component.InitStack
+import net.kigawa.kutil.unit.api.component.UnitFactoryComponent
 import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 import java.util.concurrent.Future

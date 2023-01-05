@@ -1,7 +1,7 @@
-package net.kigawa.kutil.unit.component.async
+package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.extension.async.UnitAsyncExecutor
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.extension.async.UnitAsyncExecutor
 import java.util.concurrent.Callable
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask

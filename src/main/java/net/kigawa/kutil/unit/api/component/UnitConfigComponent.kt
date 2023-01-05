@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.component.config
+package net.kigawa.kutil.unit.api.component
 
 interface UnitConfigComponent {
   var timeoutSec: Long

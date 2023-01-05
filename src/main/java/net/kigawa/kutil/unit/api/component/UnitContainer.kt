@@ -1,5 +1,8 @@
-package net.kigawa.kutil.unit.component.container
+@file:Suppress("unused")
 
+package net.kigawa.kutil.unit.api.component
+
+import net.kigawa.kutil.unit.component.UnitContainerImpl
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.exception.*
 import java.util.*

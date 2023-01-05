@@ -1,7 +1,8 @@
-package net.kigawa.kutil.unit.component.logger
+package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
-import net.kigawa.kutil.unit.component.container.UnitContainer
+import net.kigawa.kutil.unit.api.component.ContainerLoggerComponent
+import net.kigawa.kutil.unit.api.component.UnitContainer
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.logger.ContainerLogger

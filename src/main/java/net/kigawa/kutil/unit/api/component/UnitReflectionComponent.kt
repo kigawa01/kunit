@@ -1,6 +1,6 @@
-package net.kigawa.kutil.unit.component.executor
+package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.component.factory.InitStack
+import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.extension.executor.UnitReflectionExecutor
 import java.lang.reflect.Constructor
 

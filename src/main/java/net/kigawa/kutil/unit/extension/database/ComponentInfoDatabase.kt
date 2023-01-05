@@ -2,9 +2,9 @@ package net.kigawa.kutil.unit.extension.database
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.component.factory.InitStack
-import net.kigawa.kutil.unit.component.getter.UnitGetterComponent
-import net.kigawa.kutil.unit.component.info.UnitInfo
+import net.kigawa.kutil.unit.component.InitStack
+import net.kigawa.kutil.unit.api.component.UnitGetterComponent
+import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.getter.InstanceGetter
 import net.kigawa.kutil.unit.extension.getter.UnitGetter

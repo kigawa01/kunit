@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.component.logger
+package net.kigawa.kutil.unit.api.component
 
 import net.kigawa.kutil.unit.extension.logger.ContainerLogger
 import java.util.logging.Level

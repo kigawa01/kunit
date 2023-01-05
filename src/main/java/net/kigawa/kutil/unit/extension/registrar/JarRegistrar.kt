@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
+import net.kigawa.kutil.unit.api.component.ContainerLoggerComponent
 import net.kigawa.kutil.unit.util.AnnotationUtil
 import java.net.JarURLConnection
 import java.net.URL
