@@ -1,19 +1,19 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
-import net.kigawa.kutil.unit.api.component.ContainerLoggerComponent
+import net.kigawa.kutil.unit.api.component.UnitLoggerComponent
 import net.kigawa.kutil.unit.api.component.UnitContainer
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.extension.logger.ContainerLogger
-import net.kigawa.kutil.unit.extension.logger.ContainerStdLogger
+import net.kigawa.kutil.unit.api.extention.ContainerLogger
+import net.kigawa.kutil.unit.extension.ContainerStdLogger
 import java.util.logging.Level
 
 @LateInit
-class ContainerLoggerComponentImpl(
+class UnitLoggerComponentImpl(
   private val container: UnitContainer,
   private val database: ComponentInfoDatabase,
-): ContainerLoggerComponent {
+): UnitLoggerComponent {
   private val loggerClasses = ConcurrentList<Class<out ContainerLogger>>()
   
   init {

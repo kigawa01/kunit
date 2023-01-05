@@ -1,9 +1,9 @@
 package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.extension.logger.ContainerLogger
+import net.kigawa.kutil.unit.api.extention.ContainerLogger
 import java.util.logging.Level
 
-interface ContainerLoggerComponent {
+interface UnitLoggerComponent {
   fun addLogger(logger: Class<out ContainerLogger>)
   fun removeLogger(logger: Class<out ContainerLogger>)
   fun log(level: Level, message: String?, cause: Throwable? = null, vararg item: Any?)

@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.extension.closer.UnitCloser
+import net.kigawa.kutil.unit.api.extention.UnitCloser
 
 interface UnitCloserComponent {
   fun closeUnit(identify: UnitInfo<out Any>)

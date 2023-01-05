@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.api.component
 
 import net.kigawa.kutil.unit.component.*
-import net.kigawa.kutil.unit.extension.getter.UnitGetter
+import net.kigawa.kutil.unit.api.extention.UnitGetter
 import java.util.concurrent.Future
 
 interface UnitInfo<T: Any> {

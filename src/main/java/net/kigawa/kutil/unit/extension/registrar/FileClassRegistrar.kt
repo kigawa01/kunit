@@ -2,7 +2,8 @@ package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.api.component.ContainerLoggerComponent
+import net.kigawa.kutil.unit.api.component.UnitLoggerComponent
+import net.kigawa.kutil.unit.api.extention.UnitRegistrar
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.util.AnnotationUtil
 import java.io.File
@@ -11,7 +12,7 @@ import java.net.URL
 @LateInit
 class FileClassRegistrar(
   private val listRegistrar: ListRegistrar,
-  private val loggerComponent: ContainerLoggerComponent,
+  private val loggerComponent: UnitLoggerComponent,
 ): UnitRegistrar {
   companion object {
     const val PROTOCOL = "file"

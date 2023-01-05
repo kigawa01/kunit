@@ -6,6 +6,7 @@ import net.kigawa.kutil.unit.api.component.UnitDatabaseComponent
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.api.component.UnitGetterComponent
 import net.kigawa.kutil.unit.api.component.UnitInfo
+import net.kigawa.kutil.unit.api.extention.UnitRegistrar
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 abstract class AbstractRegister(

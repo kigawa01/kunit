@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.extension.getter.UnitGetter
+import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 

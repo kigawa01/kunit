@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.api.component
 
 import net.kigawa.kutil.unit.component.InitStack
-import net.kigawa.kutil.unit.extension.executor.UnitReflectionExecutor
+import net.kigawa.kutil.unit.api.extention.UnitReflectionExecutor
 import java.lang.reflect.Constructor
 
 interface UnitReflectionComponent {

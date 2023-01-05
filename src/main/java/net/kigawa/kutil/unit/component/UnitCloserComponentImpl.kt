@@ -3,13 +3,13 @@ package net.kigawa.kutil.unit.component
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unit.extension.closer.UnitCloser
+import net.kigawa.kutil.unit.api.extention.UnitCloser
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 @LateInit
 class UnitCloserComponentImpl(
   private val container: UnitContainer,
-  private val loggerComponent: ContainerLoggerComponent,
+  private val loggerComponent: UnitLoggerComponent,
   private val database: ComponentInfoDatabase,
 ): UnitCloserComponent {
   private val closerClasses = ConcurrentList<Class<out UnitCloser>>()

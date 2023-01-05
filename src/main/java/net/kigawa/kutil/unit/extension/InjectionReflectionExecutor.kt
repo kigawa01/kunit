@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.executor
+package net.kigawa.kutil.unit.extension
 
 import net.kigawa.kutil.unit.annotation.ArgName
 import net.kigawa.kutil.unit.annotation.getter.LateInit
@@ -6,7 +6,8 @@ import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.component.UnitConfigComponent
 import net.kigawa.kutil.unit.api.component.UnitDatabaseComponent
 import net.kigawa.kutil.unit.component.InitStack
-import net.kigawa.kutil.unit.api.component.ContainerLoggerComponent
+import net.kigawa.kutil.unit.api.component.UnitLoggerComponent
+import net.kigawa.kutil.unit.api.extention.UnitReflectionExecutor
 import net.kigawa.kutil.unit.exception.UnitException
 import java.lang.reflect.Constructor
 import java.util.concurrent.TimeUnit
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class InjectionReflectionExecutor(
   private val database: UnitDatabaseComponent,
   private val components: UnitConfigComponent,
-  private val loggerComponent: ContainerLoggerComponent,
+  private val loggerComponent: UnitLoggerComponent,
 ): UnitReflectionExecutor {
   override fun <T> callConstructor(constructor: Constructor<T>, stack: InitStack): T? {
     val parameters = constructor.parameters.map {

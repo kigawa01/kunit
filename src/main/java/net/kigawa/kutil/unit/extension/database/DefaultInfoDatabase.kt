@@ -4,6 +4,7 @@ import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.api.extention.UnitInfoDatabase
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 @LateInit

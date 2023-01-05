@@ -1,6 +1,8 @@
-package net.kigawa.kutil.unit.extension.logger
+package net.kigawa.kutil.unit.extension
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
+import net.kigawa.kutil.unit.api.extention.ContainerLogger
+import net.kigawa.kutil.unit.api.extention.Message
 import net.kigawa.kutil.unit.util.Util
 import java.io.PrintStream
 import java.util.logging.Level

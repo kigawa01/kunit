@@ -4,7 +4,10 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.UnitInfoDatabase
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
+import net.kigawa.kutil.unit.extension.database.DefaultInfoDatabase
 import net.kigawa.kutil.unit.extension.database.*
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
@@ -12,14 +15,14 @@ import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 class UnitDatabaseComponentImpl(
   private val componentDatabase: ComponentInfoDatabase,
 ): UnitDatabaseComponent {
-  internal lateinit var loggerComponent: ContainerLoggerComponent
+  internal lateinit var loggerComponent: UnitLoggerComponent
   private val databases = ConcurrentList<UnitInfoDatabase>(componentDatabase)
   
   init {
     addDatabase(DefaultInfoDatabase())
   }
   
-  fun setLoggerComponent(loggerComponent: ContainerLoggerComponent) {
+  fun setLoggerComponent(loggerComponent: UnitLoggerComponent) {
     this.loggerComponent = loggerComponent
   }
   

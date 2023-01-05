@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.database
+package net.kigawa.kutil.unit.api.extention
 
 import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.component.UnitIdentify

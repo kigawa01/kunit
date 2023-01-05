@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit.extension.factory
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
+import net.kigawa.kutil.unit.api.extention.UnitFactory
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.component.UnitIdentify
 

@@ -5,7 +5,7 @@ package net.kigawa.kutil.unit.api.component
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.extension.database.UnitInfoDatabase
+import net.kigawa.kutil.unit.api.extention.UnitInfoDatabase
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 interface UnitDatabaseComponent {

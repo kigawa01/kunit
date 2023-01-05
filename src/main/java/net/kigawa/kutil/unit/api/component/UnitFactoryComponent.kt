@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.api.component
 
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.extension.factory.UnitFactory
+import net.kigawa.kutil.unit.api.extention.UnitFactory
 
 @Suppress("unused")
 

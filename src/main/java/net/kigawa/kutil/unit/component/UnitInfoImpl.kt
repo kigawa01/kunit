@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.UnitInfo
-import net.kigawa.kutil.unit.extension.getter.UnitGetter
+import net.kigawa.kutil.unit.api.extention.UnitGetter
 
 @LateInit
 class UnitInfoImpl<T: Any>(

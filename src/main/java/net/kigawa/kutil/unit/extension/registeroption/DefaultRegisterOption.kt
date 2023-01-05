@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit.extension.registeroption
 
 import net.kigawa.kutil.unit.annotation.getter.*
+import net.kigawa.kutil.unit.api.extention.RegisterOption
 
 enum class DefaultRegisterOption(private val annotationClass: Class<out Annotation>): RegisterOption {
   ALWAYS_INIT(AlwaysInit::class.java),

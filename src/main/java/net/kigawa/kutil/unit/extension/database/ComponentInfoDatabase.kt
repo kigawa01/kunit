@@ -6,8 +6,9 @@ import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.api.component.UnitGetterComponent
 import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.api.extention.UnitInfoDatabase
 import net.kigawa.kutil.unit.extension.getter.InstanceGetter
-import net.kigawa.kutil.unit.extension.getter.UnitGetter
+import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.extension.registeroption.*
 
 @LateInit

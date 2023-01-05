@@ -5,13 +5,13 @@ import net.kigawa.kutil.unit.api.component.*
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.extension.executor.UnitReflectionExecutor
+import net.kigawa.kutil.unit.api.extention.UnitReflectionExecutor
 import java.lang.reflect.Constructor
 
 @LateInit
 class UnitReflectionComponentImpl(
   private val container: UnitContainer,
-  private val loggerComponent: ContainerLoggerComponent,
+  private val loggerComponent: UnitLoggerComponent,
   private val database: ComponentInfoDatabase,
 ): UnitReflectionComponent {
   private val executorClasses = ConcurrentList<Class<out UnitReflectionExecutor>>()

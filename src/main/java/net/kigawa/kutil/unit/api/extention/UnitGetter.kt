@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.getter
+package net.kigawa.kutil.unit.api.extention
 
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.component.UnitIdentify

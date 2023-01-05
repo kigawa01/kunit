@@ -1,7 +1,8 @@
-package net.kigawa.kutil.unit.extension.closer
+package net.kigawa.kutil.unit.extension
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.UnitInfo
+import net.kigawa.kutil.unit.api.extention.UnitCloser
 
 @LateInit
 class AutoCloseAbleCloser: UnitCloser {

@@ -1,6 +1,7 @@
-package net.kigawa.kutil.unit.extension.async
+package net.kigawa.kutil.unit.extension
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
+import net.kigawa.kutil.unit.api.extention.UnitAsyncExecutor
 import net.kigawa.kutil.unit.component.UnitIdentify
 
 @LateInit

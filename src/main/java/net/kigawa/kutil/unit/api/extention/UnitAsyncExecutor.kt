@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.async
+package net.kigawa.kutil.unit.api.extention
 
 import net.kigawa.kutil.unit.component.UnitIdentify
 

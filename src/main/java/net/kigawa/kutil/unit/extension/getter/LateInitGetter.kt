@@ -5,6 +5,7 @@ import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.component.UnitAsyncComponent
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.api.component.UnitFactoryComponent
+import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 import java.util.concurrent.Future

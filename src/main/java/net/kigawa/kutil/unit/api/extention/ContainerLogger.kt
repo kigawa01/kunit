@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.logger
+package net.kigawa.kutil.unit.api.extention
 
 import java.util.logging.Level
 
