@@ -6,6 +6,7 @@ import net.kigawa.kutil.unit.extension.*
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
+import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.registrar.*
 import java.util.concurrent.Callable
 
@@ -62,6 +63,7 @@ class UnitContainerImpl(
     
     // 拡張機能の登録
     closerComponent.addCloser(AutoCloseAbleCloser::class.java)
+    initializedFilterComponent.add(FieldInjectFilter::class.java)
     
     componentDatabase.registerComponentClass(ClassRegistrar::class.java)
     componentDatabase.registerComponentClass(ListRegistrar::class.java)
