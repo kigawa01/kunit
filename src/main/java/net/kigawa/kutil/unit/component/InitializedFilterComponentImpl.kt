@@ -10,7 +10,7 @@ class InitializedFilterComponentImpl(
   private val container: UnitContainer,
 ):
   InitializedFilterComponent, ComponentHolderImpl<InitializedFilter>(database) {
-  override fun <T> filter(obj: T): T {
+  override fun <T: Any> filter(obj: T): T {
     var result = obj
     
     classes.forEach {
