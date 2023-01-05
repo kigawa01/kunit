@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.extension.factory
 
 import net.kigawa.kutil.unit.annotation.Inject
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.executor.UnitReflectionComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.exception.UnitException

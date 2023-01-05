@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.component.factory
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent

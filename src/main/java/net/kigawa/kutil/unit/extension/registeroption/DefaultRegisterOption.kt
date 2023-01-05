@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit.extension.registeroption
 
-import net.kigawa.kutil.unit.annotation.*
+import net.kigawa.kutil.unit.annotation.getter.*
 
 enum class DefaultRegisterOption(private val annotationClass: Class<out Annotation>): RegisterOption {
-  COMPONENT(UnitComponent::class.java),
   ALWAYS_INIT(AlwaysInit::class.java),
   LATE_INIT(LateInit::class.java),
+  @Suppress("unused")
   SINGLETON(Singleton::class.java),
   ;
   

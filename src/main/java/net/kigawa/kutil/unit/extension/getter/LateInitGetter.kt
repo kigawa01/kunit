@@ -1,9 +1,8 @@
 package net.kigawa.kutil.unit.extension.getter
 
-import net.kigawa.kutil.unit.annotation.AlwaysInit
+import net.kigawa.kutil.unit.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
-import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.factory.InitStack
 import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
 import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
@@ -14,7 +13,6 @@ import java.util.concurrent.Future
 class LateInitGetter(
   private val factoryComponent: UnitFactoryComponent,
   private val async: UnitAsyncComponent,
-  private val components: UnitConfigComponent,
 ): UnitGetter {
   private var obj: Any? = null
   private var registered = false

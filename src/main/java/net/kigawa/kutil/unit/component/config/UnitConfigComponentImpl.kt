@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.component.config
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 
 @LateInit
 class UnitConfigComponentImpl: UnitConfigComponent {

@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.executor
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.database.UnitDatabaseComponent

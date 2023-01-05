@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.registrar
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.extension.registeroption.InstanceOption
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 @LateInit
