@@ -64,6 +64,12 @@ internal class UnitContainerTest: Assertions() {
     assertDoesNotThrow {registrar.register(Unit6::class.java)}
   }
   
+  @Test
+  fun fieldInject() {
+    val fieldInjectUnit = con.getUnit(FieldInjectUnit::class.java)
+    assertNotNull(fieldInjectUnit.unit1)
+  }
+  
   companion object {
     private val executor = Executors.newCachedThreadPool()
     private val con: UnitContainer = UnitContainer.create()
