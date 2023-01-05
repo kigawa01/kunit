@@ -2,10 +2,8 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.extension.SyncedExecutorUnit
-import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
+import net.kigawa.kutil.unit.extension.*
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.extension.InjectionReflectionExecutor
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.registrar.*
@@ -29,8 +27,12 @@ class UnitContainerImpl(
     
     databaseComponent.setLoggerComponent(loggerComponent)
     
+    
+    val initializedFilterComponent = initComponent(componentDatabase) {
+      InitializedFilterComponentImpl(componentDatabase, loggerComponent, this)
+    }
     val factoryComponent = initComponent(componentDatabase) {
-      UnitFactoryComponentImpl(this, loggerComponent, componentDatabase,)
+      UnitFactoryComponentImpl(this, loggerComponent, componentDatabase, initializedFilterComponent)
     }
     val asyncComponent = initComponent(componentDatabase) {
       UnitAsyncComponentImpl(this, loggerComponent, componentDatabase)
