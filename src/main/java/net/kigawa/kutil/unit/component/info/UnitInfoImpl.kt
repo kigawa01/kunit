@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.component.info
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.getter.UnitGetter
 
@@ -17,5 +17,10 @@ class UnitInfoImpl<T: Any>(
     else identify.name
     
     this.identify = UnitIdentify(identify.unitClass, name)
+  }
+  
+  override fun toString(): String {
+    return "UnitInfoImpl(getter=$getter," +
+           "\n\t identify=$identify)"
   }
 }

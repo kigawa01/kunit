@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.component.logger
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase

@@ -4,7 +4,7 @@ import net.kigawa.kutil.unit.util.Util
 
 open class UnitException: RuntimeException {
   constructor(message: String, cause: Throwable?, vararg obj: Any?): super(
-    Util.createLogMessage(message, obj.toList()),
+    Util.createMessage(message, obj.toList()),
     cause
   )
   

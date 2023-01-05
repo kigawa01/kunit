@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit.extension.executor
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.ArgName
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.config.UnitConfigComponent
 import net.kigawa.kutil.unit.component.database.UnitDatabaseComponent
@@ -18,7 +19,7 @@ class InjectionReflectionExecutor(
 ): UnitReflectionExecutor {
   override fun <T> callConstructor(constructor: Constructor<T>, stack: InitStack): T? {
     val parameters = constructor.parameters.map {
-      val identify = UnitIdentify(it.type, it.name)
+      val identify = UnitIdentify(it.type, it.getAnnotation(ArgName::class.java)?.name)
       
       val info = database.findOneByEqualsOrClass(identify)
                  ?: throw UnitException("parameter is not found", constructor, identify, stack)

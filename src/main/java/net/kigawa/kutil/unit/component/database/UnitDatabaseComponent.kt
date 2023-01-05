@@ -27,7 +27,7 @@ interface UnitDatabaseComponent {
     val list = findByIdentify(identify)
     if (list.isEmpty()) return null
     if (list.size == 1) return list[0]
-    throw UnitException("unit is not single", identify)
+    throw UnitException("unitInfo is not single", identify, list)
   }
   
   fun <T: Any> findOneByEqualsOrClass(identify: UnitIdentify<T>): UnitInfo<T>? {

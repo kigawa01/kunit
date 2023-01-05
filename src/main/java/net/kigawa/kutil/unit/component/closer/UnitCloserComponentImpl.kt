@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.component.closer
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.container.UnitContainer
 import net.kigawa.kutil.unit.component.info.UnitInfo
 import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent

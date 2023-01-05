@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.registrar
 
-import net.kigawa.kutil.unit.annotation.LateInit
+import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.exception.UnitException
 
 @LateInit
@@ -8,9 +8,6 @@ class ResourceRegistrar(
   private val jarRegistrar: JarRegistrar,
   private val fileClassRegistrar: FileClassRegistrar,
 ): UnitRegistrar {
-  companion object {
-    const val PROTOCOL = "file"
-  }
   
   fun register(rootClass: Class<out Any>) {
     val packageName = rootClass.getPackage().name
