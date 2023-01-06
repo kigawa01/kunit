@@ -2,9 +2,9 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
 import net.kigawa.kutil.unit.api.extention.UnitAsyncExecutor
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
+import net.kigawa.kutil.unit.concurrent.ConcurrentList
 
 @LateInit
 class UnitAsyncComponentImpl(
@@ -17,12 +17,12 @@ class UnitAsyncComponentImpl(
     database.registerComponentClass(asyncClass)
     executors.add(asyncClass)
   }
-
+  
   override fun removeAsyncExecutor(asyncClass: Class<out UnitAsyncExecutor>) {
     executors.remove(asyncClass)
     database.unregisterComponent(asyncClass)
   }
-
+  
   override fun execute(identify: UnitIdentify<out Any>, runnable: Runnable) {
     executors.last {
       loggerComponent.catch(false) {

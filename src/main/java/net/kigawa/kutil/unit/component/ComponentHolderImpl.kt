@@ -1,8 +1,8 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 abstract class ComponentHolderImpl<T: Any>(
   private val container: UnitContainer,
@@ -35,6 +35,7 @@ abstract class ComponentHolderImpl<T: Any>(
     }
     return null
   }
+  
   fun forEach(action: (T)->Unit) {
     classes.forEach {
       action(container.getUnit(it))

@@ -2,10 +2,10 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
 import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.exception.UnitException
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.getter.*
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 

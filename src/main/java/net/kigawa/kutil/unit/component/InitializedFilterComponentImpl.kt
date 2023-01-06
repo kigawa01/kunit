@@ -1,13 +1,13 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
 import net.kigawa.kutil.unit.api.extention.InitializedFilter
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 class InitializedFilterComponentImpl(
   database: ComponentInfoDatabase,
   private val loggerComponent: UnitLoggerComponent,
-  private val container: UnitContainer,
+  container: UnitContainer,
 ):
   InitializedFilterComponent, ComponentHolderImpl<InitializedFilter>(container, database, loggerComponent) {
   override fun <T: Any> filter(obj: T, stack: InitStack): T {

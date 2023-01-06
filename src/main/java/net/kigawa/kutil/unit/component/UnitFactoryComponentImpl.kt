@@ -2,9 +2,9 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
 import net.kigawa.kutil.unit.api.extention.UnitFactory
 import net.kigawa.kutil.unit.exception.NoFoundFactoryException
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 @LateInit
 class UnitFactoryComponentImpl(

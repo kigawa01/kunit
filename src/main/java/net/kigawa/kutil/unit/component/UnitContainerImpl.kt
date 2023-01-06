@@ -2,8 +2,9 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.*
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
+import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
@@ -22,7 +23,7 @@ class UnitContainerImpl(
   
   init {
     // 登録に最低限必要
-    val componentDatabase = ComponentInfoDatabase()
+    val componentDatabase = ComponentInfoDatabaseImpl() as ComponentInfoDatabase
     initComponent(componentDatabase) {this}
     
     databaseComponent = initComponent(componentDatabase) {UnitDatabaseComponentImpl(componentDatabase)}

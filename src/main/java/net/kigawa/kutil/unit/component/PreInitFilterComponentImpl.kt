@@ -1,8 +1,8 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
 import net.kigawa.kutil.unit.api.extention.PreInitFilter
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 class PreInitFilterComponentImpl(
   container: UnitContainer,
