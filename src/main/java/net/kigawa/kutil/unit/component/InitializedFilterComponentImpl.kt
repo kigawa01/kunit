@@ -9,8 +9,8 @@ class InitializedFilterComponentImpl(
   private val loggerComponent: UnitLoggerComponent,
   private val container: UnitContainer,
 ):
-  InitializedFilterComponent, ComponentHolderImpl<InitializedFilter>(database) {
-  override fun <T: Any> filter(obj: T): T {
+  InitializedFilterComponent, ComponentHolderImpl<InitializedFilter>(container, database) {
+  override fun <T: Any> filter(obj: T, stack: InitStack): T {
     var result = obj
     
     classes.forEach {
@@ -18,7 +18,7 @@ class InitializedFilterComponentImpl(
         container.getUnit(it)
       } ?: return@forEach
       loggerComponent.catch(null) {
-        result = filter.filter(result)
+        result = filter.filter(result, stack)
       }
     }
     

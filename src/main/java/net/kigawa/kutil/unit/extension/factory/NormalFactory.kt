@@ -2,22 +2,23 @@ package net.kigawa.kutil.unit.extension.factory
 
 import net.kigawa.kutil.unit.annotation.Inject
 import net.kigawa.kutil.unit.annotation.getter.LateInit
-import net.kigawa.kutil.unit.api.component.UnitReflectionComponent
+import net.kigawa.kutil.unit.api.component.*
 import net.kigawa.kutil.unit.api.extention.UnitFactory
 import net.kigawa.kutil.unit.component.InitStack
-import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.exception.UnitException
 import java.lang.reflect.Constructor
-import java.util.*
 
 @LateInit
 class NormalFactory(
-  private val executorComponent: UnitReflectionComponent,
+  private val injectorComponent: UnitInjectorComponent,
 ): UnitFactory {
   
-  override fun <T: Any> init(identify: UnitIdentify<T>, initStack: InitStack): T {
+  override fun <T: Any> init(identify: UnitIdentify<T>, stack: InitStack): T {
+    val constructor = getConstructor(identify.unitClass)
+    val parameters = injectorComponent.findUnits(constructor, stack).toTypedArray()
     @Suppress("UNCHECKED_CAST")
-    return executorComponent.callConstructor(getConstructor(identify.unitClass), initStack) as T
+    return constructor.newInstance(*parameters) as T
   }
   
   companion object {
