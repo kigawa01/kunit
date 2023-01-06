@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
+import net.kigawa.kutil.unit.api.extention.UnitRegistrar
 import net.kigawa.kutil.unit.exception.UnitException
 
 @LateInit

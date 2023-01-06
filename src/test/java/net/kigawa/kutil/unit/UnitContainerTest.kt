@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unit.component.config.UnitConfigComponent
-import net.kigawa.kutil.unit.component.container.UnitContainer
+import net.kigawa.kutil.unit.api.component.UnitConfigComponent
+import net.kigawa.kutil.unit.api.component.UnitContainer
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
 import net.kigawa.kutil.unit.exception.NoSingleUnitException
@@ -62,6 +62,12 @@ internal class UnitContainerTest: Assertions() {
   fun testArgNameInjection() {
     val registrar = con.getUnit(ClassRegistrar::class.java)
     assertDoesNotThrow {registrar.register(Unit6::class.java)}
+  }
+  
+  @Test
+  fun fieldInject() {
+    val fieldInjectUnit = con.getUnit(FieldInjectUnit::class.java)
+    assertNotNull(fieldInjectUnit.unit1)
   }
   
   companion object {

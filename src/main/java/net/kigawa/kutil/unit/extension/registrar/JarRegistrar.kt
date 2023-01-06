@@ -2,7 +2,8 @@ package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.component.logger.ContainerLoggerComponent
+import net.kigawa.kutil.unit.api.component.UnitLoggerComponent
+import net.kigawa.kutil.unit.api.extention.UnitRegistrar
 import net.kigawa.kutil.unit.util.AnnotationUtil
 import java.net.JarURLConnection
 import java.net.URL
@@ -11,7 +12,7 @@ import java.util.*
 @LateInit
 class JarRegistrar(
   private val listRegistrar: ListRegistrar,
-  private val loggerComponent: ContainerLoggerComponent,
+  private val loggerComponent: UnitLoggerComponent,
 ): UnitRegistrar {
   companion object {
     const val PROTOCOL = "jar"

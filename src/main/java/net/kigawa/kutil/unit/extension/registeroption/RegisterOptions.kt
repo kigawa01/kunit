@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.extension.registeroption
 
+import net.kigawa.kutil.unit.api.extention.RegisterOption
 import net.kigawa.kutil.unit.util.Util
 
 class RegisterOptions(vararg option: RegisterOption) {

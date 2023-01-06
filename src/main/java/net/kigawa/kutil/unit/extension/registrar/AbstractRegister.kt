@@ -1,11 +1,12 @@
 package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.component.container.UnitContainer
-import net.kigawa.kutil.unit.component.database.UnitDatabaseComponent
-import net.kigawa.kutil.unit.component.factory.InitStack
-import net.kigawa.kutil.unit.component.getter.UnitGetterComponent
-import net.kigawa.kutil.unit.component.info.UnitInfo
+import net.kigawa.kutil.unit.api.component.UnitContainer
+import net.kigawa.kutil.unit.api.component.UnitDatabaseComponent
+import net.kigawa.kutil.unit.component.InitStack
+import net.kigawa.kutil.unit.api.component.UnitGetterComponent
+import net.kigawa.kutil.unit.api.component.UnitInfo
+import net.kigawa.kutil.unit.api.extention.UnitRegistrar
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 abstract class AbstractRegister(

@@ -1,10 +1,11 @@
 package net.kigawa.kutil.unit.extension.getter
 
 import net.kigawa.kutil.unit.annotation.getter.AlwaysInit
-import net.kigawa.kutil.unit.component.config.UnitConfigComponent
-import net.kigawa.kutil.unit.component.async.UnitAsyncComponent
-import net.kigawa.kutil.unit.component.factory.InitStack
-import net.kigawa.kutil.unit.component.factory.UnitFactoryComponent
+import net.kigawa.kutil.unit.api.component.UnitConfigComponent
+import net.kigawa.kutil.unit.api.component.UnitAsyncComponent
+import net.kigawa.kutil.unit.component.InitStack
+import net.kigawa.kutil.unit.api.component.UnitFactoryComponent
+import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.concurrent.ThreadLock
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.component.UnitIdentify
