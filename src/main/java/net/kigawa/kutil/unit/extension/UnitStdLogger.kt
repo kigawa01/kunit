@@ -1,14 +1,14 @@
 package net.kigawa.kutil.unit.extension
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
-import net.kigawa.kutil.unit.api.extention.ContainerLogger
+import net.kigawa.kutil.unit.api.extention.UnitLogger
 import net.kigawa.kutil.unit.api.extention.Message
 import net.kigawa.kutil.unit.util.Util
 import java.io.PrintStream
 import java.util.logging.Level
 
 @LateInit
-class ContainerStdLogger: ContainerLogger {
+class UnitStdLogger: UnitLogger {
   override fun log(message: Message) {
     when (message.level) {
       Level.WARNING->log(System.err, message)

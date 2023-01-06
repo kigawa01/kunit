@@ -2,31 +2,20 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.concurrent.ConcurrentList
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.api.extention.UnitAsyncExecutor
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 @LateInit
 class UnitAsyncComponentImpl(
-  private val container: UnitContainer,
+  container: UnitContainer,
   private val loggerComponent: UnitLoggerComponent,
-  private val database: ComponentInfoDatabase,
-): UnitAsyncComponent {
-  private val executors = ConcurrentList<Class<out UnitAsyncExecutor>>()
-  override fun addAsyncExecutor(asyncClass: Class<out UnitAsyncExecutor>) {
-    database.registerComponentClass(asyncClass)
-    executors.add(asyncClass)
-  }
-
-  override fun removeAsyncExecutor(asyncClass: Class<out UnitAsyncExecutor>) {
-    executors.remove(asyncClass)
-    database.unregisterComponent(asyncClass)
-  }
-
+  database: ComponentDatabase,
+): UnitAsyncComponent, ComponentHolderImpl<UnitAsyncExecutor>(container, database, loggerComponent) {
+  
   override fun execute(identify: UnitIdentify<out Any>, runnable: Runnable) {
-    executors.last {
+    last {
       loggerComponent.catch(false) {
-        container.getUnit(it).execute(identify, runnable)
+        it.execute(identify, runnable)
       }
     }
   }

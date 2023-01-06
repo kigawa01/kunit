@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.api.extention
 
 import java.util.logging.Level
 
-interface ContainerLogger {
+interface UnitLogger {
   fun log(level: Level, message: String?, cause: Throwable?, vararg item: Any?) {
     log(Message(level, message, cause, listOf(*item)))
   }

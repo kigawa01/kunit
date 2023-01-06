@@ -2,15 +2,15 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.api.extention.UnitFactory
 import net.kigawa.kutil.unit.exception.NoFoundFactoryException
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 @LateInit
 class UnitFactoryComponentImpl(
   container: UnitContainer,
   private val loggerComponent: UnitLoggerComponent,
-  private val database: ComponentInfoDatabase,
+  private val database: ComponentDatabase,
   private val initializedFilter: InitializedFilterComponent,
   private val preInitFilterComponent: PreInitFilterComponent,
 ): UnitFactoryComponent, ComponentHolderImpl<UnitFactory>(container, database, loggerComponent) {

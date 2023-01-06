@@ -1,34 +1,34 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
-import net.kigawa.kutil.unit.api.component.UnitLoggerComponent
 import net.kigawa.kutil.unit.api.component.UnitContainer
+import net.kigawa.kutil.unit.api.component.UnitLoggerComponent
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
+import net.kigawa.kutil.unit.api.extention.UnitLogger
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.api.extention.ContainerLogger
-import net.kigawa.kutil.unit.extension.ContainerStdLogger
+import net.kigawa.kutil.unit.extension.UnitStdLogger
 import java.util.logging.Level
 
 @LateInit
 class UnitLoggerComponentImpl(
   private val container: UnitContainer,
-  private val database: ComponentInfoDatabase,
+  private val database: ComponentDatabase,
 ): UnitLoggerComponent {
-  private val loggerClasses = ConcurrentList<Class<out ContainerLogger>>()
+  private val loggerClasses = ConcurrentList<Class<out UnitLogger>>()
   
   init {
-    database.registerComponent(ContainerStdLogger())
-    loggerClasses.add(ContainerStdLogger::class.java)
+    database.registerComponent(UnitStdLogger())
+    loggerClasses.add(UnitStdLogger::class.java)
   }
   
-  override fun addLogger(logger: Class<out ContainerLogger>) {
-    database.registerComponentClass(logger)
-    loggerClasses.add(logger)
+  override fun add(clazz: Class<out UnitLogger>) {
+    database.registerComponentClass(clazz)
+    loggerClasses.add(clazz)
   }
   
-  override fun removeLogger(logger: Class<out ContainerLogger>) {
-    loggerClasses.remove(logger)
-    database.unregisterComponent(logger)
+  override fun remove(clazz: Class<out UnitLogger>) {
+    loggerClasses.remove(clazz)
+    database.unregisterComponent(clazz)
   }
   
   override fun log(level: Level, message: String?, cause: Throwable?, vararg item: Any?) {
@@ -36,7 +36,7 @@ class UnitLoggerComponentImpl(
       try {
         container.getUnit(it).log(level, message, cause, *item)
       } catch (e: Throwable) {
-        removeLogger(it)
+        remove(it)
         log(level, "", e)
       }
     }
