@@ -1,14 +1,10 @@
 package net.kigawa.kutil.unit.api.component
 
-import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.extention.UnitAsyncExecutor
-import java.util.concurrent.Callable
-import java.util.concurrent.Future
-import java.util.concurrent.FutureTask
+import net.kigawa.kutil.unit.component.UnitIdentify
+import java.util.concurrent.*
 
-interface UnitAsyncComponent {
-  fun addAsyncExecutor(asyncClass: Class<out UnitAsyncExecutor>)
-  fun removeAsyncExecutor(asyncClass: Class<out UnitAsyncExecutor>)
+interface UnitAsyncComponent: ComponentHolder<UnitAsyncExecutor> {
   fun execute(identify: UnitIdentify<out Any>, runnable: Runnable)
   fun <T> submit(identify: UnitIdentify<out Any>, callable: Callable<T>): Future<T> {
     val future = FutureTask(callable)

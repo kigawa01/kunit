@@ -66,7 +66,7 @@ class UnitContainerImpl(
     reflectionComponent.addExecutor(ContainerInjector(databaseComponent))
     
     factoryComponent.add(KotlinObjectFactory::class.java)
-    asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)
+    asyncComponent.add(SyncedExecutorUnit::class.java)
     
     // その他
     closerComponent = initComponent(componentDatabase) {
@@ -74,7 +74,7 @@ class UnitContainerImpl(
     }
     
     // 拡張機能の登録
-    closerComponent.addCloser(AutoCloseAbleCloser::class.java)
+    closerComponent.add(AutoCloseAbleCloser::class.java)
     initializedFilterComponent.add(FieldInjectFilter::class.java)
     initializedFilterComponent.add(MethodInjectFilter::class.java)
     preInitFilterComponent.add(DependencyAnnotationFilter::class.java)
