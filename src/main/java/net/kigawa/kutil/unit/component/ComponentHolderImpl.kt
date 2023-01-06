@@ -1,13 +1,13 @@
 package net.kigawa.kutil.unit.component
 
-import net.kigawa.kutil.unit.api.component.ComponentHolder
-import net.kigawa.kutil.unit.api.component.UnitContainer
+import net.kigawa.kutil.unit.api.component.*
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 
 abstract class ComponentHolderImpl<T: Any>(
   private val container: UnitContainer,
   private val database: ComponentInfoDatabase,
+  private val loggerComponent: UnitLoggerComponent,
 ): ComponentHolder<T> {
   protected val classes = ConcurrentList<Class<out T>>()
   override fun add(clazz: Class<out T>) {
@@ -28,12 +28,14 @@ abstract class ComponentHolderImpl<T: Any>(
   
   fun <R: Any> lastMap(transform: (T)->R?): R? {
     for (clazz in classes.reversed()) {
-      return transform(container.getUnit(clazz)) ?: continue
+      val instance = loggerComponent.catch(null) {
+        container.getUnit(clazz)
+      } ?: continue
+      return transform(instance) ?: continue
     }
     return null
   }
-  
-  fun unitForEach(action: (T)->Unit) {
+  fun forEach(action: (T)->Unit) {
     classes.forEach {
       action(container.getUnit(it))
     }

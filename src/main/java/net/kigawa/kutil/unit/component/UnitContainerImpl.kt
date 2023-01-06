@@ -33,8 +33,17 @@ class UnitContainerImpl(
     val initializedFilterComponent = initComponent(componentDatabase) {
       InitializedFilterComponentImpl(componentDatabase, loggerComponent, this)
     }
+    val preInitFilterComponent = initComponent(componentDatabase) {
+      PreInitFilterComponentImpl(this, componentDatabase, loggerComponent)
+    }
     val factoryComponent = initComponent(componentDatabase) {
-      UnitFactoryComponentImpl(this, loggerComponent, componentDatabase, initializedFilterComponent)
+      UnitFactoryComponentImpl(
+        this,
+        loggerComponent,
+        componentDatabase,
+        initializedFilterComponent,
+        preInitFilterComponent
+      )
     }
     val asyncComponent = initComponent(componentDatabase) {
       UnitAsyncComponentImpl(this, loggerComponent, componentDatabase)
@@ -54,7 +63,7 @@ class UnitContainerImpl(
     factoryComponent.addFactory(NormalFactory(reflectionComponent))
     reflectionComponent.addExecutor(ContainerInjector(databaseComponent))
     
-    factoryComponent.addFactory(KotlinObjectFactory::class.java)
+    factoryComponent.add(KotlinObjectFactory::class.java)
     asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)
     
     // その他
