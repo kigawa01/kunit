@@ -8,6 +8,7 @@ import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
+import net.kigawa.kutil.unit.extension.preinitfilter.DependencyAnnotationFilter
 import net.kigawa.kutil.unit.extension.registrar.*
 import java.util.concurrent.Callable
 
@@ -33,8 +34,17 @@ class UnitContainerImpl(
     val initializedFilterComponent = initComponent(componentDatabase) {
       InitializedFilterComponentImpl(componentDatabase, loggerComponent, this)
     }
+    val preInitFilterComponent = initComponent(componentDatabase) {
+      PreInitFilterComponentImpl(this, componentDatabase, loggerComponent)
+    }
     val factoryComponent = initComponent(componentDatabase) {
-      UnitFactoryComponentImpl(this, loggerComponent, componentDatabase, initializedFilterComponent)
+      UnitFactoryComponentImpl(
+        this,
+        loggerComponent,
+        componentDatabase,
+        initializedFilterComponent,
+        preInitFilterComponent
+      )
     }
     val asyncComponent = initComponent(componentDatabase) {
       UnitAsyncComponentImpl(this, loggerComponent, componentDatabase)
@@ -47,14 +57,14 @@ class UnitContainerImpl(
     componentDatabase.getterComponent = getterComponent
     
     val reflectionComponent = initComponent(componentDatabase) {
-      UnitInjectorComponentImpl(this, componentDatabase)
+      UnitInjectorComponentImpl(this, componentDatabase, loggerComponent)
     }
-    val configComponent = initComponent(componentDatabase) {UnitConfigComponentImpl()}
+    initComponent(componentDatabase) {UnitConfigComponentImpl()}
     
     factoryComponent.addFactory(NormalFactory(reflectionComponent))
     reflectionComponent.addExecutor(ContainerInjector(databaseComponent))
     
-    factoryComponent.addFactory(KotlinObjectFactory::class.java)
+    factoryComponent.add(KotlinObjectFactory::class.java)
     asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)
     
     // その他
@@ -66,6 +76,7 @@ class UnitContainerImpl(
     closerComponent.addCloser(AutoCloseAbleCloser::class.java)
     initializedFilterComponent.add(FieldInjectFilter::class.java)
     initializedFilterComponent.add(MethodInjectFilter::class.java)
+    preInitFilterComponent.add(DependencyAnnotationFilter::class.java)
     
     componentDatabase.registerComponentClass(ClassRegistrar::class.java)
     componentDatabase.registerComponentClass(ListRegistrar::class.java)
