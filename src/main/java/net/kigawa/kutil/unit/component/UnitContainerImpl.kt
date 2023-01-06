@@ -7,6 +7,7 @@ import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
+import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
 import net.kigawa.kutil.unit.extension.registrar.*
 import java.util.concurrent.Callable
 
@@ -46,12 +47,12 @@ class UnitContainerImpl(
     componentDatabase.getterComponent = getterComponent
     
     val reflectionComponent = initComponent(componentDatabase) {
-      UnitReflectionComponentImpl(this, loggerComponent, componentDatabase)
+      UnitInjectorComponentImpl(this, componentDatabase)
     }
     val configComponent = initComponent(componentDatabase) {UnitConfigComponentImpl()}
     
     factoryComponent.addFactory(NormalFactory(reflectionComponent))
-    reflectionComponent.addExecutor(InjectionReflectionExecutor(databaseComponent, configComponent, loggerComponent))
+    reflectionComponent.addExecutor(ContainerInjector(databaseComponent))
     
     factoryComponent.addFactory(KotlinObjectFactory::class.java)
     asyncComponent.addAsyncExecutor(SyncedExecutorUnit::class.java)
@@ -64,6 +65,7 @@ class UnitContainerImpl(
     // 拡張機能の登録
     closerComponent.addCloser(AutoCloseAbleCloser::class.java)
     initializedFilterComponent.add(FieldInjectFilter::class.java)
+    initializedFilterComponent.add(MethodInjectFilter::class.java)
     
     componentDatabase.registerComponentClass(ClassRegistrar::class.java)
     componentDatabase.registerComponentClass(ListRegistrar::class.java)

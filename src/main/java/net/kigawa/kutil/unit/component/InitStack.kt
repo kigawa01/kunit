@@ -4,13 +4,15 @@ import net.kigawa.kutil.unit.exception.UnitException
 import java.util.*
 
 class InitStack(
-  private val identifies: MutableList<UnitIdentify<out Any>>,
+  private val identifies: List<UnitIdentify<out Any>>,
 ) {
   constructor(): this(mutableListOf())
   
-  fun addIdentify(unitIdentify: UnitIdentify<out Any>) {
-    if (identifies.contains(unitIdentify)) throw UnitException("unit has bean circular reference", unitIdentify)
-    identifies.add(unitIdentify)
+  fun addIdentify(identify: UnitIdentify<out Any>): InitStack {
+    if (identifies.contains(identify)) throw UnitException("unit has bean circular reference", identify)
+    val list = LinkedList(identifies)
+    list.add(identify)
+    return InitStack(identifies)
   }
   
   fun clone(): InitStack {

@@ -70,6 +70,12 @@ internal class UnitContainerTest: Assertions() {
     assertNotNull(fieldInjectUnit.unit1)
   }
   
+  @Test
+  fun methodInject() {
+    val fieldInjectUnit = con.getUnit(MethodInjectUnit::class.java)
+    assertNotNull(fieldInjectUnit.unit1)
+  }
+  
   companion object {
     private val executor = Executors.newCachedThreadPool()
     private val con: UnitContainer = UnitContainer.create()

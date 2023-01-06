@@ -2,10 +2,10 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
+import net.kigawa.kutil.unit.api.extention.UnitFactory
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.exception.NoFoundFactoryException
 import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabase
-import net.kigawa.kutil.unit.api.extention.UnitFactory
 
 @LateInit
 class UnitFactoryComponentImpl(
@@ -16,17 +16,17 @@ class UnitFactoryComponentImpl(
 ): UnitFactoryComponent {
   private val factoryClasses = ConcurrentList<Class<out UnitFactory>>()
   override fun <T: Any> init(identify: UnitIdentify<T>, stack: InitStack): T {
-    stack.addIdentify(identify)
+    val initStack = stack.addIdentify(identify)
     for (factoryClass in factoryClasses.reversed()) {
       val factory = loggerComponent.catch(null) {
         container.getUnit(factoryClass)
       } ?: continue
       
-      val result = loggerComponent.catch(null, identify, stack) {
-        factory.init(identify, stack)
+      val result = loggerComponent.catch(null, identify, initStack) {
+        factory.init(identify, initStack)
       } ?: continue
       
-      return initializedFilter.filter(result)
+      return initializedFilter.filter(result, stack)
     }
     throw NoFoundFactoryException("factory is not found", identify)
   }
