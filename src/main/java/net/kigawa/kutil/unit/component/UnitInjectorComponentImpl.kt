@@ -10,8 +10,8 @@ import java.util.concurrent.Future
 @LateInit
 class UnitInjectorComponentImpl(
   container: UnitContainer,
-  private val database: ComponentInfoDatabase,
-): UnitInjectorComponent, ComponentHolderImpl<UnitInjector>(container, database) {
+  private val database: ComponentInfoDatabase, loggerComponent: UnitLoggerComponent,
+): UnitInjectorComponent, ComponentHolderImpl<UnitInjector>(container, database, loggerComponent) {
   fun addExecutor(executor: UnitInjector) {
     database.registerComponent(executor)
     classes.add(executor.javaClass)

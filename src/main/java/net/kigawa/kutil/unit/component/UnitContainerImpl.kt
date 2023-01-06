@@ -8,6 +8,7 @@ import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
+import net.kigawa.kutil.unit.extension.preinitfilter.DependencyAnnotationFilter
 import net.kigawa.kutil.unit.extension.registrar.*
 import java.util.concurrent.Callable
 
@@ -56,9 +57,9 @@ class UnitContainerImpl(
     componentDatabase.getterComponent = getterComponent
     
     val reflectionComponent = initComponent(componentDatabase) {
-      UnitInjectorComponentImpl(this, componentDatabase)
+      UnitInjectorComponentImpl(this, componentDatabase, loggerComponent)
     }
-    val configComponent = initComponent(componentDatabase) {UnitConfigComponentImpl()}
+    initComponent(componentDatabase) {UnitConfigComponentImpl()}
     
     factoryComponent.addFactory(NormalFactory(reflectionComponent))
     reflectionComponent.addExecutor(ContainerInjector(databaseComponent))
@@ -75,6 +76,7 @@ class UnitContainerImpl(
     closerComponent.addCloser(AutoCloseAbleCloser::class.java)
     initializedFilterComponent.add(FieldInjectFilter::class.java)
     initializedFilterComponent.add(MethodInjectFilter::class.java)
+    preInitFilterComponent.add(DependencyAnnotationFilter::class.java)
     
     componentDatabase.registerComponentClass(ClassRegistrar::class.java)
     componentDatabase.registerComponentClass(ListRegistrar::class.java)
