@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.getter.*
@@ -14,7 +14,7 @@ class UnitGetterComponentImpl(
   private val loggerComponent: UnitLoggerComponent,
   factoryComponent: UnitFactoryComponent,
   asyncComponent: UnitAsyncComponent,
-  database: ComponentInfoDatabase,
+  database: ComponentDatabase,
 ): UnitGetterComponent, ComponentHolderImpl<UnitGetter>(container, database, loggerComponent) {
   
   init {

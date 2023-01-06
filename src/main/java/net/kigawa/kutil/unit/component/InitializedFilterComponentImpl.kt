@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.api.extention.InitializedFilter
 
 class InitializedFilterComponentImpl(
-  database: ComponentInfoDatabase,
+  database: ComponentDatabase,
   private val loggerComponent: UnitLoggerComponent,
   container: UnitContainer,
 ):

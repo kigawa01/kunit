@@ -2,9 +2,9 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.extension.*
-import net.kigawa.kutil.unit.extension.database.ComponentInfoDatabaseImpl
+import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
@@ -23,7 +23,7 @@ class UnitContainerImpl(
   
   init {
     // 登録に最低限必要
-    val componentDatabase = ComponentInfoDatabaseImpl() as ComponentInfoDatabase
+    val componentDatabase = ComponentDatabaseImpl() as ComponentDatabase
     initComponent(componentDatabase) {this}
     
     databaseComponent = initComponent(componentDatabase) {UnitDatabaseComponentImpl(componentDatabase)}
@@ -87,9 +87,9 @@ class UnitContainerImpl(
     componentDatabase.registerComponentClass(ResourceRegistrar::class.java)
   }
   
-  private fun <T: Any> initComponent(componentInfoDatabase: ComponentInfoDatabase, callable: Callable<T>): T {
+  private fun <T: Any> initComponent(componentDatabase: ComponentDatabase, callable: Callable<T>): T {
     val result = callable.call()
-    componentInfoDatabase.registerComponent(result)
+    componentDatabase.registerComponent(result)
     return result
   }
   

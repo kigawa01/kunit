@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.api.extention.UnitInjector
 import net.kigawa.kutil.unit.exception.UnitException
 import java.util.concurrent.Future
@@ -10,7 +10,7 @@ import java.util.concurrent.Future
 @LateInit
 class UnitInjectorComponentImpl(
   container: UnitContainer,
-  private val database: ComponentInfoDatabase, loggerComponent: UnitLoggerComponent,
+  private val database: ComponentDatabase, loggerComponent: UnitLoggerComponent,
 ): UnitInjectorComponent, ComponentHolderImpl<UnitInjector>(container, database, loggerComponent) {
   fun addExecutor(executor: UnitInjector) {
     database.registerComponent(executor)

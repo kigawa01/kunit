@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.extension.getter.InstanceGetter
 import net.kigawa.kutil.unit.extension.registeroption.InstanceOption
 import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
-interface ComponentInfoDatabase: UnitInfoDatabase {
+interface ComponentDatabase: UnitInfoDatabase {
   var getterComponent: UnitGetterComponent
   override fun register(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions): Boolean {
     return false

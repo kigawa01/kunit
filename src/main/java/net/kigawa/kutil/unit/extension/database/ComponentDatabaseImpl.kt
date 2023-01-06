@@ -10,7 +10,7 @@ import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.registeroption.*
 
 @LateInit
-class ComponentInfoDatabaseImpl: ComponentInfoDatabase {
+class ComponentDatabaseImpl: ComponentDatabase {
   override lateinit var getterComponent: UnitGetterComponent
   private val infoList = ConcurrentList<UnitInfo<out Any>>()
   

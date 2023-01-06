@@ -1,12 +1,12 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.api.component.*
-import net.kigawa.kutil.unit.api.extention.ComponentInfoDatabase
+import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 
 abstract class ComponentHolderImpl<T: Any>(
   private val container: UnitContainer,
-  private val database: ComponentInfoDatabase,
+  private val database: ComponentDatabase,
   private val loggerComponent: UnitLoggerComponent,
 ): ComponentHolder<T> {
   protected val classes = ConcurrentList<Class<out T>>()
