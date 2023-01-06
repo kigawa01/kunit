@@ -11,9 +11,9 @@ class MethodInjectFilter(
   override fun <T: Any> filter(obj: T, stack: InitStack): T {
     obj.javaClass.declaredMethods.forEach {
       it.getAnnotation(Inject::class.java) ?: return@forEach
-      val arg = injectorComponent.findUnits(it, stack)
+      val arg = injectorComponent.findUnits(it, stack).toTypedArray()
       it.isAccessible = true
-      it.invoke(obj, arg)
+      it.invoke(obj, *arg)
     }
     return obj
   }
