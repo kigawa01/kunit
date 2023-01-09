@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.component
 
-import net.kigawa.kutil.unit.util.Util
+import net.kigawa.kutil.unit.util.ReflectionUtil
 import java.util.*
 
 class UnitIdentify<T>(
@@ -14,7 +14,7 @@ class UnitIdentify<T>(
   }
   
   fun equalsOrSuperClass(superClassInfo: UnitIdentify<*>): Boolean {
-    if (!Util.instanceOf(unitClass, superClassInfo.unitClass)) return false
+    if (!instanceOf(superClassInfo.unitClass)) return false
     return equalsName(superClassInfo)
   }
   
@@ -30,7 +30,7 @@ class UnitIdentify<T>(
   }
   
   fun instanceOf(superClass: Class<out Any>): Boolean {
-    return Util.instanceOf(unitClass, superClass)
+    return ReflectionUtil.instanceOf(unitClass, superClass)
   }
   
   override fun toString(): String {

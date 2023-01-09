@@ -6,7 +6,18 @@ import net.kigawa.kutil.unit.annotation.Inject
 import net.kigawa.kutil.unit.annotation.Kunit
 
 @Kunit
-class FieldInjectUnit {
+class FieldInjectUnit: ParentFieldInjection() {
   @Inject
   val unit1: Unit2? = null
+  
+  companion object {
+    @JvmStatic
+    @Inject
+    val unit2: Unit2? = null
+  }
+}
+
+open class ParentFieldInjection {
+  @Inject
+  val unit3: Unit2? = null
 }

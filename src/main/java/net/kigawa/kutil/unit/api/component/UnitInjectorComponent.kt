@@ -16,7 +16,7 @@ interface UnitInjectorComponent: ComponentHolder<UnitInjector> {
     )
   }
   
-  fun <T: Any> findUnits(identifies: List<UnitIdentify<T>>, stack: InitStack): List<T> {
+  fun <T: Any> findUnits(identifies: List<UnitIdentify<out T>>, stack: InitStack): List<T> {
     return identifies.map {
       findUnitAsync(it, stack)
     }.map {it.get()}
