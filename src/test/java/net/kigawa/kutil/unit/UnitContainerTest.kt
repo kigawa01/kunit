@@ -68,12 +68,16 @@ internal class UnitContainerTest: Assertions() {
   fun fieldInject() {
     val fieldInjectUnit = con.getUnit(FieldInjectUnit::class.java)
     assertNotNull(fieldInjectUnit.unit1)
+    assertNotNull(fieldInjectUnit.unit3)
+    assertNull(FieldInjectUnit.unit2)
   }
   
   @Test
   fun methodInject() {
     val fieldInjectUnit = con.getUnit(MethodInjectUnit::class.java)
     assertNotNull(fieldInjectUnit.unit1)
+    assertNotNull(fieldInjectUnit.unit3)
+    assertNull(FieldInjectUnit.unit2)
   }
   
   companion object {

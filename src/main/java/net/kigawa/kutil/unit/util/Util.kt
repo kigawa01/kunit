@@ -26,20 +26,9 @@ object Util {
   fun createMessage(message: String, item: Iterable<Any?>): String {
     return createStringList(message, item).joinToString("\n ")
   }
-  
-  fun instanceOf(clazz: Class<*>, superClass: Class<*>): Boolean {
-    if (clazz == superClass) return true
-    if (clazz.interfaces.contains(superClass)) return true
-    for (interfaceClass in clazz.interfaces) {
-      if (instanceOf(interfaceClass, superClass)) return true
-    }
-    if (clazz.superclass == null) return false
-    if (clazz.superclass.equals(superClass)) return true
-    if (instanceOf(clazz.superclass, superClass)) return true
-    return false
-  }
 }
 
+@Suppress("unused")
 class Message private constructor(val message: String, private val child: Iterable<Message>) {
   override fun toString(): String {
     return "$message> $child"

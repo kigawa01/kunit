@@ -1,14 +1,14 @@
 package net.kigawa.kutil.unit.extension.registeroption
 
 import net.kigawa.kutil.unit.api.extention.RegisterOption
-import net.kigawa.kutil.unit.util.Util
+import net.kigawa.kutil.unit.util.ReflectionUtil
 
 class RegisterOptions(vararg option: RegisterOption) {
   private val options = mutableListOf(*option)
   
   fun <T> firstOrNull(optionClass: Class<T>): T? {
     @Suppress("UNCHECKED_CAST")
-    return options.firstOrNull {Util.instanceOf(it.javaClass, optionClass)} as T?
+    return options.firstOrNull {ReflectionUtil.instanceOf(it.javaClass, optionClass)} as T?
   }
   
   fun contain(option: RegisterOption): Boolean {
