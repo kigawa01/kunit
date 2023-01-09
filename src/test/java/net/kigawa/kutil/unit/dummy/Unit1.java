@@ -1,10 +1,10 @@
 package net.kigawa.kutil.unit.dummy;
 
 import net.kigawa.kutil.unit.annotation.*;
-import net.kigawa.kutil.unit.container.*;
+import net.kigawa.kutil.unit.api.component.*;
 import net.kigawa.kutil.unit.dummy.parent.*;
 
-@Unit
+@Kunit
 public class Unit1 implements UnitOneToFourInterface
 {
     protected final Unit4 unitDummy;

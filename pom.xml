@@ -14,10 +14,10 @@
     </properties>
 
     <groupId>net.kigawa.kutil</groupId>
-    <artifactId>unit</artifactId>
-    <version>2.5</version>
+    <artifactId>kutil-unit</artifactId>
+    <version>3.0.0</version>
     <name>${project.artifactId}</name>
-    <description>add unit</description>
+    <description>add di container as unit</description>
     <url>https://github.com/kigawa01/kutil-unit</url>
 
     <scm>
@@ -70,7 +70,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>1.4</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -201,6 +201,16 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>kutil</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>log</artifactId>
+            <version>2.0</version>
         </dependency>
     </dependencies>
 

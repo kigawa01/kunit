@@ -1,25 +1,85 @@
 package net.kigawa.kutil.unit.concurrent
 
-class ConcurrentList<T : Any> {
-    private val list = mutableSetOf<T>()
+import java.util.*
 
-    @Synchronized
-    fun last(predicate: (T) -> Boolean): T {
-        return list.last(predicate)
+open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
+  private var list = listOf<T>()
+    @Synchronized get() {
+      return LinkedList(field)
     }
-
-    @Synchronized
-    fun add(unitFactory: T) {
-        list.add(unitFactory)
+  
+  open fun add(item: T): Boolean {
+    return synchronized(this) {
+      val l = list.toMutableList()
+      val result = l.add(item)
+      list = l
+      result
     }
-
-    @Synchronized
-    fun remove(factoryClass: Class<out T>) {
-        list.removeIf { it.javaClass == factoryClass }
+  }
+  
+  open fun remove(item: T): Boolean {
+    return synchronized(this) {
+      val l = list.toMutableList()
+      val result = l.remove(item)
+      list = l
+      result
     }
-
-    @Synchronized
-    fun filter(predicate: (T) -> Boolean): List<T> {
-        return list.filter(predicate)
+  }
+  
+  open fun removeLast(): T {
+    return synchronized(this) {
+      val l = list.toMutableList()
+      val result = l.removeLast()
+      list = l
+      result
     }
+  }
+  
+  fun last(predicate: (T)->Boolean): T? {
+    for (item in reversed()) {
+      if (predicate(item)) return item
+    }
+    return null
+  }
+  
+  fun first(predicate: (T)->Boolean): T? {
+    for (item in toMutableList()) {
+      if (predicate(item)) return item
+    }
+    return null
+  }
+  
+  fun filter(predicate: (T)->Boolean): List<T> {
+    return toMutableList().filter(predicate)
+  }
+  
+  fun reversed(): List<T> {
+    return toMutableList().reversed()
+  }
+  
+  fun toMutableList(): MutableList<T> {
+    val result = mutableListOf(*immutableItem)
+    result.addAll(list)
+    return result
+  }
+  
+  fun forEach(action: (T)->Unit) {
+    toMutableList().forEach(action)
+  }
+  
+  fun <R> flatMap(transform: (T)->Iterable<R>): List<R> {
+    return toMutableList().flatMap(transform)
+  }
+  
+  fun contain(predicate: (T)->Boolean): Boolean {
+    return first(predicate) != null
+  }
+  
+  fun <R> map(transform: (T)->R): List<R> {
+    return toMutableList().map(transform)
+  }
+  
+  override fun toString(): String {
+    return "ConcurrentList(immutableItem=${immutableItem.contentToString()}, list=$list)"
+  }
 }
