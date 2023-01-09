@@ -3,7 +3,6 @@ package net.kigawa.kutil.unit.component
 import net.kigawa.kutil.unit.api.component.*
 import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.extension.*
-import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
