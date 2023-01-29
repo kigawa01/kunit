@@ -1,13 +1,13 @@
 package net.kigawa.kutil.unit.extension.getter
 
 import net.kigawa.kutil.unit.annotation.getter.AlwaysInit
-import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.component.UnitAsyncComponent
-import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.api.component.UnitFactoryComponent
-import net.kigawa.kutil.unit.api.extention.UnitGetter
-import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
 import net.kigawa.kutil.unit.api.extention.RegisterOptions
+import net.kigawa.kutil.unit.api.extention.UnitGetter
+import net.kigawa.kutil.unit.component.InitStack
+import net.kigawa.kutil.unit.component.UnitIdentify
+import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
 import java.util.concurrent.Future
 
 @AlwaysInit
@@ -41,6 +41,6 @@ class LateInitGetter(
     if (obj != null) return false
     if (registered) return false
     registered = true
-    return options.match(DefaultRegisterOption.LATE_INIT, identify.unitClass)
+    return options.contain(DefaultRegisterOption.LATE_INIT)
   }
 }

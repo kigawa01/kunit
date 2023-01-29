@@ -29,6 +29,6 @@ class InitializeGetter(
   }
   
   override fun register(identify: UnitIdentify<out Any>, options: RegisterOptions): Boolean {
-    return options.match(DefaultRegisterOption.ALWAYS_INIT, identify.unitClass)
+    return options.contain(DefaultRegisterOption.ALWAYS_INIT)
   }
 }
