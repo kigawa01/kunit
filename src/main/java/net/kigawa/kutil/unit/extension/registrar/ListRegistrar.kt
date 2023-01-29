@@ -5,7 +5,7 @@ import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.component.UnitContainer
 import net.kigawa.kutil.unit.api.component.UnitDatabaseComponent
 import net.kigawa.kutil.unit.api.component.UnitGetterComponent
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
+import net.kigawa.kutil.unit.api.extention.RegisterOptions
 
 @LateInit
 open class ListRegistrar(

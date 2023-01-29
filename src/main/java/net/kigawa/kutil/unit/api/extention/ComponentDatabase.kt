@@ -5,7 +5,6 @@ import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.extension.getter.InstanceGetter
 import net.kigawa.kutil.unit.extension.registeroption.InstanceOption
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 
 interface ComponentDatabase: UnitInfoDatabase {
   var getterComponent: UnitGetterComponent

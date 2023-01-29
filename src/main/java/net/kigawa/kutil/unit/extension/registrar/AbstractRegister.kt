@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.api.component.UnitGetterComponent
 import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.api.extention.UnitRegistrar
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
+import net.kigawa.kutil.unit.api.extention.RegisterOptions
 
 abstract class AbstractRegister(
   private val getterComponent: UnitGetterComponent,

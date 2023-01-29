@@ -1,6 +1,7 @@
 package net.kigawa.kutil.unit.extension.getter
 
 import net.kigawa.kutil.unit.annotation.getter.AlwaysInit
+import net.kigawa.kutil.unit.api.extention.RegisterOptions
 import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.InitStack

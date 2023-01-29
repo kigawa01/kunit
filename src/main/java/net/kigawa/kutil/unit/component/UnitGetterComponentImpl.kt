@@ -6,7 +6,7 @@ import net.kigawa.kutil.unit.api.extention.ComponentDatabase
 import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.getter.*
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
+import net.kigawa.kutil.unit.api.extention.RegisterOptions
 
 @LateInit
 class UnitGetterComponentImpl(

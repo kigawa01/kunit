@@ -9,7 +9,7 @@ import net.kigawa.kutil.unit.api.extention.UnitGetter
 import net.kigawa.kutil.unit.concurrent.ThreadLock
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
+import net.kigawa.kutil.unit.api.extention.RegisterOptions
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 

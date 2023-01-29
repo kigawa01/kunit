@@ -2,7 +2,6 @@ package net.kigawa.kutil.unit.api.extention
 
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.extension.registeroption.RegisterOptions
 import java.util.concurrent.Future
 
 interface UnitGetter {

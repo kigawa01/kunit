@@ -41,6 +41,5 @@ class UnitContainerImpl(
   
   override fun close() {
     removeUnit(Any::class.java)
-    parent?.close()
   }
 }
