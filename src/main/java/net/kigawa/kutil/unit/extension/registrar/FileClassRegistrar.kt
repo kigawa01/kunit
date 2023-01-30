@@ -8,7 +8,7 @@ import java.net.URL
 
 @LateInit
 class FileClassRegistrar(
-  private val loggerComponent: UnitLoggerComponent, getterComponent: UnitGetterComponent,
+  private val loggerComponent: UnitLoggerComponent, getterComponent: UnitStoreComponent,
   databaseComponent: UnitDatabaseComponent, container: UnitContainer,
 ): SelectionRegistrar(getterComponent, databaseComponent, container) {
   companion object {

@@ -3,31 +3,31 @@ package net.kigawa.kutil.unit.component
 import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.api.component.*
 import net.kigawa.kutil.unit.api.extention.ComponentDatabase
-import net.kigawa.kutil.unit.api.extention.UnitGetter
+import net.kigawa.kutil.unit.api.extention.UnitStore
 import net.kigawa.kutil.unit.exception.UnitException
 import net.kigawa.kutil.unit.extension.getter.*
 import net.kigawa.kutil.unit.api.extention.RegisterOptions
 
 @LateInit
-class UnitGetterComponentImpl(
+class UnitStoreComponentImpl(
   container: UnitContainer,
   private val loggerComponent: UnitLoggerComponent,
   factoryComponent: UnitFactoryComponent,
   asyncComponent: UnitAsyncComponent,
   database: ComponentDatabase,
-): UnitGetterComponent, ComponentHolderImpl<UnitGetter>(container, database, loggerComponent) {
+): UnitStoreComponent, ComponentHolderImpl<UnitStore>(container, database, loggerComponent) {
   
   init {
-    val initializeGetter = InitializeGetter(factoryComponent, asyncComponent)
-    classes.add(SingletonGetter::class.java)
-    database.registerComponent(SingletonGetter::class.java, initializeGetter)
-    classes.add(InstanceGetter::class.java)
-    database.registerComponent(InstanceGetter::class.java, initializeGetter)
+    val initializeGetter = InitializeStore(factoryComponent, asyncComponent)
+    classes.add(SingletonStore::class.java)
+    database.registerComponent(SingletonStore::class.java, initializeGetter)
+    classes.add(InstanceStore::class.java)
+    database.registerComponent(InstanceStore::class.java, initializeGetter)
     classes.add(initializeGetter.javaClass)
     database.registerComponent(initializeGetter)
   }
   
-  override fun findGetter(identify: UnitIdentify<out Any>, options: RegisterOptions): UnitGetter {
+  override fun findStore(identify: UnitIdentify<out Any>, options: RegisterOptions): UnitStore {
     return lastMap {
       @Suppress("UNCHECKED_CAST")
       loggerComponent.catch(null) {

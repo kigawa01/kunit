@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.extension.getter
 
 import net.kigawa.kutil.unit.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unit.api.extention.RegisterOptions
-import net.kigawa.kutil.unit.api.extention.UnitGetter
+import net.kigawa.kutil.unit.api.extention.UnitStore
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.exception.UnitException
@@ -11,7 +11,7 @@ import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 
 @AlwaysInit
-class InstanceGetter(): UnitGetter {
+class InstanceStore(): UnitStore {
   private var obj: Any? = null
   
   override fun <T: Any> get(identify: UnitIdentify<T>): T {

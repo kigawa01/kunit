@@ -1,13 +1,13 @@
 package net.kigawa.kutil.unit.api.extention
 
-import net.kigawa.kutil.unit.api.component.UnitGetterComponent
+import net.kigawa.kutil.unit.api.component.UnitStoreComponent
 import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.component.UnitIdentify
-import net.kigawa.kutil.unit.extension.getter.InstanceGetter
+import net.kigawa.kutil.unit.extension.getter.InstanceStore
 import net.kigawa.kutil.unit.extension.registeroption.InstanceOption
 
 interface ComponentDatabase: UnitInfoDatabase {
-  var getterComponent: UnitGetterComponent
+  var getterComponent: UnitStoreComponent
   override fun register(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions): Boolean {
     return false
   }
@@ -16,20 +16,20 @@ interface ComponentDatabase: UnitInfoDatabase {
   }
   
   fun registerComponent(item: Any) {
-    val instanceGetter = InstanceGetter()
+    val instanceGetter = InstanceStore()
     instanceGetter.register(UnitIdentify(item.javaClass, null), RegisterOptions(InstanceOption(item)))
     registerComponent(item.javaClass, instanceGetter)
   }
   
-  fun registerComponent(itemClass: Class<out Any>, getter: UnitGetter) {
+  fun registerComponent(itemClass: Class<out Any>, getter: UnitStore) {
     registerComponent(UnitIdentify(itemClass, null), getter)
   }
   
   fun registerComponentClass(itemClass: Class<out Any>) {
-    registerComponent(itemClass, getterComponent.findGetter(UnitIdentify(itemClass, null), RegisterOptions()))
+    registerComponent(itemClass, getterComponent.findStore(UnitIdentify(itemClass, null), RegisterOptions()))
   }
   
-  fun registerComponent(identify: UnitIdentify<out Any>, getter: UnitGetter)
+  fun registerComponent(identify: UnitIdentify<out Any>, getter: UnitStore)
   
   fun unregisterComponent(clazz: Class<out Any>) {
     unregisterComponent(UnitIdentify(clazz, null))

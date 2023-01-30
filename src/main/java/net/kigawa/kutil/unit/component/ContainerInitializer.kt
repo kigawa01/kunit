@@ -2,7 +2,8 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.api.component.*
 import net.kigawa.kutil.unit.api.extention.ComponentDatabase
-import net.kigawa.kutil.unit.extension.*
+import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
+import net.kigawa.kutil.unit.extension.ContainerInjector
 import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
@@ -14,7 +15,7 @@ import net.kigawa.kutil.unit.extension.registrar.*
 
 class ContainerInitializer(unitContainer: UnitContainerImpl) {
   private val injectorComponent: UnitInjectorComponentImpl
-  private val getterComponent: UnitGetterComponentImpl
+  private val getterComponent: UnitStoreComponentImpl
   private val asyncComponent: UnitAsyncComponentImpl
   private val factoryComponent: UnitFactoryComponentImpl
   private val preInitFilterComponent: PreInitFilterComponentImpl
@@ -59,6 +60,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     componentDatabase.registerComponentClass(FileClassRegistrar::class.java)
     componentDatabase.registerComponentClass(JarRegistrar::class.java)
     componentDatabase.registerComponentClass(ResourceRegistrar::class.java)
+    componentDatabase.registerComponentClass(InstanceListRegistrar::class.java)
   }
   
   private fun initDatabase(
@@ -90,9 +92,9 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     return result
   }
   
-  private fun initGetter(): UnitGetterComponentImpl {
+  private fun initGetter(): UnitStoreComponentImpl {
     val result = addUnit(
-      UnitGetterComponentImpl(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
+      UnitStoreComponentImpl(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
     )
     componentDatabase.getterComponent = result
     return result

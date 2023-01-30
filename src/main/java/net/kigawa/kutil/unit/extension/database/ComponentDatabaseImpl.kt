@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.extension.database
 
 import net.kigawa.kutil.unit.annotation.getter.LateInit
-import net.kigawa.kutil.unit.api.component.UnitGetterComponent
+import net.kigawa.kutil.unit.api.component.UnitStoreComponent
 import net.kigawa.kutil.unit.api.component.UnitInfo
 import net.kigawa.kutil.unit.api.extention.*
 import net.kigawa.kutil.unit.component.InitStack
@@ -11,14 +11,14 @@ import net.kigawa.kutil.unit.extension.registeroption.*
 
 @LateInit
 class ComponentDatabaseImpl: ComponentDatabase {
-  override lateinit var getterComponent: UnitGetterComponent
+  override lateinit var getterComponent: UnitStoreComponent
   private val infoList = ConcurrentList<UnitInfo<out Any>>()
   
   init {
     registerComponent(this)
   }
   
-  override fun registerComponent(identify: UnitIdentify<out Any>, getter: UnitGetter) {
+  override fun registerComponent(identify: UnitIdentify<out Any>, getter: UnitStore) {
     val unitInfo = UnitInfo.create(identify, getter)
     unitInfo.initGetter(InitStack())
     infoList.add(unitInfo)

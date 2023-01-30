@@ -4,12 +4,12 @@ import net.kigawa.kutil.unit.annotation.getter.LateInit
 import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.component.UnitContainer
 import net.kigawa.kutil.unit.api.component.UnitDatabaseComponent
-import net.kigawa.kutil.unit.api.component.UnitGetterComponent
+import net.kigawa.kutil.unit.api.component.UnitStoreComponent
 import net.kigawa.kutil.unit.api.extention.RegisterOptions
 
 @LateInit
 open class ClassRegistrar(
-  getterComponent: UnitGetterComponent, databaseComponent: UnitDatabaseComponent,
+  getterComponent: UnitStoreComponent, databaseComponent: UnitDatabaseComponent,
   container: UnitContainer,
 ):
   AbstractRegister(getterComponent, databaseComponent, container) {

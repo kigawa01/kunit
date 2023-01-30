@@ -8,7 +8,7 @@ import net.kigawa.kutil.unit.api.extention.RegisterOptions
 
 @LateInit
 open class InstanceListRegistrar(
-  getterComponent: UnitGetterComponent, databaseComponent: UnitDatabaseComponent,
+  getterComponent: UnitStoreComponent, databaseComponent: UnitDatabaseComponent,
   container: UnitContainer,
 ):
   AbstractRegister(getterComponent, databaseComponent, container) {

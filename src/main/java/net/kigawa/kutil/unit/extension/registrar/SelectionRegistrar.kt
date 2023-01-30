@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
 import net.kigawa.kutil.unit.util.AnnotationUtil
 
 open class SelectionRegistrar(
-  getterComponent: UnitGetterComponent, databaseComponent: UnitDatabaseComponent, container: UnitContainer,
+  getterComponent: UnitStoreComponent, databaseComponent: UnitDatabaseComponent, container: UnitContainer,
 ): AbstractRegister(getterComponent, databaseComponent, container) {
   fun selectRegister(unitClass: Class<out Any>): (()->Unit)? {
     if (!AnnotationUtil.hasUnitAnnotation(unitClass)) return null

@@ -5,16 +5,16 @@ import net.kigawa.kutil.unit.component.UnitIdentify
 import net.kigawa.kutil.unit.api.component.UnitAsyncComponent
 import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.api.component.UnitFactoryComponent
-import net.kigawa.kutil.unit.api.extention.UnitGetter
+import net.kigawa.kutil.unit.api.extention.UnitStore
 import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
 import net.kigawa.kutil.unit.api.extention.RegisterOptions
 import java.util.concurrent.Future
 
 @LateInit
-class InitializeGetter(
+class InitializeStore(
   private val factoryComponent: UnitFactoryComponent,
   private val asyncComponent: UnitAsyncComponent,
-): UnitGetter {
+): UnitStore {
   override fun <T: Any> get(identify: UnitIdentify<T>): T {
     return factoryComponent.init(identify, InitStack())
   }

@@ -8,9 +8,9 @@ import java.util.*
 
 @LateInit
 class JarRegistrar(
-  private val listRegistrar: ListRegistrar,
-  private val loggerComponent: UnitLoggerComponent, getterComponent: UnitGetterComponent,
-  databaseComponent: UnitDatabaseComponent, container: UnitContainer,
+  private val loggerComponent: UnitLoggerComponent,
+  getterComponent: UnitStoreComponent, databaseComponent: UnitDatabaseComponent,
+  container: UnitContainer,
 ): SelectionRegistrar(getterComponent, databaseComponent, container) {
   companion object {
     const val PROTOCOL = "jar"

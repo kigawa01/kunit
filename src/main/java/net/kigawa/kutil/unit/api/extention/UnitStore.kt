@@ -4,7 +4,7 @@ import net.kigawa.kutil.unit.component.InitStack
 import net.kigawa.kutil.unit.component.UnitIdentify
 import java.util.concurrent.Future
 
-interface UnitGetter {
+interface UnitStore {
   fun <T: Any> get(identify: UnitIdentify<T>): T
   fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): Future<T>
   fun initGetter(identify: UnitIdentify<out Any>, initStack: InitStack)
