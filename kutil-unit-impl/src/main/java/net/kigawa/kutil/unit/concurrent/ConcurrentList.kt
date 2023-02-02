@@ -26,6 +26,7 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
     }
   }
   
+  @Suppress("unused")
   open fun removeLast(): T {
     return synchronized(this) {
       val l = list.toMutableList()
@@ -71,6 +72,7 @@ open class ConcurrentList<T: Any>(private vararg val immutableItem: T) {
     return toMutableList().flatMap(transform)
   }
   
+  @Suppress("unused")
   fun contain(predicate: (T)->Boolean): Boolean {
     return first(predicate) != null
   }
