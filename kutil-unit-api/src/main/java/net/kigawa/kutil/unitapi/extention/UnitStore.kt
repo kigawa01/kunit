@@ -1,7 +1,8 @@
 package net.kigawa.kutil.unitapi.extention
 
 import net.kigawa.kutil.unitapi.component.InitStack
-import net.kigawa.kutil.unitapi.component.UnitIdentify
+import net.kigawa.kutil.unitapi.UnitIdentify
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 import java.util.concurrent.Future
 
 interface UnitStore {

@@ -2,8 +2,10 @@
 
 package net.kigawa.kutil.unitapi.component
 
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.exception.UnitException
 import net.kigawa.kutil.unitapi.extention.*
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 interface UnitDatabaseComponent {
   fun getComponentDatabase(): ComponentDatabase

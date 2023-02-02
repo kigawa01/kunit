@@ -3,9 +3,9 @@ package net.kigawa.kutil.unit.extension.getter
 import net.kigawa.kutil.unit.extension.registeroption.*
 import net.kigawa.kutil.unitapi.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unitapi.component.InitStack
-import net.kigawa.kutil.unitapi.component.UnitIdentify
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.exception.UnitException
-import net.kigawa.kutil.unitapi.extention.RegisterOptions
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitStore
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask

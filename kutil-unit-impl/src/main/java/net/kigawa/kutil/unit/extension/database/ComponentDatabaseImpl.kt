@@ -6,8 +6,10 @@ import net.kigawa.kutil.unitapi.component.InitStack
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unit.extension.getter.InstanceStore
 import net.kigawa.kutil.unit.extension.registeroption.*
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.*
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 @LateInit
 class ComponentDatabaseImpl: ComponentDatabase {

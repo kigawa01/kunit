@@ -1,10 +1,11 @@
 package net.kigawa.kutil.unit.extension.getter
 
 import net.kigawa.kutil.unit.concurrent.ThreadLock
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.exception.UnitException
-import net.kigawa.kutil.unitapi.extention.RegisterOptions
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitStore
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit

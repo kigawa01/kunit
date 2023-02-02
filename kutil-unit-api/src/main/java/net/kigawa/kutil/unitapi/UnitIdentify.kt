@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unitapi.component
+package net.kigawa.kutil.unitapi
 
 import net.kigawa.kutil.unitapi.util.ReflectionUtil
 import java.util.*

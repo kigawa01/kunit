@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.extension.factory
 
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.InitStack
-import net.kigawa.kutil.unitapi.component.UnitIdentify
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.extention.UnitFactory
 
 @LateInit

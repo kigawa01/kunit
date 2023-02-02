@@ -2,9 +2,9 @@ package net.kigawa.kutil.unit.extension.database
 
 import net.kigawa.kutil.unit.concurrent.ConcurrentList
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
-import net.kigawa.kutil.unitapi.component.UnitIdentify
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.UnitInfo
-import net.kigawa.kutil.unitapi.extention.RegisterOptions
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitInfoDatabase
 
 @LateInit

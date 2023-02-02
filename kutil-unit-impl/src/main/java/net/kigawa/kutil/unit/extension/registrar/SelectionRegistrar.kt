@@ -1,8 +1,9 @@
 package net.kigawa.kutil.unit.extension.registrar
 
 import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
-import net.kigawa.kutil.unitapi.extention.RegisterOptions
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.util.AnnotationUtil
 
 open class SelectionRegistrar(

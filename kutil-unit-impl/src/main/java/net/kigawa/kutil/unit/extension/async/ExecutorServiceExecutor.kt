@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.async
 
-import net.kigawa.kutil.unitapi.component.UnitIdentify
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.extention.UnitAsyncExecutor
 import java.util.concurrent.ExecutorService
 

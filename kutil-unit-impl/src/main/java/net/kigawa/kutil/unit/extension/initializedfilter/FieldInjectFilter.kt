@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.extension.initializedfilter
 
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.Inject
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.exception.UnitException

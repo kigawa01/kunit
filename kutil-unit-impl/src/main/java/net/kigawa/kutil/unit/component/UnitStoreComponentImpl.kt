@@ -3,8 +3,10 @@ package net.kigawa.kutil.unit.component
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.exception.UnitException
 import net.kigawa.kutil.unit.extension.getter.*
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.*
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 @LateInit
 class UnitStoreComponentImpl(

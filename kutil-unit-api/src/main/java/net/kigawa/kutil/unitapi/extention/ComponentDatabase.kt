@@ -1,6 +1,8 @@
 package net.kigawa.kutil.unitapi.extention
 
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 interface ComponentDatabase: UnitInfoDatabase {
   var getterComponent: UnitStoreComponent

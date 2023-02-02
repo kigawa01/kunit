@@ -1,7 +1,8 @@
 package net.kigawa.kutil.unitapi.extention
 
-import net.kigawa.kutil.unitapi.component.UnitIdentify
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.UnitInfo
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 interface UnitInfoDatabase {
   fun register(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions): Boolean

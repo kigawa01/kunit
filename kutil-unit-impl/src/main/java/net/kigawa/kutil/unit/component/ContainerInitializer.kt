@@ -14,7 +14,7 @@ import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.ComponentDatabase
 
 class ContainerInitializer(unitContainer: UnitContainerImpl) {
-  private val injectorComponent: UnitInjectorComponentImpl
+  private val injectorComponent: UnitFinderComponentImpl
   private val getterComponent: UnitStoreComponentImpl
   private val asyncComponent: UnitAsyncComponentImpl
   private val factoryComponent: UnitFactoryComponentImpl
@@ -85,8 +85,8 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   private fun initInjector(
     factoryComponent: UnitFactoryComponentImpl,
     databaseComponent: UnitDatabaseComponentImpl,
-  ): UnitInjectorComponentImpl {
-    val result = addUnit(UnitInjectorComponentImpl(container, componentDatabase, loggerComponent))
+  ): UnitFinderComponentImpl {
+    val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent))
     factoryComponent.addFactory(NormalFactory(result))
     result.addExecutor(ContainerInjector(databaseComponent))
     return result
