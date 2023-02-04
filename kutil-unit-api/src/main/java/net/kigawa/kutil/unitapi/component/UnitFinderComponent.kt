@@ -2,13 +2,13 @@ package net.kigawa.kutil.unitapi.component
 
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.options.FindOptions
-import net.kigawa.kutil.unitapi.extention.UnitInjector
+import net.kigawa.kutil.unitapi.extention.UnitFinder
 
-interface UnitFinderComponent: ComponentHolder<UnitInjector> {
-  fun <T: Any> findUnits(identify: UnitIdentify<T>, stack: InitStack, findOptions: FindOptions): List<T>
-  fun <T: Any> findUnits(identifies: List<UnitIdentify<out T>>, stack: InitStack, findOptions: FindOptions): List<T> {
+interface UnitFinderComponent: ComponentHolder<UnitFinder> {
+  fun <T: Any> findUnits(identify: UnitIdentify<T>,  findOptions: FindOptions): List<T>
+  fun <T: Any> findUnits(identifies: List<UnitIdentify<out T>>, findOptions: FindOptions): List<T> {
     return identifies.flatMap {
-      findUnits(it, stack, findOptions)
+      findUnits(it,  findOptions)
     }
   }
 }

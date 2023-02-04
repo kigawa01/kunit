@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
-import net.kigawa.kutil.unit.extension.ContainerInjector
+import net.kigawa.kutil.unit.extension.ContainerFinder
 import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
@@ -88,7 +88,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   ): UnitFinderComponentImpl {
     val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent))
     factoryComponent.addFactory(NormalFactory(result))
-    result.addExecutor(ContainerInjector(databaseComponent))
+    result.addExecutor(ContainerFinder(databaseComponent))
     return result
   }
   

@@ -8,6 +8,7 @@ import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.exception.UnitException
 import net.kigawa.kutil.unitapi.options.FindOptions
 import net.kigawa.kutil.unitapi.extention.UnitFactory
+import net.kigawa.kutil.unitapi.options.FindInitGetOption
 import java.lang.reflect.Constructor
 
 @LateInit
@@ -19,7 +20,7 @@ class NormalFactory(
   override fun <T: Any> init(identify: UnitIdentify<T>, stack: InitStack): T {
     val constructor = getConstructor(identify.unitClass)
     val parameters =
-      injectorComponent.findUnits(UnitIdentifies.createList(constructor), stack, FindOptions()).toTypedArray()
+      injectorComponent.findUnits(UnitIdentifies.createList(constructor), FindOptions(FindInitGetOption(stack))).toTypedArray()
     @Suppress("UNCHECKED_CAST")
     return constructor.newInstance(*parameters) as T
   }

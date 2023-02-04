@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.registrar
 
-import net.kigawa.kutil.unit.extension.registeroption.InstanceOption
+import net.kigawa.kutil.unitapi.options.RegistrarInstanceOption
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
@@ -14,7 +14,7 @@ open class InstanceListRegistrar(
   AbstractRegister(getterComponent, databaseComponent, container) {
   fun register(identifies: List<Any>) {
     identifies.map {
-      registerTask(UnitIdentify(it.javaClass, null), RegisterOptions(InstanceOption(it)))
+      registerTask(UnitIdentify(it.javaClass, null), RegisterOptions(RegistrarInstanceOption(it)))
     }.forEach {
       it()
     }

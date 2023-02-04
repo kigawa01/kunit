@@ -7,6 +7,7 @@ import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.exception.UnitException
 import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitStore
+import net.kigawa.kutil.unitapi.options.RegistrarInstanceOption
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 
@@ -31,8 +32,8 @@ class InstanceStore(): UnitStore {
   @Synchronized
   override fun register(identify: UnitIdentify<out Any>, options: RegisterOptions): Boolean {
     if (obj != null) return false
-    val instanceOption = options.firstOrNull(InstanceOption::class.java) ?: return false
-    obj = instanceOption.instance
+    val registrarInstanceOption = options.firstOrNull(RegistrarInstanceOption::class.java) ?: return false
+    obj = registrarInstanceOption.instance
     return true
   }
 }

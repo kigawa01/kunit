@@ -1,3 +1,3 @@
 package net.kigawa.kutil.unitapi.options
 
-class FindOptions: Options<FindOption>()
+class FindOptions(vararg option: FindOption): Options<FindOption>(*option)

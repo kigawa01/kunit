@@ -9,6 +9,7 @@ import net.kigawa.kutil.unit.extension.registeroption.*
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.*
+import net.kigawa.kutil.unitapi.options.RegistrarInstanceOption
 import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 @LateInit
@@ -22,7 +23,7 @@ class ComponentDatabaseImpl: ComponentDatabase {
   
   override fun registerComponent(item: Any) {
     val instanceGetter = InstanceStore()
-    instanceGetter.register(UnitIdentify(item.javaClass, null), RegisterOptions(InstanceOption(item)))
+    instanceGetter.register(UnitIdentify(item.javaClass, null), RegisterOptions(RegistrarInstanceOption(item)))
     registerComponent(item.javaClass, instanceGetter)
   }
   

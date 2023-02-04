@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.registrar
 
-import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
+import net.kigawa.kutil.unitapi.options.RegisterDefaultOption
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.options.RegisterOptions
@@ -13,7 +13,7 @@ open class SelectionRegistrar(
     if (!AnnotationUtil.hasUnitAnnotation(unitClass)) return null
    return registerTask(
      UnitIdentify(unitClass, AnnotationUtil.getUnitNameByAnnotation(unitClass)),
-     RegisterOptions(*DefaultRegisterOption.getOption(unitClass))
+     RegisterOptions(*RegisterDefaultOption.getOption(unitClass))
     )
   }
 }

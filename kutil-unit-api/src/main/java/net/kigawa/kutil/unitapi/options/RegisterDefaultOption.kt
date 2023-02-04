@@ -1,9 +1,8 @@
-package net.kigawa.kutil.unit.extension.registeroption
+package net.kigawa.kutil.unitapi.options
 
 import net.kigawa.kutil.unitapi.annotation.getter.*
-import net.kigawa.kutil.unitapi.options.RegisterOption
 
-enum class DefaultRegisterOption(private val annotationClass: Class<out Annotation>): RegisterOption {
+enum class RegisterDefaultOption(private val annotationClass: Class<out Annotation>): RegisterOption {
   ALWAYS_INIT(AlwaysInit::class.java),
   LATE_INIT(LateInit::class.java),
   
@@ -13,7 +12,7 @@ enum class DefaultRegisterOption(private val annotationClass: Class<out Annotati
   
   companion object {
     @JvmStatic
-    fun getOption(clazz: Class<out Any>): Array<DefaultRegisterOption> {
+    fun getOption(clazz: Class<out Any>): Array<RegisterDefaultOption> {
       return values().filter {clazz.isAnnotationPresent(it.annotationClass)}.toTypedArray()
     }
   }

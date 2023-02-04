@@ -5,6 +5,7 @@ import net.kigawa.kutil.unitapi.annotation.Inject
 import net.kigawa.kutil.unitapi.component.InitStack
 import net.kigawa.kutil.unitapi.component.UnitFinderComponent
 import net.kigawa.kutil.unitapi.extention.InitializedFilter
+import net.kigawa.kutil.unitapi.options.FindInitGetOption
 import net.kigawa.kutil.unitapi.options.FindOptions
 import net.kigawa.kutil.unitapi.util.ReflectionUtil
 
@@ -16,7 +17,7 @@ class MethodInjectFilter(
       if (ReflectionUtil.isStatic(it)) return@forEach
       it.getAnnotation(Inject::class.java) ?: return@forEach
       val arg =
-        injectorComponent.findUnits(UnitIdentifies.createList(it), stack, FindOptions()).toTypedArray()
+        injectorComponent.findUnits(UnitIdentifies.createList(it), FindOptions(FindInitGetOption(stack))).toTypedArray()
       it.isAccessible = true
       it.invoke(obj, *arg)
     }

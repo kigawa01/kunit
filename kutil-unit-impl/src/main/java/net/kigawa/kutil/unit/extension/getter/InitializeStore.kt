@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.getter
 
-import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
+import net.kigawa.kutil.unitapi.options.RegisterDefaultOption
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
@@ -27,6 +27,6 @@ class InitializeStore(
   }
   
   override fun register(identify: UnitIdentify<out Any>, options: RegisterOptions): Boolean {
-    return options.contain(DefaultRegisterOption.ALWAYS_INIT)
+    return options.contain(RegisterDefaultOption.ALWAYS_INIT)
   }
 }

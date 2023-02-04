@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.getter
 
-import net.kigawa.kutil.unit.extension.registeroption.DefaultRegisterOption
+import net.kigawa.kutil.unitapi.options.RegisterDefaultOption
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unitapi.component.*
@@ -40,6 +40,6 @@ class LateInitStore(
     if (obj != null) return false
     if (registered) return false
     registered = true
-    return options.contain(DefaultRegisterOption.LATE_INIT)
+    return options.contain(RegisterDefaultOption.LATE_INIT)
   }
 }
