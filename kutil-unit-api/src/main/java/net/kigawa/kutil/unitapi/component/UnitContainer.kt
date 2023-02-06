@@ -4,6 +4,7 @@ package net.kigawa.kutil.unitapi.component
 
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.exception.*
+import net.kigawa.kutil.unitapi.options.FindOptions
 import java.util.*
 import java.util.concurrent.*
 
@@ -41,7 +42,10 @@ interface UnitContainer: AutoCloseable {
   
   fun removeUnit(identify: UnitIdentify<out Any>)
   
-  fun <T: Any> getUnitList(identify: UnitIdentify<T>): List<T>
+  fun <T: Any> getUnitList(identify: UnitIdentify<T>, findOptions: FindOptions): List<T>
+  fun <T: Any> getUnitList(identify: UnitIdentify<T>): List<T> {
+    return getUnitList(identify, FindOptions())
+  }
   
   fun <T: Any> getUnitList(unitClass: Class<T>): List<T> {
     return getUnitList(unitClass, null)
@@ -55,11 +59,23 @@ interface UnitContainer: AutoCloseable {
     return getUnit(unitClass, null)
   }
   
+  fun <T: Any> getUnit(unitClass: Class<T>, findOptions: FindOptions): T {
+    return getUnit(unitClass, null, findOptions)
+  }
+  
   fun <T: Any> getUnit(unitClass: Class<T>, name: String?): T {
     return getUnit(UnitIdentify(unitClass, name))
   }
   
+  fun <T: Any> getUnit(unitClass: Class<T>, name: String?, findOptions: FindOptions): T {
+    return getUnit(UnitIdentify(unitClass, name), findOptions)
+  }
+  
   fun <T: Any> getUnit(identify: UnitIdentify<T>): T {
+    return getUnit(identify, FindOptions())
+  }
+  
+  fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T {
     var units = getUnitList(identify)
     if (units.isEmpty()) {
       units = getUnitList(identify.unitClass)

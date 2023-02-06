@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
-import net.kigawa.kutil.unit.extension.ContainerFinder
 import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.factory.NormalFactory
+import net.kigawa.kutil.unit.extension.finder.InitGetFinder
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
 import net.kigawa.kutil.unit.extension.preinitfilter.DependencyAnnotationFilter
@@ -14,8 +14,8 @@ import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.ComponentDatabase
 
 class ContainerInitializer(unitContainer: UnitContainerImpl) {
-  private val injectorComponent: UnitFinderComponentImpl
-  private val getterComponent: UnitStoreComponentImpl
+  private val finderComponent: UnitFinderComponentImpl
+  private val storeComponent: UnitStoreComponentImpl
   private val asyncComponent: UnitAsyncComponentImpl
   private val factoryComponent: UnitFactoryComponentImpl
   private val preInitFilterComponent: PreInitFilterComponentImpl
@@ -36,8 +36,8 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     factoryComponent =
       initFactory(container, loggerComponent, componentDatabase, initializedFilterComponent, preInitFilterComponent)
     asyncComponent = addUnit(UnitAsyncComponentImpl(container, loggerComponent, componentDatabase))
-    getterComponent = initGetter()
-    injectorComponent = initInjector(factoryComponent, databaseComponent)
+    storeComponent = initStore(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
+    finderComponent = initFinder(container, factoryComponent, databaseComponent, componentDatabase, loggerComponent)
     addUnit(UnitConfigComponentImpl())
     closerComponent = initCloser(container, loggerComponent, componentDatabase)
     
@@ -82,17 +82,27 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     return result
   }
   
-  private fun initInjector(
+  private fun initFinder(
+    container: UnitContainerImpl,
     factoryComponent: UnitFactoryComponentImpl,
     databaseComponent: UnitDatabaseComponentImpl,
+    componentDatabase: ComponentDatabase,
+    loggerComponent: UnitLoggerComponent,
   ): UnitFinderComponentImpl {
-    val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent))
+    val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent,databaseComponent))
     factoryComponent.addFactory(NormalFactory(result))
-    result.addExecutor(ContainerFinder(databaseComponent))
+    result.addExecutor(InitGetFinder(databaseComponent))
+    container.finderComponent = result
     return result
   }
   
-  private fun initGetter(): UnitStoreComponentImpl {
+  private fun initStore(
+    container: UnitContainer,
+    loggerComponent: UnitLoggerComponent,
+    factoryComponent: UnitFactoryComponent,
+    asyncComponent: UnitAsyncComponent,
+    componentDatabase: ComponentDatabase,
+  ): UnitStoreComponentImpl {
     val result = addUnit(
       UnitStoreComponentImpl(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
     )

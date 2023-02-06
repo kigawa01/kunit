@@ -2,7 +2,7 @@ package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.exception.UnitException
-import net.kigawa.kutil.unit.extension.getter.*
+import net.kigawa.kutil.unit.extension.store.*
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.*
@@ -34,6 +34,6 @@ class UnitStoreComponentImpl(
         if (it.register(identify, options)) it
         else null
       }
-    } ?: throw UnitException("getter is not found", identify, options)
+    } ?: throw UnitException("could not register to UnitStore", identify, options)
   }
 }

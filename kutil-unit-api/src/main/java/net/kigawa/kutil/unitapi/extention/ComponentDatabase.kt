@@ -1,7 +1,9 @@
 package net.kigawa.kutil.unitapi.extention
 
 import net.kigawa.kutil.unitapi.UnitIdentify
-import net.kigawa.kutil.unitapi.component.*
+import net.kigawa.kutil.unitapi.component.UnitInfo
+import net.kigawa.kutil.unitapi.component.UnitStoreComponent
+import net.kigawa.kutil.unitapi.options.RegisterOptionEnum
 import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 interface ComponentDatabase: UnitInfoDatabase {
@@ -20,7 +22,12 @@ interface ComponentDatabase: UnitInfoDatabase {
   }
   
   fun registerComponentClass(itemClass: Class<out Any>) {
-    registerComponent(itemClass, getterComponent.findStore(UnitIdentify(itemClass, null), RegisterOptions()))
+    registerComponent(
+      itemClass, getterComponent.findStore(
+        UnitIdentify(itemClass, null),
+        RegisterOptions(*RegisterOptionEnum.getOption(itemClass))
+      )
+    )
   }
   
   fun registerComponent(identify: UnitIdentify<out Any>, getter: UnitStore)

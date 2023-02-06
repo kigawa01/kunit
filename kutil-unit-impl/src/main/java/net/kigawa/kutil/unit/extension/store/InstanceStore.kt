@@ -1,18 +1,17 @@
-package net.kigawa.kutil.unit.extension.getter
+package net.kigawa.kutil.unit.extension.store
 
-import net.kigawa.kutil.unit.extension.registeroption.*
+import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unitapi.component.InitStack
-import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.exception.UnitException
-import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitStore
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.options.RegistrarInstanceOption
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 
 @AlwaysInit
-class InstanceStore(): UnitStore {
+class InstanceStore: UnitStore {
   private var obj: Any? = null
   
   override fun <T: Any> get(identify: UnitIdentify<T>): T {

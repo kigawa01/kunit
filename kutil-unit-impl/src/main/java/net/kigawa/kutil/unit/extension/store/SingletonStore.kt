@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.getter
+package net.kigawa.kutil.unit.extension.store
 
 import net.kigawa.kutil.unit.concurrent.ThreadLock
 import net.kigawa.kutil.unitapi.UnitIdentify
