@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unit.extension.registrar
 
-import net.kigawa.kutil.unit.component.UnitInfoImpl
+import net.kigawa.kutil.unit.UnitInfoImpl
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.options.RegisterOptions
