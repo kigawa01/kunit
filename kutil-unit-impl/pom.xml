@@ -23,5 +23,10 @@
             <artifactId>kutil-unit-api</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>log</artifactId>
+            <version>2.0</version>
+        </dependency>
     </dependencies>
 </project>

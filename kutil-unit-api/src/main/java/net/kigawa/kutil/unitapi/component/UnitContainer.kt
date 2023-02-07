@@ -76,7 +76,7 @@ interface UnitContainer: AutoCloseable {
   }
   
   fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T {
-    var units = getUnitList(identify)
+    var units = getUnitList(identify, findOptions)
     if (units.isEmpty()) {
       units = getUnitList(identify.unitClass)
       if (units.isEmpty())
