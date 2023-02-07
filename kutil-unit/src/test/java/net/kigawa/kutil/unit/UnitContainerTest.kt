@@ -7,6 +7,7 @@ import net.kigawa.kutil.unit.util.AbstractTest
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
 import net.kigawa.kutil.unitapi.component.UnitContainer
 import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
+import net.kigawa.kutil.unitapi.registrar.*
 import org.junit.AfterClass
 import org.junit.Assert.assertThrows
 import org.junit.BeforeClass
@@ -44,7 +45,7 @@ internal class UnitContainerTest: AbstractTest() {
     val closeable = AutoCloseable {
       closed = true
     }
-    con.getUnit(InstanceRegistrar::class.java).register(closeable)
+    con.getUnit(InstanceRegistrarImpl::class.java).register(closeable)
     con.removeUnit(closeable.javaClass)
     assertTrue(closed)
   }
@@ -52,7 +53,7 @@ internal class UnitContainerTest: AbstractTest() {
   @Test
   fun testRegisterChangeUnit() {
     val unit = con.getUnit(Unit4::class.java)
-    con.getUnit(ClassRegistrar::class.java).register(Unit4::class.java)
+    con.getUnit(ClassRegistrarImpl::class.java).register(Unit4::class.java)
     assertNotSame(unit, con.getUnit(Unit4::class.java))
   }
   
@@ -66,7 +67,7 @@ internal class UnitContainerTest: AbstractTest() {
   
   @Test
   fun testArgNameInjection() {
-    val registrar = con.getUnit(ClassRegistrar::class.java)
+    val registrar = con.getUnit(ClassRegistrarImpl::class.java)
     assertDoesNotThrow {registrar.register(Unit6::class.java)}
   }
   
@@ -95,7 +96,7 @@ internal class UnitContainerTest: AbstractTest() {
     fun beforeAll() {
       con.getUnit(InstanceRegistrar::class.java).register(executor)
       con.getUnit(UnitConfigComponent::class.java).timeoutSec = 5
-      con.getUnit(ResourceRegistrarImpl::class.java).register(UnitContainerTest::class.java)
+      con.getUnit(ResourceRegistrar::class.java).register(UnitContainerTest::class.java)
       con.getUnit(ClassRegistrar::class.java).register(NamedUnit::class.java, "b")
     }
     
