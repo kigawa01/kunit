@@ -54,11 +54,11 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     initializedFilterComponent.add(MethodInjectFilter::class.java)
     preInitFilterComponent.add(DependencyAnnotationFilter::class.java)
     
-    componentDatabase.registerComponentClass(ClassRegistrar::class.java)
-    componentDatabase.registerComponentClass(ListRegistrar::class.java)
-    componentDatabase.registerComponentClass(InstanceRegistrar::class.java)
+    componentDatabase.registerComponentClass(ClassRegistrarImpl::class.java)
+    componentDatabase.registerComponentClass(ListRegistrarImpl::class.java)
+    componentDatabase.registerComponentClass(InstanceRegistrarImpl::class.java)
     componentDatabase.registerComponentClass(ResourceRegistrarImpl::class.java)
-    componentDatabase.registerComponentClass(InstanceListRegistrar::class.java)
+    componentDatabase.registerComponentClass(InstanceListRegistrarImpl::class.java)
   }
   
   private fun initDatabase(

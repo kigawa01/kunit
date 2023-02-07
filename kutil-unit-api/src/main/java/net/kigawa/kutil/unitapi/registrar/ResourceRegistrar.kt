@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unitapi.extention
+package net.kigawa.kutil.unitapi.registrar
 
 interface ResourceRegistrar {
   fun register(rootClass: Class<out Any>) {
