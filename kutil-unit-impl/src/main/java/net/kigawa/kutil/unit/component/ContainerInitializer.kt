@@ -57,9 +57,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     componentDatabase.registerComponentClass(ClassRegistrar::class.java)
     componentDatabase.registerComponentClass(ListRegistrar::class.java)
     componentDatabase.registerComponentClass(InstanceRegistrar::class.java)
-    componentDatabase.registerComponentClass(FileClassRegistrar::class.java)
-    componentDatabase.registerComponentClass(JarRegistrar::class.java)
-    componentDatabase.registerComponentClass(ResourceRegistrar::class.java)
+    componentDatabase.registerComponentClass(ResourceRegistrarImpl::class.java)
     componentDatabase.registerComponentClass(InstanceListRegistrar::class.java)
   }
   

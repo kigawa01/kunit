@@ -2,16 +2,22 @@ package net.kigawa.kutil.unit
 
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
-import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
 import net.kigawa.kutil.unit.extension.registrar.*
-import net.kigawa.kutil.unit.util.Assertions
+import net.kigawa.kutil.unit.util.AbstractTest
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
 import net.kigawa.kutil.unitapi.component.UnitContainer
-import org.junit.jupiter.api.*
+import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
+import org.junit.AfterClass
+import org.junit.Assert.assertThrows
+import org.junit.BeforeClass
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-internal class UnitContainerTest: Assertions() {
+@RunWith(JUnit4::class)
+internal class UnitContainerTest: AbstractTest() {
   @Test
   fun testGet() {
     assertNotNull(con.getUnit(Unit4::class.java))
@@ -85,16 +91,16 @@ internal class UnitContainerTest: Assertions() {
     private val con: UnitContainer = UnitContainer.create()
     
     @JvmStatic
-    @BeforeAll
+    @BeforeClass
     fun beforeAll() {
       con.getUnit(InstanceRegistrar::class.java).register(executor)
       con.getUnit(UnitConfigComponent::class.java).timeoutSec = 5
-      con.getUnit(ResourceRegistrar::class.java).register(UnitContainerTest::class.java)
+      con.getUnit(ResourceRegistrarImpl::class.java).register(UnitContainerTest::class.java)
       con.getUnit(ClassRegistrar::class.java).register(NamedUnit::class.java, "b")
     }
     
     @JvmStatic
-    @AfterAll
+    @AfterClass
     fun afterAll() {
       executor.shutdown()
     }
