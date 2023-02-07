@@ -7,13 +7,27 @@
         <version>4.0.0</version>
     </parent>
 
-    <artifactId>kutil-unit-api</artifactId>
+    <artifactId>kutil-unit</artifactId>
     <packaging>jar</packaging>
 
-    <name>kutil-unit-api</name>
+    <name>kutil-unit</name>
     <url>https://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>kutil-unit-impl</artifactId>
+            <version>${version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>kutil-unit-api</artifactId>
+            <version>${version}</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -7,5 +7,5 @@ import net.kigawa.kutil.unitapi.annotation.Kunit
 @Suppress("UNUSED_PARAMETER")
 @Kunit
 class Unit3(unitInterface1: UnitInterface1) :
-    UnitOneToFourInterface {
+  UnitOneToFourInterface {
 }
