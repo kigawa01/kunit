@@ -55,6 +55,12 @@ interface UnitContainer: AutoCloseable {
     return getUnitList(UnitIdentify(unitClass, name))
   }
   
+  fun <T: Any> getCorrespondingUnitList(identifies: List<UnitIdentify<out T>>, findOptions: FindOptions): List<T> {
+    return identifies.map {
+      getUnit(it, findOptions)
+    }
+  }
+  
   fun <T: Any> getUnit(unitClass: Class<T>): T {
     return getUnit(unitClass, null)
   }

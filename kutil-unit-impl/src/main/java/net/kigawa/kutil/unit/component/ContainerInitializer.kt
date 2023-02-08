@@ -4,7 +4,6 @@ import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
 import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
-import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.finder.InitGetFinder
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
@@ -37,7 +36,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
       initFactory(container, loggerComponent, componentDatabase, initializedFilterComponent, preInitFilterComponent)
     asyncComponent = addUnit(UnitAsyncComponentImpl(container, loggerComponent, componentDatabase))
     storeComponent = initStore(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
-    finderComponent = initFinder(container, factoryComponent, databaseComponent, componentDatabase, loggerComponent)
+    finderComponent = initFinder(container, databaseComponent, componentDatabase, loggerComponent)
     addUnit(UnitConfigComponentImpl())
     closerComponent = initCloser(container, loggerComponent, componentDatabase)
     
@@ -82,13 +81,11 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   
   private fun initFinder(
     container: UnitContainerImpl,
-    factoryComponent: UnitFactoryComponentImpl,
     databaseComponent: UnitDatabaseComponentImpl,
     componentDatabase: ComponentDatabase,
     loggerComponent: UnitLoggerComponent,
   ): UnitFinderComponentImpl {
     val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent, databaseComponent))
-    factoryComponent.addFactory(NormalFactory(result))
     result.addExecutor(InitGetFinder(databaseComponent))
     container.finderComponent = result
     return result
