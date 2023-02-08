@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.registrar
+package net.kigawa.kutil.unit.registrar
 
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
@@ -26,14 +26,14 @@ class ResourceRegistrarImpl(
     val packageDir = packageName.replace('.', '/')
     classLoader.getResources(packageDir).asIterator().forEach {
       when (it.protocol) {
-        JAR_PROTOCOL ->registerJar(it, packageName)
-        FILE_PROTOCOL->registerFile(it, packageName)
+        JAR_PROTOCOL ->registerJar(classLoader, it, packageName)
+        FILE_PROTOCOL->registerFile(classLoader, it, packageName)
         else         ->throw UnitException("could not support resource protocol")
       }
     }
   }
   
-  private fun registerJar(resource: URL, packageName: String) {
+  private fun registerJar(classLoader: ClassLoader, resource: URL, packageName: String) {
     if (JAR_PROTOCOL != resource.protocol) throw RuntimeException("could not support file type")
     
     (resource.openConnection() as JarURLConnection).jarFile.use {jarFile->
@@ -43,23 +43,23 @@ class ResourceRegistrarImpl(
         if (!name.endsWith(".class")) return@map null
         name = name.replace('/', '.').replace(".class$".toRegex(), "")
         loggerComponent.catch(null) {
-          val unitClass = Class.forName(name)
+          val unitClass = classLoader.loadClass(name)
           selectRegister(unitClass)
         }
       }
     }.forEach {it?.invoke()}
   }
   
-  private fun registerFile(resource: URL, packageName: String) {
+  private fun registerFile(classLoader: ClassLoader, resource: URL, packageName: String) {
     if (FILE_PROTOCOL != resource.protocol) throw RuntimeException("could not support file type")
-    loadUnit(File(resource.file), packageName).forEach {it?.invoke()}
+    loadUnit(classLoader, File(resource.file), packageName).forEach {it?.invoke()}
   }
   
-  private fun loadUnit(dir: File, packageName: String): List<(()->Unit)?> {
+  private fun loadUnit(classLoader: ClassLoader, dir: File, packageName: String): List<(()->Unit)?> {
     val files = dir.listFiles() ?: throw UnitException("cold not load unit files")
     return files.map {file->
       if (file.isDirectory) {
-        val list = loadUnit(file, packageName + "." + file.name)
+        val list = loadUnit(classLoader, file, packageName + "." + file.name)
         return@map {list.forEach {it?.invoke()}}
       }
       if (!file.name.endsWith(".class")) return@map null
@@ -67,7 +67,7 @@ class ResourceRegistrarImpl(
       name = name.replace(".class$".toRegex(), "")
       name = "$packageName.$name"
       loggerComponent.catch(null) {
-        val unitClass = Class.forName(name)
+        val unitClass = classLoader.loadClass(name)
         selectRegister(unitClass)
       }
     }

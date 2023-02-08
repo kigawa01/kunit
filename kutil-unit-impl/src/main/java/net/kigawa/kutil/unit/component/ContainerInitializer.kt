@@ -9,7 +9,7 @@ import net.kigawa.kutil.unit.extension.finder.InitGetFinder
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
 import net.kigawa.kutil.unit.extension.preinitfilter.DependencyAnnotationFilter
-import net.kigawa.kutil.unit.extension.registrar.*
+import net.kigawa.kutil.unit.registrar.*
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.ComponentDatabase
 
@@ -87,7 +87,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     componentDatabase: ComponentDatabase,
     loggerComponent: UnitLoggerComponent,
   ): UnitFinderComponentImpl {
-    val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent,databaseComponent))
+    val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent, databaseComponent))
     factoryComponent.addFactory(NormalFactory(result))
     result.addExecutor(InitGetFinder(databaseComponent))
     container.finderComponent = result

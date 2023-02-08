@@ -2,16 +2,15 @@ package net.kigawa.kutil.unit
 
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
-import net.kigawa.kutil.unit.extension.registrar.*
+import net.kigawa.kutil.unit.registrar.ClassRegistrarImpl
+import net.kigawa.kutil.unit.registrar.InstanceRegistrarImpl
 import net.kigawa.kutil.unit.util.AbstractTest
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
 import net.kigawa.kutil.unitapi.component.UnitContainer
 import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
 import net.kigawa.kutil.unitapi.registrar.*
-import org.junit.AfterClass
+import org.junit.*
 import org.junit.Assert.assertThrows
-import org.junit.BeforeClass
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import java.util.concurrent.ExecutorService
