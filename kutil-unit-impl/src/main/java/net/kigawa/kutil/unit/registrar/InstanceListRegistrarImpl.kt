@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.registrar
+package net.kigawa.kutil.unit.registrar
 
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
