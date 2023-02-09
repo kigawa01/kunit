@@ -21,7 +21,7 @@ internal class UnitContainerTest: AbstractTest() {
   @Test
   fun testParent() {
     val container = UnitContainer.create(con)
-    assertSize(1, container.getUnitList(ResourceRegistrar::class.java))
+    assertDoesNotThrow {container.getUnit(ResourceRegistrar::class.java)}
   }
   
   @Test
