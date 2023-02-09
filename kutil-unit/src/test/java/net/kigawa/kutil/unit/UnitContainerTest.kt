@@ -19,6 +19,12 @@ import java.util.concurrent.Executors
 @RunWith(JUnit4::class)
 internal class UnitContainerTest: AbstractTest() {
   @Test
+  fun testParent() {
+    val container = UnitContainer.create(con)
+    assertDoesNotThrow {container.getUnit(ResourceRegistrar::class.java)}
+  }
+  
+  @Test
   fun testGet() {
     assertNotNull(con.getUnit(Unit4::class.java))
     assertNotNull(con.getUnit(Unit1::class.java))

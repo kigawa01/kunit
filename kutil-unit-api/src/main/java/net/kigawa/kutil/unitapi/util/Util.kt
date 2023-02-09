@@ -1,6 +1,10 @@
 package net.kigawa.kutil.unitapi.util
 
 object Util {
+  fun <T> connectList(vararg list: List<T>): List<T> {
+    return list.flatMap {it}
+  }
+  
   fun createStringList(items: Iterable<Any?>): List<String> {
     val list = mutableListOf<Any>()
     items.forEach {

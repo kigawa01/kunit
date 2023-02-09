@@ -81,18 +81,7 @@ interface UnitContainer: AutoCloseable {
     return getUnit(identify, FindOptions())
   }
   
-  fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T {
-    var units = getUnitList(identify, findOptions)
-    if (units.isEmpty()) {
-      units = getUnitList(identify.unitClass)
-      if (units.isEmpty())
-        throw NoFoundUnitException("unit is not found", identify)
-    }
-    if (units.size == 1) {
-      return units[0]
-    }
-    throw NoSingleUnitException("unit is not single count: ${units.size}", identify)
-  }
+  fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T
   
   fun <T: Any> contain(identify: UnitIdentify<T>): Boolean {
     return getUnitList(identify).isNotEmpty()
