@@ -1,5 +1,6 @@
 package net.kigawa.kutil.unit.component
 
+import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
@@ -15,6 +16,10 @@ class UnitFactoryComponentImpl(
   private val initializedFilter: InitializedFilterComponent,
   private val preInitFilterComponent: PreInitFilterComponent,
 ): UnitFactoryComponent, ComponentHolderImpl<UnitFactory>(container, database, loggerComponent) {
+  init {
+    addFactory(NormalFactory(container))
+  }
+  
   override fun <T: Any> init(identify: UnitIdentify<T>, stack: InitStack): T {
     val initStack = stack.addIdentify(identify)
     
