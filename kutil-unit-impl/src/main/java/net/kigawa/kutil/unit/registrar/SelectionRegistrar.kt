@@ -1,4 +1,4 @@
-package net.kigawa.kutil.unit.extension.registrar
+package net.kigawa.kutil.unit.registrar
 
 import net.kigawa.kutil.unitapi.options.RegisterOptionEnum
 import net.kigawa.kutil.unitapi.UnitIdentify

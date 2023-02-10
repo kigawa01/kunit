@@ -2,16 +2,30 @@ package net.kigawa.kutil.unit
 
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
-import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
-import net.kigawa.kutil.unit.extension.registrar.*
-import net.kigawa.kutil.unit.util.Assertions
+import net.kigawa.kutil.unit.registrar.ClassRegistrarImpl
+import net.kigawa.kutil.unit.registrar.InstanceRegistrarImpl
+import net.kigawa.kutil.unit.util.AbstractTest
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
 import net.kigawa.kutil.unitapi.component.UnitContainer
-import org.junit.jupiter.api.*
+import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
+import net.kigawa.kutil.unitapi.registrar.*
+import org.junit.*
+import org.junit.Assert.assertThrows
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-internal class UnitContainerTest: Assertions() {
+@RunWith(JUnit4::class)
+internal class UnitContainerTest: AbstractTest() {
+  @Test
+  fun testParent() {
+    val container = UnitContainer.create(con)
+    assertDoesNotThrow {container.getUnit(ResourceRegistrar::class.java)}
+    assertDoesNotThrow {container.getUnit(Unit1::class.java)}
+    assertSize(2, container.getUnitList(ResourceRegistrar::class.java))
+  }
+  
   @Test
   fun testGet() {
     assertNotNull(con.getUnit(Unit4::class.java))
@@ -38,7 +52,7 @@ internal class UnitContainerTest: Assertions() {
     val closeable = AutoCloseable {
       closed = true
     }
-    con.getUnit(InstanceRegistrar::class.java).register(closeable)
+    con.getUnit(InstanceRegistrarImpl::class.java).register(closeable)
     con.removeUnit(closeable.javaClass)
     assertTrue(closed)
   }
@@ -46,7 +60,7 @@ internal class UnitContainerTest: Assertions() {
   @Test
   fun testRegisterChangeUnit() {
     val unit = con.getUnit(Unit4::class.java)
-    con.getUnit(ClassRegistrar::class.java).register(Unit4::class.java)
+    con.getUnit(ClassRegistrarImpl::class.java).register(Unit4::class.java)
     assertNotSame(unit, con.getUnit(Unit4::class.java))
   }
   
@@ -60,7 +74,7 @@ internal class UnitContainerTest: Assertions() {
   
   @Test
   fun testArgNameInjection() {
-    val registrar = con.getUnit(ClassRegistrar::class.java)
+    val registrar = con.getUnit(ClassRegistrarImpl::class.java)
     assertDoesNotThrow {registrar.register(Unit6::class.java)}
   }
   
@@ -85,7 +99,7 @@ internal class UnitContainerTest: Assertions() {
     private val con: UnitContainer = UnitContainer.create()
     
     @JvmStatic
-    @BeforeAll
+    @BeforeClass
     fun beforeAll() {
       con.getUnit(InstanceRegistrar::class.java).register(executor)
       con.getUnit(UnitConfigComponent::class.java).timeoutSec = 5
@@ -94,7 +108,7 @@ internal class UnitContainerTest: Assertions() {
     }
     
     @JvmStatic
-    @AfterAll
+    @AfterClass
     fun afterAll() {
       executor.shutdown()
     }

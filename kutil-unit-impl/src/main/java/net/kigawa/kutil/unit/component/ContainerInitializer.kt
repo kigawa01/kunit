@@ -4,10 +4,11 @@ import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
 import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
-import net.kigawa.kutil.unit.extension.factory.NormalFactory
 import net.kigawa.kutil.unit.extension.finder.InitGetFinder
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
+import net.kigawa.kutil.unit.extension.preinitfilter.DependencyAnnotationFilter
+import net.kigawa.kutil.unit.registrar.*
 import net.kigawa.kutil.unit.extension.preinitfilter.AnnotationPreInitFilter
 import net.kigawa.kutil.unit.extension.registrar.*
 import net.kigawa.kutil.unitapi.component.*
@@ -37,7 +38,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
       initFactory(container, loggerComponent, componentDatabase, initializedFilterComponent, preInitFilterComponent)
     asyncComponent = addUnit(UnitAsyncComponentImpl(container, loggerComponent, componentDatabase))
     storeComponent = initStore(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
-    finderComponent = initFinder(container, factoryComponent, databaseComponent, componentDatabase, loggerComponent)
+    finderComponent = initFinder(container, databaseComponent, componentDatabase, loggerComponent)
     addUnit(UnitConfigComponentImpl())
     closerComponent = initCloser(container, loggerComponent, componentDatabase)
     
@@ -54,13 +55,11 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     initializedFilterComponent.add(MethodInjectFilter::class.java)
     preInitFilterComponent.add(AnnotationPreInitFilter::class.java)
     
-    componentDatabase.registerComponentClass(ClassRegistrar::class.java)
-    componentDatabase.registerComponentClass(ListRegistrar::class.java)
-    componentDatabase.registerComponentClass(InstanceRegistrar::class.java)
-    componentDatabase.registerComponentClass(FileClassRegistrar::class.java)
-    componentDatabase.registerComponentClass(JarRegistrar::class.java)
-    componentDatabase.registerComponentClass(ResourceRegistrar::class.java)
-    componentDatabase.registerComponentClass(InstanceListRegistrar::class.java)
+    componentDatabase.registerComponentClass(ClassRegistrarImpl::class.java)
+    componentDatabase.registerComponentClass(ListRegistrarImpl::class.java)
+    componentDatabase.registerComponentClass(InstanceRegistrarImpl::class.java)
+    componentDatabase.registerComponentClass(ResourceRegistrarImpl::class.java)
+    componentDatabase.registerComponentClass(InstanceListRegistrarImpl::class.java)
   }
   
   private fun initDatabase(
@@ -84,13 +83,11 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   
   private fun initFinder(
     container: UnitContainerImpl,
-    factoryComponent: UnitFactoryComponentImpl,
     databaseComponent: UnitDatabaseComponentImpl,
     componentDatabase: ComponentDatabase,
     loggerComponent: UnitLoggerComponent,
   ): UnitFinderComponentImpl {
-    val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent,databaseComponent))
-    factoryComponent.addFactory(NormalFactory(result))
+    val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent, databaseComponent))
     result.addExecutor(InitGetFinder(databaseComponent))
     container.finderComponent = result
     return result
