@@ -49,7 +49,7 @@ class UnitContainerImpl(
       identify,
       FindOptions(*Util.connectList(findOptions.options, listOf(FindOptionEnum.SKIP_PARENT)).toTypedArray())
     )
-    if (parent != null && units.isEmpty() && findOptions.contain(FindOptionEnum.SKIP_PARENT)) {
+    if (parent != null && units.isEmpty() && !findOptions.contain(FindOptionEnum.SKIP_PARENT)) {
       return parent.getUnit(identify, findOptions)
     }
     if (units.isEmpty())
