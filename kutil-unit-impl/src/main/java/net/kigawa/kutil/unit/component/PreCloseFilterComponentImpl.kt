@@ -11,9 +11,7 @@ class PreCloseFilterComponentImpl(
   private val loggerComponent: UnitLoggerComponent,
   database: ComponentDatabase,
 ): PreCloseFilterComponent, ComponentHolderImpl<PreCloseFilter>(container, database, loggerComponent) {
-  init {
   
-  }
   override fun filter(info: UnitInfo<out Any>) {
     forEach {
       loggerComponent.catch(false) {
