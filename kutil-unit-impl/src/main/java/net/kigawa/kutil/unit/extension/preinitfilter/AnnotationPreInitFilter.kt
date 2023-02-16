@@ -9,7 +9,7 @@ import net.kigawa.kutil.unitapi.options.FindInitGetOption
 import net.kigawa.kutil.unitapi.options.FindOptions
 import net.kigawa.kutil.unitapi.util.ReflectionUtil
 
-class DependencyAnnotationFilter(
+class AnnotationPreInitFilter(
   private val container: UnitContainer,
 ): PreInitFilter {
   override fun <T: Any> filter(identify: UnitIdentify<T>, stack: InitStack) {
