@@ -2,7 +2,6 @@ package net.kigawa.kutil.unitapi.component
 
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.extention.UnitStore
-import java.util.concurrent.Future
 
 interface UnitInfo<T: Any> {
   val identify: UnitIdentify<T>
@@ -11,7 +10,7 @@ interface UnitInfo<T: Any> {
     getter.initGetter(identify, initStack)
   }
   
-  fun initOrGet(initStack: InitStack): Future<T> {
+  fun initOrGet(initStack: InitStack): T {
     return getter.initOrGet(identify, initStack)
   }
   

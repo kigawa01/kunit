@@ -14,6 +14,6 @@ class InitGetFinder(
   
   override fun <T: Any> findUnits(identify: UnitIdentify<T>, findOptions: FindOptions): List<T>? {
     val stack = findOptions.firstOrNull(FindInitGetOption::class.java)?.initStack ?: return null
-    return databaseComponent.findByIdentify(identify).map {it.initOrGet(stack)}.map {it.get()}
+    return databaseComponent.findByIdentify(identify).map {it.initOrGet(stack)}.map {it}
   }
 }

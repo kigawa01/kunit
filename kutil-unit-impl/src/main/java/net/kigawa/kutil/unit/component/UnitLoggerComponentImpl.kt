@@ -5,8 +5,7 @@ import net.kigawa.kutil.unit.extension.UnitStdLogger
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.UnitContainer
 import net.kigawa.kutil.unitapi.component.UnitLoggerComponent
-import net.kigawa.kutil.unitapi.extention.ComponentDatabase
-import net.kigawa.kutil.unitapi.extention.UnitLogger
+import net.kigawa.kutil.unitapi.extention.*
 import java.util.logging.Level
 
 @LateInit
@@ -31,13 +30,13 @@ class UnitLoggerComponentImpl(
     database.unregisterComponent(clazz)
   }
   
-  override fun log(level: Level, message: String?, cause: Throwable?, vararg item: Any?) {
+  override fun log(message: Message) {
     loggerClasses.forEach {
       try {
-        container.getUnit(it).log(level, message, cause, *item)
+        container.getUnit(it).log(message)
       } catch (e: Throwable) {
         remove(it)
-        log(level, "", e)
+        log(Level.WARNING, "logger thrown exception", e)
       }
     }
   }

@@ -1,13 +1,12 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
-import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.finder.InitGetFinder
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
-import net.kigawa.kutil.unit.extension.preinitfilter.DependencyAnnotationFilter
+import net.kigawa.kutil.unit.extension.preinitfilter.AnnotationPreInitFilter
 import net.kigawa.kutil.unit.registrar.*
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.ComponentDatabase
@@ -15,7 +14,6 @@ import net.kigawa.kutil.unitapi.extention.ComponentDatabase
 class ContainerInitializer(unitContainer: UnitContainerImpl) {
   private val finderComponent: UnitFinderComponentImpl
   private val storeComponent: UnitStoreComponentImpl
-  private val asyncComponent: UnitAsyncComponentImpl
   private val factoryComponent: UnitFactoryComponentImpl
   private val preInitFilterComponent: PreInitFilterComponentImpl
   private val closerComponent: UnitCloserComponent
@@ -24,6 +22,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   private val databaseComponent: UnitDatabaseComponentImpl
   private val container: UnitContainerImpl
   private val componentDatabase: ComponentDatabase
+  private val preCloseFilterComponent: PreCloseFilterComponent
   
   init {
     componentDatabase = ComponentDatabaseImpl()
@@ -34,24 +33,23 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     preInitFilterComponent = addUnit(PreInitFilterComponentImpl(container, componentDatabase, loggerComponent))
     factoryComponent =
       initFactory(container, loggerComponent, componentDatabase, initializedFilterComponent, preInitFilterComponent)
-    asyncComponent = addUnit(UnitAsyncComponentImpl(container, loggerComponent, componentDatabase))
-    storeComponent = initStore(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
+    storeComponent = initStore(container, loggerComponent, factoryComponent, componentDatabase)
     finderComponent = initFinder(container, databaseComponent, componentDatabase, loggerComponent)
     addUnit(UnitConfigComponentImpl())
-    closerComponent = initCloser(container, loggerComponent, componentDatabase)
+    preCloseFilterComponent = PreCloseFilterComponentImpl(container, loggerComponent, componentDatabase)
+    closerComponent = initCloser(container, loggerComponent, componentDatabase, preCloseFilterComponent)
     
     registerExtension()
   }
   
   private fun registerExtension() {
     factoryComponent.add(KotlinObjectFactory::class.java)
-    asyncComponent.add(SyncedExecutorUnit::class.java)
     
     // 拡張機能の登録
     closerComponent.add(AutoCloseAbleCloser::class.java)
     initializedFilterComponent.add(FieldInjectFilter::class.java)
     initializedFilterComponent.add(MethodInjectFilter::class.java)
-    preInitFilterComponent.add(DependencyAnnotationFilter::class.java)
+    preInitFilterComponent.add(AnnotationPreInitFilter::class.java)
     
     componentDatabase.registerComponentClass(ClassRegistrarImpl::class.java)
     componentDatabase.registerComponentClass(ListRegistrarImpl::class.java)
@@ -73,8 +71,10 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     container: UnitContainerImpl,
     loggerComponent: UnitLoggerComponent,
     componentDatabase: ComponentDatabase,
+    preCloseFilterComponent: PreCloseFilterComponent,
   ): UnitCloserComponentImpl {
-    val result = addUnit(UnitCloserComponentImpl(container, loggerComponent, componentDatabase))
+    val result =
+      addUnit(UnitCloserComponentImpl(container, loggerComponent, componentDatabase, preCloseFilterComponent))
     container.closerComponent = result
     return result
   }
@@ -95,11 +95,10 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     container: UnitContainer,
     loggerComponent: UnitLoggerComponent,
     factoryComponent: UnitFactoryComponent,
-    asyncComponent: UnitAsyncComponent,
     componentDatabase: ComponentDatabase,
   ): UnitStoreComponentImpl {
     val result = addUnit(
-      UnitStoreComponentImpl(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
+      UnitStoreComponentImpl(container, loggerComponent, factoryComponent, componentDatabase)
     )
     componentDatabase.getterComponent = result
     return result

@@ -1,12 +1,13 @@
 package net.kigawa.kutil.unit.component
 
+import net.kigawa.kutil.unit.util.LocaleBuilder
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
-import net.kigawa.kutil.unitapi.extention.ComponentDatabase
-import net.kigawa.kutil.unitapi.extention.UnitFinder
+import net.kigawa.kutil.unitapi.extention.*
 import net.kigawa.kutil.unitapi.options.FindOptionEnum
 import net.kigawa.kutil.unitapi.options.FindOptions
+import java.util.logging.Level
 
 @LateInit
 class UnitFinderComponentImpl(
@@ -35,8 +36,15 @@ class UnitFinderComponentImpl(
   fun <T: Any> defaultFind(identify: UnitIdentify<T>): MutableList<T> {
     val list = mutableListOf<T>()
     databaseComponent.findByIdentify(identify).forEach {
-      loggerComponent.catch(null) {
+      try{
         list.add(it.get())
+      }catch (e: Throwable){
+        loggerComponent.log(Message(
+          Level.WARNING,
+          LocaleBuilder("there is an exception when get instance").toString(),
+          listOf(e),
+          listOf(identify)
+        ))
       }
     }
     return list

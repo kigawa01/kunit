@@ -1,18 +1,16 @@
 package net.kigawa.kutil.unit.extension.store
 
-import net.kigawa.kutil.unitapi.options.RegisterOptionEnum
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unitapi.component.*
-import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitStore
-import java.util.concurrent.Future
+import net.kigawa.kutil.unitapi.options.RegisterOptionEnum
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 @Suppress("unused")
 @AlwaysInit
 class LateInitStore(
   private val factoryComponent: UnitFactoryComponent,
-  private val async: UnitAsyncComponent,
 ): UnitStore {
   private var obj: Any? = null
   private var registered = false
@@ -27,10 +25,8 @@ class LateInitStore(
     }
   }
   
-  override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): Future<T> {
-    return async.submit(identify) {
-      get(identify)
-    }
+  override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): T {
+    return get(identify)
   }
   
   override fun initGetter(identify: UnitIdentify<out Any>, initStack: InitStack) {

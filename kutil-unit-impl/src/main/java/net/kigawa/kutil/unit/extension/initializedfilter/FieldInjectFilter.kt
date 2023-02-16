@@ -2,8 +2,9 @@ package net.kigawa.kutil.unit.extension.initializedfilter
 
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.Inject
-import net.kigawa.kutil.unitapi.component.*
-import net.kigawa.kutil.unitapi.exception.UnitException
+import net.kigawa.kutil.unitapi.component.InitStack
+import net.kigawa.kutil.unitapi.component.UnitDatabaseComponent
+import net.kigawa.kutil.unitapi.exception.NoFoundUnitException
 import net.kigawa.kutil.unitapi.extention.InitializedFilter
 import net.kigawa.kutil.unitapi.util.ReflectionUtil
 
@@ -15,9 +16,10 @@ class FieldInjectFilter(
       if (ReflectionUtil.isStatic(it)) return@forEach
       it.getAnnotation(Inject::class.java) ?: return@forEach
       val identify = UnitIdentify(it.type, it.name)
-      val info = database.findOneByEqualsOrClass(identify) ?: throw UnitException("unit is not found", it, identify)
+      val info = database.findOneByEqualsOrClass(identify)
+                 ?: throw NoFoundUnitException("unit is not found", identify = identify)
       it.isAccessible = true
-      it.set(obj, info.initOrGet(stack).get())
+      it.set(obj, info.initOrGet(stack))
     }
     return obj
   }

@@ -3,7 +3,7 @@
 package net.kigawa.kutil.unitapi.component
 
 import net.kigawa.kutil.unitapi.UnitIdentify
-import net.kigawa.kutil.unitapi.exception.UnitException
+import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
 import net.kigawa.kutil.unitapi.extention.*
 import net.kigawa.kutil.unitapi.options.RegisterOptions
 
@@ -27,7 +27,7 @@ interface UnitDatabaseComponent {
     val list = findByIdentify(identify)
     if (list.isEmpty()) return null
     if (list.size == 1) return list[0]
-    throw UnitException("unitInfo is not single", identify, list)
+    throw NoSingleUnitException("unitInfo is not single", identify = identify, infoList = list)
   }
   
   fun <T: Any> findOneByEqualsOrClass(identify: UnitIdentify<T>): UnitInfo<T>? {

@@ -1,8 +1,8 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unitapi.component.*
-import net.kigawa.kutil.unitapi.extention.ComponentDatabase
-import net.kigawa.kutil.unitapi.extention.InitializedFilter
+import net.kigawa.kutil.unitapi.extention.*
+import java.util.logging.Level
 
 class InitializedFilterComponentImpl(
   database: ComponentDatabase,
@@ -14,8 +14,17 @@ class InitializedFilterComponentImpl(
     var result = obj
     
     forEach {
-      loggerComponent.catch(null) {
+      try {
         result = it.filter(result, stack)
+      } catch (e: Throwable) {
+        loggerComponent.log(
+          Message(
+            Level.WARNING,
+            "there is an exception in initialized filter",
+            listOf(e),
+            listOf(it)
+          )
+        )
       }
     }
     

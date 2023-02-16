@@ -1,7 +1,9 @@
 package net.kigawa.kutil.unitapi.exception
 
-@Suppress("unused")
-class NoFoundUnitException: UnitException {
-  constructor(message: String, cause: Throwable?, vararg obj: Any?): super(message, cause, *obj)
-  constructor(message: String, vararg obj: Any?): super(message, *obj)
-}
+import net.kigawa.kutil.unitapi.UnitIdentify
+
+class NoFoundUnitException(
+  override val message: String?,
+  override val cause: Throwable? = null,
+  override val identify: UnitIdentify<out Any>,
+): UnitException()

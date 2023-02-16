@@ -1,12 +1,9 @@
 package net.kigawa.kutil.unitapi.exception
 
-import net.kigawa.kutil.unitapi.util.Util
+import net.kigawa.kutil.unitapi.UnitIdentify
 
-open class UnitException: RuntimeException {
-  constructor(message: String, cause: Throwable?, vararg obj: Any?): super(
-    Util.createMessage(message, obj.toList()),
-    cause
-  )
-  
-  constructor(message: String, vararg obj: Any?): this(message, null, *obj)
-}
+open class UnitException(
+  override val message: String? = null,
+  override val cause: Throwable? = null,
+  open val identify: UnitIdentify<out Any>? = null,
+): RuntimeException()
