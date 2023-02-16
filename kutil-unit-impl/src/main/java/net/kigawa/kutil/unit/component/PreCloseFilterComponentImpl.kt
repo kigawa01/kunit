@@ -1,9 +1,10 @@
 package net.kigawa.kutil.unit.component
 
+import net.kigawa.kutil.unit.util.LocaleBuilder
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
-import net.kigawa.kutil.unitapi.extention.ComponentDatabase
-import net.kigawa.kutil.unitapi.extention.PreCloseFilter
+import net.kigawa.kutil.unitapi.extention.*
+import java.util.logging.Level
 
 @LateInit
 class PreCloseFilterComponentImpl(
@@ -14,8 +15,17 @@ class PreCloseFilterComponentImpl(
   
   override fun filter(info: UnitInfo<out Any>) {
     forEach {
-      loggerComponent.catch(false) {
+      try {
         it.filter(info)
+      } catch (e: Throwable) {
+        loggerComponent.log(
+          Message(
+            Level.WARNING,
+            LocaleBuilder("there is an exception in pre close filter").toString(),
+            listOf(e),
+            listOf(info)
+          )
+        )
       }
     }
   }
