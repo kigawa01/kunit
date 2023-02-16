@@ -3,7 +3,6 @@ package net.kigawa.kutil.unit.extension
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.extention.Message
 import net.kigawa.kutil.unitapi.extention.UnitLogger
-import net.kigawa.kutil.unitapi.util.Util
 import java.io.PrintStream
 import java.util.logging.Level
 
@@ -19,9 +18,8 @@ class UnitStdLogger: UnitLogger {
   
   @Synchronized
   private fun log(stream: PrintStream, message: Message) {
-    val list = if (message.message == null) Util.createStringList(message.item)
-    else Util.createStringList(message.message!!, message.item)
-    list.forEach(stream::println)
-    message.cause?.printStackTrace(stream)
+    message.message?.let(stream::println)
+    message.items.filterNotNull().forEach(stream::println)
+    message.cause.filterNotNull().forEach(stream::println)
   }
 }

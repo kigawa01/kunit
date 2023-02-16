@@ -1,13 +1,17 @@
 package net.kigawa.kutil.unit.component
 
+import net.kigawa.kutil.unit.util.LocaleBuilder
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.exception.NoFoundUnitException
 import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
+import net.kigawa.kutil.unitapi.extention.Message
 import net.kigawa.kutil.unitapi.options.FindOptionEnum
 import net.kigawa.kutil.unitapi.options.FindOptions
 import net.kigawa.kutil.unitapi.util.Util
+import java.util.*
+import java.util.logging.Level
 
 @Suppress("unused")
 @LateInit
@@ -27,8 +31,17 @@ class UnitContainerImpl(
   
   override fun removeUnit(identify: UnitIdentify<out Any>) {
     databaseComponent.findByIdentify(identify).forEach {info->
-      loggerComponent.catch(null) {
+      try {
         removeInfo(info)
+      } catch (e: Throwable) {
+        loggerComponent.log(
+          Message(
+            Level.WARNING,
+            LocaleBuilder(Locale.ENGLISH, "there an exception when remove unit").toString(),
+            listOf(e),
+            listOf(identify, info)
+          )
+        )
       }
     }
   }
@@ -53,11 +66,11 @@ class UnitContainerImpl(
       return parent.getUnit(identify, findOptions)
     }
     if (units.isEmpty())
-      throw NoFoundUnitException("unit is not found", identify)
+      throw NoFoundUnitException("unit is not found", identify = identify)
     if (units.size == 1) {
       return units[0]
     }
-    throw NoSingleUnitException("unit is not single count: ${units.size}", identify)
+    throw NoSingleUnitException("unit is not single count", identify = identify, units = units)
   }
   
   override fun close() {

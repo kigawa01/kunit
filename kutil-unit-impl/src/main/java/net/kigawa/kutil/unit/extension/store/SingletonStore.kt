@@ -5,15 +5,13 @@ import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.exception.UnitException
-import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitStore
-import java.util.concurrent.Future
+import net.kigawa.kutil.unitapi.options.RegisterOptions
 import java.util.concurrent.TimeUnit
 
 @AlwaysInit
 class SingletonStore(
   private val factoryComponent: UnitFactoryComponent,
-  private val async: UnitAsyncComponent,
   private val components: UnitConfigComponent,
 ): UnitStore {
   private var obj: Any? = null
@@ -22,14 +20,12 @@ class SingletonStore(
   
   override fun <T: Any> get(identify: UnitIdentify<T>): T {
     @Suppress("UNCHECKED_CAST")
-    return obj as T? ?: throw UnitException("unit is not initialized", identify)
+    return obj as T? ?: throw UnitException("unit is not initialized", identify = identify)
   }
   
-  override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): Future<T> {
-    return async.submit(identify) {
-      initGetter(identify, initStack)
-      get(identify)
-    }
+  override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): T {
+    initGetter(identify, initStack)
+    return get(identify)
   }
   
   override fun initGetter(identify: UnitIdentify<out Any>, initStack: InitStack) {

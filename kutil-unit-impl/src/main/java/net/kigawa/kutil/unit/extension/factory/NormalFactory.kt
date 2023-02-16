@@ -5,7 +5,7 @@ import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.Inject
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
-import net.kigawa.kutil.unitapi.exception.UnitException
+import net.kigawa.kutil.unitapi.exception.UnitConstructorException
 import net.kigawa.kutil.unitapi.extention.UnitFactory
 import net.kigawa.kutil.unitapi.options.FindInitGetOption
 import net.kigawa.kutil.unitapi.options.FindOptions
@@ -36,7 +36,7 @@ class NormalFactory(
           return constructor
         }
       }
-      throw UnitException("could not get constructor", unitClass)
+      throw UnitConstructorException("could not get constructor", unitClass = unitClass)
     }
   }
 }

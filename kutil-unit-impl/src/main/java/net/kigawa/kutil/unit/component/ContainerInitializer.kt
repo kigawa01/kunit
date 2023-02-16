@@ -1,7 +1,6 @@
 package net.kigawa.kutil.unit.component
 
 import net.kigawa.kutil.unit.extension.AutoCloseAbleCloser
-import net.kigawa.kutil.unit.extension.async.SyncedExecutorUnit
 import net.kigawa.kutil.unit.extension.database.ComponentDatabaseImpl
 import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.finder.InitGetFinder
@@ -15,7 +14,6 @@ import net.kigawa.kutil.unitapi.extention.ComponentDatabase
 class ContainerInitializer(unitContainer: UnitContainerImpl) {
   private val finderComponent: UnitFinderComponentImpl
   private val storeComponent: UnitStoreComponentImpl
-  private val asyncComponent: UnitAsyncComponentImpl
   private val factoryComponent: UnitFactoryComponentImpl
   private val preInitFilterComponent: PreInitFilterComponentImpl
   private val closerComponent: UnitCloserComponent
@@ -35,8 +33,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     preInitFilterComponent = addUnit(PreInitFilterComponentImpl(container, componentDatabase, loggerComponent))
     factoryComponent =
       initFactory(container, loggerComponent, componentDatabase, initializedFilterComponent, preInitFilterComponent)
-    asyncComponent = addUnit(UnitAsyncComponentImpl(container, loggerComponent, componentDatabase))
-    storeComponent = initStore(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
+    storeComponent = initStore(container, loggerComponent, factoryComponent, componentDatabase)
     finderComponent = initFinder(container, databaseComponent, componentDatabase, loggerComponent)
     addUnit(UnitConfigComponentImpl())
     preCloseFilterComponent = PreCloseFilterComponentImpl(container, loggerComponent, componentDatabase)
@@ -47,7 +44,6 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   
   private fun registerExtension() {
     factoryComponent.add(KotlinObjectFactory::class.java)
-    asyncComponent.add(SyncedExecutorUnit::class.java)
     
     // 拡張機能の登録
     closerComponent.add(AutoCloseAbleCloser::class.java)
@@ -99,11 +95,10 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     container: UnitContainer,
     loggerComponent: UnitLoggerComponent,
     factoryComponent: UnitFactoryComponent,
-    asyncComponent: UnitAsyncComponent,
     componentDatabase: ComponentDatabase,
   ): UnitStoreComponentImpl {
     val result = addUnit(
-      UnitStoreComponentImpl(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
+      UnitStoreComponentImpl(container, loggerComponent, factoryComponent, componentDatabase)
     )
     componentDatabase.getterComponent = result
     return result

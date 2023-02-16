@@ -7,8 +7,6 @@ import net.kigawa.kutil.unitapi.exception.UnitException
 import net.kigawa.kutil.unitapi.extention.UnitStore
 import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.options.RegistrarInstanceOption
-import java.util.concurrent.Future
-import java.util.concurrent.FutureTask
 
 @AlwaysInit
 class InstanceStore: UnitStore {
@@ -16,13 +14,11 @@ class InstanceStore: UnitStore {
   
   override fun <T: Any> get(identify: UnitIdentify<T>): T {
     @Suppress("UNCHECKED_CAST")
-    return obj as T? ?: throw UnitException("unit is not initialized", identify)
+    return obj as T? ?: throw UnitException("unit is not initialized", identify = identify)
   }
   
-  override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): Future<T> {
-    val future = FutureTask {get(identify)}
-    future.run()
-    return future
+  override fun <T: Any> initOrGet(identify: UnitIdentify<T>, initStack: InitStack): T {
+    return get(identify)
   }
   
   override fun initGetter(identify: UnitIdentify<out Any>, initStack: InitStack) {
