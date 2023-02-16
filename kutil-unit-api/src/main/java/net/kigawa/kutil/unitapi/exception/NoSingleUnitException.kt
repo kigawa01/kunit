@@ -1,7 +1,12 @@
 package net.kigawa.kutil.unitapi.exception
 
-@Suppress("unused")
-class NoSingleUnitException: UnitException {
-  constructor(message: String, cause: Throwable?, vararg obj: Any?): super(message, cause, *obj)
-  constructor(message: String, vararg obj: Any?): super(message, *obj)
-}
+import net.kigawa.kutil.unitapi.UnitIdentify
+import net.kigawa.kutil.unitapi.component.UnitInfo
+
+class NoSingleUnitException(
+  override val message: String?,
+  override val cause: Throwable? = null,
+  @Suppress("UNUSED_PARAMETER") identify: UnitIdentify<out Any>,
+  @Suppress("UNUSED_PARAMETER") units: List<Any>? = null,
+  @Suppress("UNUSED_PARAMETER") infoList: List<UnitInfo<out Any>>? = null,
+): UnitException()

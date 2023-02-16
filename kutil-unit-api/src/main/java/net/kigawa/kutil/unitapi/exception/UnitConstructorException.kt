@@ -1,9 +1,7 @@
 package net.kigawa.kutil.unitapi.exception
 
-import net.kigawa.kutil.unitapi.UnitIdentify
-
-class NoFoundFactoryException(
+class UnitConstructorException(
   override val message: String?,
   override val cause: Throwable? = null,
-  override val identify: UnitIdentify<out Any>,
+  @Suppress("UNUSED_PARAMETER") unitClass: Class<out Any>,
 ): UnitException()
