@@ -1,7 +1,7 @@
-package net.kigawa.kutil.unit.component
+package net.kigawa.kutil.unit
 
-import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.UnitIdentify
+import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.UnitInfo
 import net.kigawa.kutil.unitapi.extention.UnitStore
 

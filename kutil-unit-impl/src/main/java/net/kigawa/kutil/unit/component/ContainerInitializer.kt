@@ -7,7 +7,7 @@ import net.kigawa.kutil.unit.extension.factory.KotlinObjectFactory
 import net.kigawa.kutil.unit.extension.finder.InitGetFinder
 import net.kigawa.kutil.unit.extension.initializedfilter.FieldInjectFilter
 import net.kigawa.kutil.unit.extension.initializedfilter.MethodInjectFilter
-import net.kigawa.kutil.unit.extension.preinitfilter.DependencyAnnotationFilter
+import net.kigawa.kutil.unit.extension.preinitfilter.AnnotationPreInitFilter
 import net.kigawa.kutil.unit.registrar.*
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.ComponentDatabase
@@ -24,6 +24,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   private val databaseComponent: UnitDatabaseComponentImpl
   private val container: UnitContainerImpl
   private val componentDatabase: ComponentDatabase
+  private val preCloseFilterComponent: PreCloseFilterComponent
   
   init {
     componentDatabase = ComponentDatabaseImpl()
@@ -38,7 +39,8 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     storeComponent = initStore(container, loggerComponent, factoryComponent, asyncComponent, componentDatabase)
     finderComponent = initFinder(container, databaseComponent, componentDatabase, loggerComponent)
     addUnit(UnitConfigComponentImpl())
-    closerComponent = initCloser(container, loggerComponent, componentDatabase)
+    preCloseFilterComponent = PreCloseFilterComponentImpl(container, loggerComponent, componentDatabase)
+    closerComponent = initCloser(container, loggerComponent, componentDatabase, preCloseFilterComponent)
     
     registerExtension()
   }
@@ -51,7 +53,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     closerComponent.add(AutoCloseAbleCloser::class.java)
     initializedFilterComponent.add(FieldInjectFilter::class.java)
     initializedFilterComponent.add(MethodInjectFilter::class.java)
-    preInitFilterComponent.add(DependencyAnnotationFilter::class.java)
+    preInitFilterComponent.add(AnnotationPreInitFilter::class.java)
     
     componentDatabase.registerComponentClass(ClassRegistrarImpl::class.java)
     componentDatabase.registerComponentClass(ListRegistrarImpl::class.java)
@@ -73,8 +75,10 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     container: UnitContainerImpl,
     loggerComponent: UnitLoggerComponent,
     componentDatabase: ComponentDatabase,
+    preCloseFilterComponent: PreCloseFilterComponent,
   ): UnitCloserComponentImpl {
-    val result = addUnit(UnitCloserComponentImpl(container, loggerComponent, componentDatabase))
+    val result =
+      addUnit(UnitCloserComponentImpl(container, loggerComponent, componentDatabase, preCloseFilterComponent))
     container.closerComponent = result
     return result
   }
