@@ -26,7 +26,7 @@ class UnitStoreComponentImpl(
     classes.add(InstanceStore::class.java)
     database.registerComponent(InstanceStore::class.java, initializeGetter)
     classes.add(initializeGetter.javaClass)
-    database.registerComponent(initializeGetter)
+    database.registerComponent(initializeGetter, null)
   }
   
   override fun findStore(identify: UnitIdentify<out Any>, options: RegisterOptions): UnitStore {

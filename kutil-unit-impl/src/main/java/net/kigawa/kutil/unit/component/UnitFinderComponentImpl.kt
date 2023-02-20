@@ -16,8 +16,8 @@ class UnitFinderComponentImpl(
   private val loggerComponent: UnitLoggerComponent,
   private val databaseComponent: UnitDatabaseComponent,
 ): UnitFinderComponent, ComponentHolderImpl<UnitFinder>(container, componentDatabase, loggerComponent) {
-  fun addExecutor(executor: UnitFinder) {
-    componentDatabase.registerComponent(executor)
+  fun addFinder(executor: UnitFinder) {
+    componentDatabase.registerComponent(executor,null)
     classes.add(executor.javaClass)
   }
   

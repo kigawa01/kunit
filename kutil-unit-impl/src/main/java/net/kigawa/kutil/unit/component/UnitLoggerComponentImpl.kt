@@ -16,7 +16,7 @@ class UnitLoggerComponentImpl(
   private val loggerClasses = ConcurrentList<Class<out UnitLogger>>()
   
   init {
-    database.registerComponent(UnitStdLogger())
+    database.registerComponent(UnitStdLogger(), null)
     loggerClasses.add(UnitStdLogger::class.java)
   }
   

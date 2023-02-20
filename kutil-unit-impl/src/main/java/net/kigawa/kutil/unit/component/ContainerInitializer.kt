@@ -26,7 +26,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
   
   init {
     componentDatabase = ComponentDatabaseImpl()
-    container = addUnit(unitContainer)
+    container = addUnit(unitContainer, unitContainer.name)
     databaseComponent = initDatabase(container, componentDatabase)
     loggerComponent = initLogger(container, componentDatabase, databaseComponent)
     initializedFilterComponent = addUnit(InitializedFilterComponentImpl(componentDatabase, loggerComponent, container))
@@ -86,7 +86,7 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     loggerComponent: UnitLoggerComponent,
   ): UnitFinderComponentImpl {
     val result = addUnit(UnitFinderComponentImpl(container, componentDatabase, loggerComponent, databaseComponent))
-    result.addExecutor(InitGetFinder(databaseComponent))
+    result.addFinder(InitGetFinder(databaseComponent))
     container.finderComponent = result
     return result
   }
@@ -133,8 +133,8 @@ class ContainerInitializer(unitContainer: UnitContainerImpl) {
     return result
   }
   
-  private fun <T: Any> addUnit(unit: T): T {
-    componentDatabase.registerComponent(unit)
+  private fun <T: Any> addUnit(unit: T, name: String? = null): T {
+    componentDatabase.registerComponent(unit, name)
     return unit
   }
 }
