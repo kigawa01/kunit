@@ -15,7 +15,7 @@ interface ComponentDatabase: UnitInfoDatabase {
   override fun unregister(unitInfo: UnitInfo<out Any>) {
   }
   
-  fun registerComponent(item: Any)
+  fun registerComponent(item: Any, name: String?)
   
   fun registerComponent(itemClass: Class<out Any>, getter: UnitStore) {
     registerComponent(UnitIdentify(itemClass, null), getter)

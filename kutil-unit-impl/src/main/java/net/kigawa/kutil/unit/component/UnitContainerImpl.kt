@@ -13,17 +13,15 @@ import net.kigawa.kutil.unitapi.util.Util
 import java.util.*
 import java.util.logging.Level
 
-@Suppress("unused")
 @LateInit
 class UnitContainerImpl(
-  private val parent: UnitContainer?,
+  val name: String,
+  private vararg val parent: UnitContainer,
 ): UnitContainer {
   lateinit var closerComponent: UnitCloserComponent
   lateinit var loggerComponent: UnitLoggerComponent
   lateinit var databaseComponent: UnitDatabaseComponent
   lateinit var finderComponent: UnitFinderComponent
-  
-  constructor(): this(null)
   
   init {
     ContainerInitializer(this)
@@ -53,17 +51,17 @@ class UnitContainerImpl(
   
   override fun <T: Any> getUnitList(identify: UnitIdentify<T>, findOptions: FindOptions): List<T> {
     val list = finderComponent.findUnits(identify, findOptions).toMutableList()
-    if (!findOptions.contain(FindOptionEnum.SKIP_PARENT)) parent?.let {list.addAll(it.getUnitList(identify))}
+    if (!findOptions.contain(FindOptionEnum.SKIP_PARENT)) parent.forEach {list.addAll(it.getUnitList(identify))}
     return list
   }
   
   override fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T {
-    val units = getUnitList(
+    var units = getUnitList(
       identify,
       FindOptions(*Util.connectList(findOptions.options, listOf(FindOptionEnum.SKIP_PARENT)).toTypedArray())
     )
-    if (parent != null && units.isEmpty() && !findOptions.contain(FindOptionEnum.SKIP_PARENT)) {
-      return parent.getUnit(identify, findOptions)
+    if (units.isEmpty() && !findOptions.contain(FindOptionEnum.SKIP_PARENT)) {
+      units = parent.map {it.getUnit(identify, findOptions)}
     }
     if (units.isEmpty())
       throw NoFoundUnitException("unit is not found", identify = identify)

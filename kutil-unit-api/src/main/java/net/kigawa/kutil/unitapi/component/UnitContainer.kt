@@ -22,13 +22,16 @@ interface UnitContainer: AutoCloseable {
     }
     
     @JvmStatic
-    fun create() = create(null)
+    fun create() = create(name = null)
     
     @JvmStatic
-    fun create(parent: UnitContainer?): UnitContainer {
-      val constructor = implementsClass?.getConstructor(UnitContainer::class.java)
+    fun create(vararg parent: UnitContainer): UnitContainer = create(name = null, *parent)
+    
+    @JvmStatic
+    fun create(name: String?, vararg parent: UnitContainer): UnitContainer {
+      val constructor = implementsClass?.getConstructor(String::class.java, Array<UnitContainer>::class.java)
                         ?: throw UnitException("container class is not found")
-      return constructor.newInstance(parent)
+      return constructor.newInstance(name ?: "", parent)
     }
   }
   

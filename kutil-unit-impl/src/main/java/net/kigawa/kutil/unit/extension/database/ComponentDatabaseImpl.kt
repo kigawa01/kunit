@@ -16,12 +16,12 @@ class ComponentDatabaseImpl: ComponentDatabase {
   private val infoList = ConcurrentList<UnitInfo<out Any>>()
   
   init {
-    registerComponent(this)
+    registerComponent(this, null)
   }
   
-  override fun registerComponent(item: Any) {
+  override fun registerComponent(item: Any, name: String?) {
     val instanceGetter = InstanceStore()
-    instanceGetter.register(UnitIdentify(item.javaClass, null), RegisterOptions(RegistrarInstanceOption(item)))
+    instanceGetter.register(UnitIdentify(item.javaClass, name), RegisterOptions(RegistrarInstanceOption(item)))
     registerComponent(item.javaClass, instanceGetter)
   }
   

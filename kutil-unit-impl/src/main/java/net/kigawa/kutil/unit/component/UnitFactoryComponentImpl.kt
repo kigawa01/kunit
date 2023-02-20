@@ -53,7 +53,7 @@ class UnitFactoryComponentImpl(
   }
   
   fun addFactory(factory: UnitFactory) {
-    database.registerComponent(factory)
+    database.registerComponent(factory, null)
     classes.add(factory.javaClass)
   }
 }

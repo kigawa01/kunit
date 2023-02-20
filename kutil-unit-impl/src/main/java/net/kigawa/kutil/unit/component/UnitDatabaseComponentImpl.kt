@@ -34,7 +34,7 @@ class UnitDatabaseComponentImpl(
   
   override fun addDatabase(unitInfoDatabase: UnitInfoDatabase) {
     databases.add(unitInfoDatabase)
-    componentDatabase.registerComponent(unitInfoDatabase)
+    componentDatabase.registerComponent(unitInfoDatabase, null)
   }
   
   override fun removeDatabase(unitInfoDatabase: UnitInfoDatabase) {
