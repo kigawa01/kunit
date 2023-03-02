@@ -13,7 +13,8 @@ class InstanceRegistrarImpl(
   private val loggerComponent: UnitLoggerComponent,
 ): InstanceRegistrar {
   override fun register(instance: Any, name: String?) {
-    loggerComponent.log(Level.WARNING, "class registered with instance registrar", null, instance)
+    if (instance is Class<*>)
+      loggerComponent.log(Level.WARNING, "class registered with instance registrar", null, instance)
     classRegistrar.register(instance.javaClass, name, RegisterOptions(RegistrarInstanceOption(instance)))
   }
   

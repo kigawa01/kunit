@@ -22,6 +22,7 @@ class UnitContainerImpl(
   lateinit var loggerComponent: UnitLoggerComponent
   lateinit var databaseComponent: UnitDatabaseComponent
   lateinit var finderComponent: UnitFinderComponent
+  var closed = false
   
   init {
     ContainerInitializer(this)
@@ -71,7 +72,10 @@ class UnitContainerImpl(
     throw NoSingleUnitException("unit is not single count", identify = identify, units = units)
   }
   
+  @Synchronized
   override fun close() {
+    if (closed) return
+    closed = true
     removeUnit(Any::class.java)
   }
 }

@@ -48,12 +48,34 @@ internal class UnitContainerTest: AbstractTest() {
   @Test
   fun testCloseAble() {
     var closed = false
+    var count = 0
     val closeable = AutoCloseable {
       closed = true
+      synchronized(this) {
+        count++
+      }
     }
     con.getUnit(InstanceRegistrar::class.java).register(closeable)
     con.removeUnit(closeable.javaClass)
     assertTrue(closed)
+    assertEquals(1, count)
+  }
+  
+  @Test
+  fun testCloseAbleOnCloseContainer() {
+    var count = 0
+    val con = UnitContainer.create(con)
+    var closed = false
+    val closeable = AutoCloseable {
+      synchronized(this) {
+        count++
+      }
+      closed = true
+    }
+    con.getUnit(InstanceRegistrar::class.java).register(closeable)
+    con.close()
+    assertTrue(closed)
+    assertEquals(1, count)
   }
   
   @Test
