@@ -3,7 +3,6 @@ package net.kigawa.kutil.unit
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
 import net.kigawa.kutil.unit.registrar.ClassRegistrarImpl
-import net.kigawa.kutil.unit.registrar.InstanceRegistrarImpl
 import net.kigawa.kutil.unit.util.AbstractTest
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
 import net.kigawa.kutil.unitapi.component.UnitContainer
@@ -52,7 +51,7 @@ internal class UnitContainerTest: AbstractTest() {
     val closeable = AutoCloseable {
       closed = true
     }
-    con.getUnit(InstanceRegistrarImpl::class.java).register(closeable)
+    con.getUnit(InstanceRegistrar::class.java).register(closeable)
     con.removeUnit(closeable.javaClass)
     assertTrue(closed)
   }

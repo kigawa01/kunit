@@ -1,6 +1,6 @@
 package net.kigawa.kutil.unitapi.registrar
 
-interface ResourceRegistrar {
+interface ResourceRegistrar: SelectionRegistrar {
   fun register(rootClass: Class<out Any>) {
     register(rootClass.classLoader, rootClass.`package`)
   }

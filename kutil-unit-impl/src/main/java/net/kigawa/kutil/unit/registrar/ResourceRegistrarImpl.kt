@@ -18,7 +18,7 @@ class ResourceRegistrarImpl(
   getterComponent: UnitStoreComponent,
   databaseComponent: UnitDatabaseComponent,
   container: UnitContainer,
-): SelectionRegistrar(getterComponent, databaseComponent, container), ResourceRegistrar {
+): SelectionRegistrarImpl(getterComponent, databaseComponent, container), ResourceRegistrar {
   companion object {
     const val JAR_PROTOCOL = "jar"
     const val FILE_PROTOCOL = "file"
