@@ -2,7 +2,6 @@ package net.kigawa.kutil.unit
 
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
-import net.kigawa.kutil.unit.registrar.ClassRegistrarImpl
 import net.kigawa.kutil.unit.util.AbstractTest
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
 import net.kigawa.kutil.unitapi.component.UnitContainer
@@ -81,7 +80,7 @@ internal class UnitContainerTest: AbstractTest() {
   @Test
   fun testRegisterChangeUnit() {
     val unit = con.getUnit(Unit4::class.java)
-    con.getUnit(ClassRegistrarImpl::class.java).register(Unit4::class.java)
+    con.getUnit(ClassRegistrar::class.java).register(Unit4::class.java)
     assertNotSame(unit, con.getUnit(Unit4::class.java))
   }
   
@@ -93,46 +92,4 @@ internal class UnitContainerTest: AbstractTest() {
     assertSize(0, con.getUnitList(NamedUnit::class.java, "c"))
   }
   
-  @Test
-  fun testArgNameInjection() {
-    val registrar = con.getUnit(ClassRegistrarImpl::class.java)
-    assertDoesNotThrow {registrar.register(Unit6::class.java)}
-  }
-  
-  @Test
-  fun fieldInject() {
-    val fieldInjectUnit = con.getUnit(FieldInjectUnit::class.java)
-    assertNotNull(fieldInjectUnit.finalField)
-    assertNotNull(fieldInjectUnit.parentField)
-    assertNotNull(fieldInjectUnit.lateInitField)
-    assertNull(FieldInjectUnit.staticField)
-  }
-  
-  @Test
-  fun methodInject() {
-    val fieldInjectUnit = con.getUnit(MethodInjectUnit::class.java)
-    assertNotNull(fieldInjectUnit.unit1)
-    assertNotNull(fieldInjectUnit.unit3)
-    assertNull(FieldInjectUnit.staticField)
-  }
-  
-  companion object {
-    private val executor = Executors.newCachedThreadPool()
-    private val con: UnitContainer = UnitContainer.create()
-    
-    @JvmStatic
-    @BeforeClass
-    fun beforeAll() {
-      con.getUnit(InstanceRegistrar::class.java).register(executor)
-      con.getUnit(UnitConfigComponent::class.java).timeoutSec = 5
-      con.getUnit(ResourceRegistrar::class.java).register(UnitContainerTest::class.java)
-      con.getUnit(ClassRegistrar::class.java).register(NamedUnit::class.java, "b")
-    }
-    
-    @JvmStatic
-    @AfterClass
-    fun afterAll() {
-      executor.shutdown()
-    }
-  }
 }

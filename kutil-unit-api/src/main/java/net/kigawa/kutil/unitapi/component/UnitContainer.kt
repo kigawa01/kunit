@@ -16,7 +16,7 @@ interface UnitContainer: AutoCloseable {
     init {
       try {
         @Suppress("UNCHECKED_CAST")
-        implementsClass = Class.forName("net.kigawa.kutil.unit.component.UnitContainerImpl") as Class<out UnitContainer>
+        implementsClass = Class.forName("net.kigawa.kutil.unitimpl.component.UnitContainerImpl") as Class<out UnitContainer>
       } catch (_: ClassNotFoundException) {
       }
     }
