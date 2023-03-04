@@ -102,9 +102,10 @@ internal class UnitContainerTest: AbstractTest() {
   @Test
   fun fieldInject() {
     val fieldInjectUnit = con.getUnit(FieldInjectUnit::class.java)
-    assertNotNull(fieldInjectUnit.unit1)
-    assertNotNull(fieldInjectUnit.unit3)
-    assertNull(FieldInjectUnit.unit2)
+    assertNotNull(fieldInjectUnit.finalField)
+    assertNotNull(fieldInjectUnit.parentField)
+    assertNotNull(fieldInjectUnit.lateInitField)
+    assertNull(FieldInjectUnit.staticField)
   }
   
   @Test
@@ -112,7 +113,7 @@ internal class UnitContainerTest: AbstractTest() {
     val fieldInjectUnit = con.getUnit(MethodInjectUnit::class.java)
     assertNotNull(fieldInjectUnit.unit1)
     assertNotNull(fieldInjectUnit.unit3)
-    assertNull(FieldInjectUnit.unit2)
+    assertNull(FieldInjectUnit.staticField)
   }
   
   companion object {

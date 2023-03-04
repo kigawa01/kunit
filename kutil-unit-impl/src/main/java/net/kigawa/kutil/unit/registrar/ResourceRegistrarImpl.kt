@@ -24,8 +24,7 @@ class ResourceRegistrarImpl(
     const val FILE_PROTOCOL = "file"
   }
   
-  override fun register(classLoader: ClassLoader, loadPackage: Package) {
-    val packageName = loadPackage.name
+  override fun register(classLoader: ClassLoader, packageName: String) {
     val packageDir = packageName.replace('.', '/')
     classLoader.getResources(packageDir).asIterator().forEach {
       when (it.protocol) {
