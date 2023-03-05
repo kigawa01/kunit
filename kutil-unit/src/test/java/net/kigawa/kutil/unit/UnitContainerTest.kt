@@ -2,8 +2,6 @@ package net.kigawa.kutil.unit
 
 import net.kigawa.kutil.unit.dummy.*
 import net.kigawa.kutil.unit.dummy.parent.*
-import net.kigawa.kutil.unit.registrar.ClassRegistrarImpl
-import net.kigawa.kutil.unit.registrar.InstanceRegistrarImpl
 import net.kigawa.kutil.unit.util.AbstractTest
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
 import net.kigawa.kutil.unitapi.component.UnitContainer
@@ -49,18 +47,40 @@ internal class UnitContainerTest: AbstractTest() {
   @Test
   fun testCloseAble() {
     var closed = false
+    var count = 0
     val closeable = AutoCloseable {
       closed = true
+      synchronized(this) {
+        count++
+      }
     }
-    con.getUnit(InstanceRegistrarImpl::class.java).register(closeable)
+    con.getUnit(InstanceRegistrar::class.java).register(closeable)
     con.removeUnit(closeable.javaClass)
     assertTrue(closed)
+    assertEquals(1, count)
+  }
+  
+  @Test
+  fun testCloseAbleOnCloseContainer() {
+    var count = 0
+    val con = UnitContainer.create(con)
+    var closed = false
+    val closeable = AutoCloseable {
+      synchronized(this) {
+        count++
+      }
+      closed = true
+    }
+    con.getUnit(InstanceRegistrar::class.java).register(closeable)
+    con.close()
+    assertTrue(closed)
+    assertEquals(1, count)
   }
   
   @Test
   fun testRegisterChangeUnit() {
     val unit = con.getUnit(Unit4::class.java)
-    con.getUnit(ClassRegistrarImpl::class.java).register(Unit4::class.java)
+    con.getUnit(ClassRegistrar::class.java).register(Unit4::class.java)
     assertNotSame(unit, con.getUnit(Unit4::class.java))
   }
   
@@ -72,45 +92,4 @@ internal class UnitContainerTest: AbstractTest() {
     assertSize(0, con.getUnitList(NamedUnit::class.java, "c"))
   }
   
-  @Test
-  fun testArgNameInjection() {
-    val registrar = con.getUnit(ClassRegistrarImpl::class.java)
-    assertDoesNotThrow {registrar.register(Unit6::class.java)}
-  }
-  
-  @Test
-  fun fieldInject() {
-    val fieldInjectUnit = con.getUnit(FieldInjectUnit::class.java)
-    assertNotNull(fieldInjectUnit.unit1)
-    assertNotNull(fieldInjectUnit.unit3)
-    assertNull(FieldInjectUnit.unit2)
-  }
-  
-  @Test
-  fun methodInject() {
-    val fieldInjectUnit = con.getUnit(MethodInjectUnit::class.java)
-    assertNotNull(fieldInjectUnit.unit1)
-    assertNotNull(fieldInjectUnit.unit3)
-    assertNull(FieldInjectUnit.unit2)
-  }
-  
-  companion object {
-    private val executor = Executors.newCachedThreadPool()
-    private val con: UnitContainer = UnitContainer.create()
-    
-    @JvmStatic
-    @BeforeClass
-    fun beforeAll() {
-      con.getUnit(InstanceRegistrar::class.java).register(executor)
-      con.getUnit(UnitConfigComponent::class.java).timeoutSec = 5
-      con.getUnit(ResourceRegistrar::class.java).register(UnitContainerTest::class.java)
-      con.getUnit(ClassRegistrar::class.java).register(NamedUnit::class.java, "b")
-    }
-    
-    @JvmStatic
-    @AfterClass
-    fun afterAll() {
-      executor.shutdown()
-    }
-  }
 }

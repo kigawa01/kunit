@@ -12,7 +12,7 @@
 <dependency>
   <groupId>net.kigawa.kutil</groupId>
   <artifactId>kunit-unit</artifactId>
-  <version>4.2.0</version>
+  <version>4.3.0</version>
 </dependency>
 ```
 
