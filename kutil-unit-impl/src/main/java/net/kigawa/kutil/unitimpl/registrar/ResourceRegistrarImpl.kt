@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unitimpl.registrar
 
-import net.kigawa.kutil.unit.util.LocaleBuilder
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.exception.UnitException
 import net.kigawa.kutil.unitapi.extention.Message
 import net.kigawa.kutil.unitapi.registrar.ResourceRegistrar
+import net.kigawa.kutil.unitimpl.util.LocaleBuilder
 import java.io.File
 import java.net.JarURLConnection
 import java.net.URL

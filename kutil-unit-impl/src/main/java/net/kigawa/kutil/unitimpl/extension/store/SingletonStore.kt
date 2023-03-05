@@ -1,12 +1,12 @@
 package net.kigawa.kutil.unitimpl.extension.store
 
-import net.kigawa.kutil.unit.concurrent.ThreadLock
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.AlwaysInit
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.exception.UnitException
 import net.kigawa.kutil.unitapi.extention.UnitStore
 import net.kigawa.kutil.unitapi.options.RegisterOptions
+import net.kigawa.kutil.unitimpl.concurrent.ThreadLock
 import java.util.concurrent.TimeUnit
 
 @AlwaysInit

@@ -1,11 +1,11 @@
 package net.kigawa.kutil.unitimpl.extension.database
 
-import net.kigawa.kutil.unit.concurrent.ConcurrentList
-import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.UnitIdentify
+import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.UnitInfo
-import net.kigawa.kutil.unitapi.options.RegisterOptions
 import net.kigawa.kutil.unitapi.extention.UnitInfoDatabase
+import net.kigawa.kutil.unitapi.options.RegisterOptions
+import net.kigawa.kutil.unitimpl.concurrent.ConcurrentList
 
 @LateInit
 class DefaultInfoDatabase: UnitInfoDatabase {
