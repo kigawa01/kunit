@@ -3,16 +3,14 @@ package net.kigawa.kutil.unitapi.util
 import java.lang.reflect.*
 
 object ReflectionUtil {
-  fun getInstanceFields(clazz: Class<*>): List<Field> {
+  fun getFields(clazz: Class<*>): List<Field> {
     return getAllClasses(clazz)
       .flatMap {it.declaredFields.asList()}
-      .filter {!isStatic(it)}
   }
   
   fun getInstanceMethod(clazz: Class<*>): List<Method> {
     return getAllClasses(clazz)
       .flatMap {it.declaredMethods.asList()}
-      .filter {!isStatic(it)}
   }
   
   fun <T: Annotation> getInstanceAnnotation(clazz: Class<*>, annotationClass: Class<T>): MutableList<T> {
@@ -24,8 +22,13 @@ object ReflectionUtil {
     return list
   }
   
+  @Suppress("unused")
   fun isStatic(member: Member): Boolean {
     return Modifier.isStatic(member.modifiers)
+  }
+  
+  fun isFinal(member: Member): Boolean {
+    return Modifier.isFinal(member.modifiers)
   }
   
   fun instanceOf(clazz: Class<*>, superClass: Class<*>): Boolean {

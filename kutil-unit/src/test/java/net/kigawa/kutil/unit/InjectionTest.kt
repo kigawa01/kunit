@@ -23,9 +23,9 @@ class InjectionTest: AbstractTest() {
     assertNotNull(fieldInjectUnit.method)
     assertNotNull(fieldInjectUnit.parentField)
     assertNotNull(fieldInjectUnit.lateInitField)
-    assertNotNull(fieldInjectUnit.parentmethod)
-    assertNull(InjectUnit.staticField)
-    assertNull(InjectUnit.staticMethod)
+    assertNotNull(fieldInjectUnit.parentMethod)
+    assertNotNull(InjectUnit.staticField)
+    assertNotNull(InjectUnit.staticMethod)
   }
   
   @Test
@@ -35,8 +35,8 @@ class InjectionTest: AbstractTest() {
     assertNotNull(fieldInjectUnit.method)
     assertNotNull(fieldInjectUnit.parentField)
     assertNotNull(fieldInjectUnit.lateInitField)
-    assertNotNull(fieldInjectUnit.parentmethod)
-    assertNull(InjectUnit.staticField)
-    assertNull(InjectUnit.staticMethod)
+    assertNotNull(fieldInjectUnit.parentMethod)
+    assertNotNull(InjectUnitObj.staticField)
+    assertNotNull(InjectUnitObj.staticMethod)
   }
 }

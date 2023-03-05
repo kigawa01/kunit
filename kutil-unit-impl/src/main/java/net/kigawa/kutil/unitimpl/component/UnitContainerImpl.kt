@@ -1,6 +1,5 @@
 package net.kigawa.kutil.unitimpl.component
 
-import net.kigawa.kutil.unit.util.LocaleBuilder
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
@@ -10,6 +9,7 @@ import net.kigawa.kutil.unitapi.extention.Message
 import net.kigawa.kutil.unitapi.options.FindOptionEnum
 import net.kigawa.kutil.unitapi.options.FindOptions
 import net.kigawa.kutil.unitapi.util.Util
+import net.kigawa.kutil.unitimpl.util.LocaleBuilder
 import java.util.*
 import java.util.logging.Level
 
@@ -22,10 +22,10 @@ class UnitContainerImpl(
   lateinit var loggerComponent: UnitLoggerComponent
   lateinit var databaseComponent: UnitDatabaseComponent
   lateinit var finderComponent: UnitFinderComponent
-  var closed = false
+  private var closed = false
   
   init {
-    net.kigawa.kutil.unitimpl.component.ContainerInitializer(this)
+    ContainerInitializer(this)
   }
   
   override fun removeUnit(identify: UnitIdentify<out Any>) {

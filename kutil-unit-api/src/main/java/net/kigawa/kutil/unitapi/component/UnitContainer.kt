@@ -16,7 +16,8 @@ interface UnitContainer: AutoCloseable {
     init {
       try {
         @Suppress("UNCHECKED_CAST")
-        implementsClass = Class.forName("net.kigawa.kutil.unitimpl.component.UnitContainerImpl") as Class<out UnitContainer>
+        implementsClass =
+          Class.forName("net.kigawa.kutil.unitimpl.component.UnitContainerImpl") as Class<out UnitContainer>
       } catch (_: ClassNotFoundException) {
       }
     }
@@ -58,6 +59,7 @@ interface UnitContainer: AutoCloseable {
     return getUnitList(UnitIdentify(unitClass, name))
   }
   
+  @Deprecated("not use", ReplaceWith("identifies.map {getUnit(it, findOptions)}"))
   fun <T: Any> getCorrespondingUnitList(identifies: List<UnitIdentify<out T>>, findOptions: FindOptions): List<T> {
     return identifies.map {
       getUnit(it, findOptions)

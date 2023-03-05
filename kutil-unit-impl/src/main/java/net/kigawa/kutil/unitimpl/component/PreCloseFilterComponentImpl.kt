@@ -1,9 +1,9 @@
 package net.kigawa.kutil.unitimpl.component
 
-import net.kigawa.kutil.unit.util.LocaleBuilder
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.extention.*
+import net.kigawa.kutil.unitimpl.util.LocaleBuilder
 import java.util.logging.Level
 
 @LateInit
@@ -11,7 +11,7 @@ class PreCloseFilterComponentImpl(
   container: UnitContainer,
   private val loggerComponent: UnitLoggerComponent,
   database: ComponentDatabase,
-): PreCloseFilterComponent, net.kigawa.kutil.unitimpl.component.ComponentHolderImpl<PreCloseFilter>(container, database, loggerComponent) {
+): PreCloseFilterComponent, ComponentHolderImpl<PreCloseFilter>(container, database, loggerComponent) {
   
   override fun filter(info: UnitInfo<out Any>) {
     forEach {

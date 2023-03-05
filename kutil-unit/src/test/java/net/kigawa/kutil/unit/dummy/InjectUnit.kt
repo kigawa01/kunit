@@ -8,9 +8,10 @@ import net.kigawa.kutil.unitapi.annotation.Kunit
 @Kunit
 class InjectUnit(val injectUnit: Unit2): ParentFieldInjection() {
   @Inject
-  val finalField: Unit2? = null
-  var method: Unit2? = null
-    @Inject set
+  lateinit var finalField: Unit2
+  
+  @set:Inject
+  lateinit var method: Unit2
   
   @Inject
   lateinit var lateInitField: Unit2
@@ -18,17 +19,18 @@ class InjectUnit(val injectUnit: Unit2): ParentFieldInjection() {
   companion object {
     @JvmStatic
     @Inject
-    val staticField: Unit2? = null
+    lateinit var staticField: Unit2
+    
     @JvmStatic
-    var staticMethod: Unit2? = null
-      @Inject set
+    @set:Inject
+    lateinit var staticMethod: Unit2
   }
 }
 
 open class ParentFieldInjection {
   @Inject
-  val parentField: Unit2? = null
-  @Inject
-  var parentmethod: Unit2? = null
-    @Inject set
+  lateinit var parentField: Unit2
+  
+  @set:Inject
+  lateinit var parentMethod: Unit2
 }

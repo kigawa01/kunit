@@ -1,6 +1,5 @@
 package net.kigawa.kutil.unitimpl.extension.factory
 
-import net.kigawa.kutil.unitapi.UnitIdentifies
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.Inject
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
@@ -19,9 +18,9 @@ class NormalFactory(
   @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
   override fun <T: Any> init(identify: UnitIdentify<T>, stack: InitStack): T {
     val constructor = getConstructor(identify.unitClass)
-    val parameters =
-      container.getCorrespondingUnitList(UnitIdentifies.createList(constructor), FindOptions(FindInitGetOption(stack)))
-        .toTypedArray()
+    val parameters = UnitIdentify.createList(constructor)
+      .map {container.getUnit(it, FindOptions(FindInitGetOption(stack)))}
+      .toTypedArray()
     @Suppress("UNCHECKED_CAST")
     return constructor.newInstance(*parameters) as T
   }

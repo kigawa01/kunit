@@ -17,6 +17,8 @@ class AnnotationPreInitFilter(
     val dependencies = annotations.flatMap {annotation->
       annotation.value.map {UnitIdentify(it.value.java, it.name)}
     }
-    container.getCorrespondingUnitList(dependencies, FindOptions(FindInitGetOption(stack)))
+    dependencies.forEach {
+      container.getUnit(it, FindOptions(FindInitGetOption(stack)))
+    }
   }
 }
