@@ -1,6 +1,5 @@
 package net.kigawa.kutil.unitimpl.component
 
-import net.kigawa.kutil.unit.extension.store.*
 import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
@@ -18,7 +17,8 @@ class UnitStoreComponentImpl(
   loggerComponent: UnitLoggerComponent,
   factoryComponent: UnitFactoryComponent,
   database: ComponentDatabase,
-): UnitStoreComponent, net.kigawa.kutil.unitimpl.component.ComponentHolderImpl<UnitStore>(container, database, loggerComponent) {
+): UnitStoreComponent,
+   ComponentHolderImpl<UnitStore>(container, database, loggerComponent) {
   
   init {
     val initializeGetter = InitializeStore(factoryComponent)
