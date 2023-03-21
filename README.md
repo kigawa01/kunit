@@ -105,10 +105,9 @@ public class Main
 
 ## Version
 
-### Example: 9.1
-
-* **9.1**
+* Example **9.1,3**
     * **9**: major, destructive
-    * **1**: miner
+    * **1**: miner, new function
+    * **3**: miner, bag fix
 
 ## ToDo
