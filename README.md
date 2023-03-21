@@ -2,7 +2,8 @@
 
 ## About
 
-* add DIContainer for java app
+* add DI Container for java app
+* inject dependency instance to unit constructor
 * manage unit by container
 
 ## Usage
@@ -10,8 +11,8 @@
 ```pom.xml
 <dependency>
   <groupId>net.kigawa.kutil</groupId>
-  <artifactId>unit</artifactId>
-  <version>2.5</version>
+  <artifactId>kunit-unit</artifactId>
+  <version>4.3.0</version>
 </dependency>
 ```
 
@@ -24,7 +25,7 @@ register unit
 
 import net.kigawa.kutil.unit.annotation.Unit;
 
-@Unit
+@Kunit
 class Unit
 {
 
@@ -33,9 +34,9 @@ class Unit
 
 ```kotlin
 // kotlin
-import net.kigawa.kutil.unit.annotation.Unit
+import net.kigawa.kutil.unit.annotation.Kunit
 
-@Unit
+@Knnit
 object Unit {
 
 }
@@ -46,6 +47,7 @@ Unitをロードして初期化する
 load units and init them
 
 ```java
+import net.kigawa.kutil.unit.api.component.*;
 import net.kigawa.kutil.unit.classlist.*;
 import net.kigawa.kutil.unit.component.container.*;
 import net.kigawa.kutil.unit.container.*;
@@ -55,41 +57,16 @@ import java.util.*;
 
 class Main
 {
-  public static void main(String[] args)
-  {
-    var errors = new ArrayList<Throwable>();
-    var classList = UnitIdentifies.create(getClass());
-    var container = UnitContainer.create();
-    errors.addAll(container.registerUnits(classList));
-    errors.addAll(container.initUnits());
+    public static void main(String[] args)
+    {
+        // init
+        var container = UnitContainer.create();
+        container.getUnit(ResourceRegistrar.class).register(UnitContainerTest.class);
 
-    errors.forEach(Throwable::printStackTrace);
-  }
+        // shutdown
+        container.close();
+    }
 }
-```
-
-非同期で使う
-
-use as async
-
-```java
-
-
-import net.kigawa.kutil.unit.component.container.*;
-import net.kigawa.kutil.unit.container.*;
-
-import java.util.concurrent.*;
-
-public class Main
-{
-  private ExecutorService executor = Executors.newCachedThreadPool();
-
-  public void setAsync(UnitContainer container)
-  {
-    container.setExecutor(executor::execute);
-  }
-}
-
 ```
 
 ## Requirement
@@ -105,9 +82,10 @@ public class Main
 
 ## Version
 
-* Example **9.1,3**
-    * **9**: major, destructive
-    * **1**: miner, new function
-    * **3**: miner, bag fix
+### Example: 9.1.2
+
+* **9**: major, destructive
+* **1**: miner, new function
+* **2**: miner, bug fix
 
 ## ToDo
