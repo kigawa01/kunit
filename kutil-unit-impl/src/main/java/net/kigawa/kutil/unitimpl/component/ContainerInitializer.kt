@@ -15,9 +15,9 @@ class ContainerInitializer(unitContainer: net.kigawa.kutil.unitimpl.component.Un
   private val finderComponent: net.kigawa.kutil.unitimpl.component.UnitFinderComponentImpl
   private val storeComponent: net.kigawa.kutil.unitimpl.component.UnitStoreComponentImpl
   private val factoryComponent: net.kigawa.kutil.unitimpl.component.UnitFactoryComponentImpl
-  private val preInitFilterComponent: net.kigawa.kutil.unitimpl.component.PreInitFilterComponentImpl
+  private val preInitFilterComponent: PreInitFilterComponentImpl
   private val closerComponent: UnitCloserComponent
-  private val initializedFilterComponent: net.kigawa.kutil.unitimpl.component.InitializedFilterComponentImpl
+  private val initializedFilterComponent: InitializedFilterComponentImpl
   private val loggerComponent: net.kigawa.kutil.unitimpl.component.UnitLoggerComponentImpl
   private val databaseComponent: net.kigawa.kutil.unitimpl.component.UnitDatabaseComponentImpl
   private val container: net.kigawa.kutil.unitimpl.component.UnitContainerImpl
@@ -30,14 +30,14 @@ class ContainerInitializer(unitContainer: net.kigawa.kutil.unitimpl.component.Un
     databaseComponent = initDatabase(container, componentDatabase)
     loggerComponent = initLogger(container, componentDatabase, databaseComponent)
     initializedFilterComponent = addUnit(
-      net.kigawa.kutil.unitimpl.component.InitializedFilterComponentImpl(
+      InitializedFilterComponentImpl(
         componentDatabase,
         loggerComponent,
         container
       )
     )
     preInitFilterComponent = addUnit(
-      net.kigawa.kutil.unitimpl.component.PreInitFilterComponentImpl(
+      PreInitFilterComponentImpl(
         container,
         componentDatabase,
         loggerComponent
@@ -47,9 +47,9 @@ class ContainerInitializer(unitContainer: net.kigawa.kutil.unitimpl.component.Un
       initFactory(container, loggerComponent, componentDatabase, initializedFilterComponent, preInitFilterComponent)
     storeComponent = initStore(container, loggerComponent, factoryComponent, componentDatabase)
     finderComponent = initFinder(container, databaseComponent, componentDatabase, loggerComponent)
-    addUnit(net.kigawa.kutil.unitimpl.component.UnitConfigComponentImpl())
+    addUnit(UnitConfigComponentImpl())
     preCloseFilterComponent =
-      net.kigawa.kutil.unitimpl.component.PreCloseFilterComponentImpl(container, loggerComponent, componentDatabase)
+      PreCloseFilterComponentImpl(container, loggerComponent, componentDatabase)
     closerComponent = initCloser(container, loggerComponent, componentDatabase, preCloseFilterComponent)
     
     registerExtension()
