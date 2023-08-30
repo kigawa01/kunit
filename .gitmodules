@@ -1,0 +1,3 @@
+[submodule "kutil-java"]
+	path = kutil-java
+	url = https://github.com/kigawa01/kutil-java.git

@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/kutil-unit-api/kutil-unit-api.iml" filepath="$PROJECT_DIR$/kutil-unit-api/kutil-unit-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/kutil-unit-impl/kutil-unit-impl.iml" filepath="$PROJECT_DIR$/kutil-unit-impl/kutil-unit-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/kutil-units.iml" filepath="$PROJECT_DIR$/kutil-units.iml" />
     </modules>
   </component>

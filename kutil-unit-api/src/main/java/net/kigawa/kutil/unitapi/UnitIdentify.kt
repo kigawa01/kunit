@@ -1,7 +1,7 @@
 package net.kigawa.kutil.unitapi
 
+import net.kigawa.kutil.kutil.reflection.KutilReflect
 import net.kigawa.kutil.unitapi.annotation.ArgName
-import net.kigawa.kutil.unitapi.util.ReflectionUtil
 import java.lang.reflect.Executable
 import java.util.*
 
@@ -39,7 +39,7 @@ class UnitIdentify<T>(
   }
   
   fun instanceOf(superClass: Class<out Any>): Boolean {
-    return ReflectionUtil.instanceOf(unitClass, superClass)
+    return KutilReflect.instanceOf(unitClass, superClass)
   }
   
   override fun toString(): String {

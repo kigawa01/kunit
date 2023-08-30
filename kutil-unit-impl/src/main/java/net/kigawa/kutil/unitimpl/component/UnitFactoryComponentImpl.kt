@@ -18,7 +18,7 @@ class UnitFactoryComponentImpl(
   private val initializedFilter: InitializedFilterComponent,
   private val preInitFilterComponent: PreInitFilterComponent,
 ): UnitFactoryComponent,
-   net.kigawa.kutil.unitimpl.component.ComponentHolderImpl<UnitFactory>(container, database, loggerComponent) {
+   ComponentHolderImpl<UnitFactory>(container, database, loggerComponent) {
   init {
     addFactory(NormalFactory(container))
   }
