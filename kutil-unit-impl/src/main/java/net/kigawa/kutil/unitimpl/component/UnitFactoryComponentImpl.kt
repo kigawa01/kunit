@@ -7,13 +7,11 @@ import net.kigawa.kutil.unitapi.exception.CircularReferenceException
 import net.kigawa.kutil.unitapi.exception.NoFoundFactoryException
 import net.kigawa.kutil.unitapi.extention.*
 import net.kigawa.kutil.unitimpl.extension.factory.NormalFactory
-import net.kigawa.kutil.unitimpl.util.LocaleBuilder
-import java.util.logging.Level
 
 @LateInit
 class UnitFactoryComponentImpl(
   container: UnitContainer,
-  private val loggerComponent: UnitLoggerComponent,
+  loggerComponent: UnitLoggerComponent,
   private val database: ComponentDatabase,
   private val initializedFilter: InitializedFilterComponent,
   private val preInitFilterComponent: PreInitFilterComponent,
@@ -35,19 +33,7 @@ class UnitFactoryComponentImpl(
     preInitFilterComponent.filter(identify, initStack)
     
     val result = lastMap {
-      try {
-        it.init(identify, initStack)
-      } catch (e: Throwable) {
-        loggerComponent.log(
-          Message(
-            Level.WARNING,
-            LocaleBuilder("there is an exception when init unit").toString(),
-            listOf(e),
-            listOf(identify, stack, it)
-          )
-        )
-        null
-      }
+      it.init(identify, initStack)
     } ?: throw NoFoundFactoryException("valid factory is not found", identify = identify)
     
     return initializedFilter.filter(result, initStack)
