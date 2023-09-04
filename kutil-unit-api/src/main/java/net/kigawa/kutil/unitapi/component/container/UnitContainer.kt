@@ -1,21 +1,18 @@
 @file:Suppress("unused")
 
-package net.kigawa.kutil.unitapi.component
+package net.kigawa.kutil.unitapi.component.container
 
 import net.kigawa.kutil.unitapi.UnitIdentify
-import net.kigawa.kutil.unitapi.component.container.UnitListGetable
-import net.kigawa.kutil.unitapi.component.container.UnitRemovable
 import net.kigawa.kutil.unitapi.exception.*
-import net.kigawa.kutil.unitapi.options.FindOptions
 import java.util.*
 import java.util.concurrent.*
 
-@Deprecated("use container.UnitContainer")
 interface UnitContainer :
   AutoCloseable,
   UnitRemovable,
   UnitListGetable,
-  net.kigawa.kutil.unitapi.component.container.UnitContainer {
+  UnitGetOrNull,
+  UnitGettable {
   companion object {
     @JvmStatic
     var implementsClass: Class<out UnitContainer>? = null
@@ -43,14 +40,7 @@ interface UnitContainer :
     }
   }
 
-  @Deprecated("not use", ReplaceWith("identifies.map {getUnit(it, findOptions)}"))
-  fun <T : Any> getCorrespondingUnitList(
-    identifies: List<UnitIdentify<out T>>,
-    findOptions: FindOptions,
-  ): List<T> {
-    return identifies.map {
-      getUnit(it, findOptions)
-    }
+  fun <T : Any> contain(identify: UnitIdentify<T>): Boolean {
+    return getUnitList(identify).isNotEmpty()
   }
-
 }
