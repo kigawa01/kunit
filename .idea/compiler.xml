@@ -10,6 +10,7 @@
         <module name="kutil-unit" />
         <module name="template-java" />
         <module name="kutil-unit-impl" />
+        <module name="kutil" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

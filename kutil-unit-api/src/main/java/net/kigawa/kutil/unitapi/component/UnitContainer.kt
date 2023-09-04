@@ -86,7 +86,31 @@ interface UnitContainer: AutoCloseable {
     return getUnit(identify, FindOptions())
   }
   
-  fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T
+  fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T {
+    return getUnitOrNull(identify, findOptions) ?: throw NoFoundUnitException("unit is not found", identify = identify)
+  }
+  
+  fun <T: Any> getUnitOrNull(unitClass: Class<T>): T? {
+    return getUnitOrNull(unitClass, null)
+  }
+  
+  fun <T: Any> getUnitOrNull(unitClass: Class<T>, findOptions: FindOptions): T? {
+    return getUnitOrNull(unitClass, null, findOptions)
+  }
+  
+  fun <T: Any> getUnitOrNull(unitClass: Class<T>, name: String?): T? {
+    return getUnitOrNull(UnitIdentify(unitClass, name))
+  }
+  
+  fun <T: Any> getUnitOrNull(unitClass: Class<T>, name: String?, findOptions: FindOptions): T? {
+    return getUnitOrNull(UnitIdentify(unitClass, name), findOptions)
+  }
+  
+  fun <T: Any> getUnitOrNull(identify: UnitIdentify<T>): T? {
+    return getUnitOrNull(identify, FindOptions())
+  }
+  
+  fun <T: Any> getUnitOrNull(identify: UnitIdentify<T>, findOptions: FindOptions): T?
   
   fun <T: Any> contain(identify: UnitIdentify<T>): Boolean {
     return getUnitList(identify).isNotEmpty()

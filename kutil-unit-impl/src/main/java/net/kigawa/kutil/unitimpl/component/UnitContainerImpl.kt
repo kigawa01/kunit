@@ -56,7 +56,7 @@ class UnitContainerImpl(
     return list
   }
   
-  override fun <T: Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T {
+  override fun <T: Any> getUnitOrNull(identify: UnitIdentify<T>, findOptions: FindOptions): T {
     var units = getUnitList(
       identify,
       FindOptions(*KutilList.connectList(findOptions.options, listOf(FindOptionEnum.SKIP_PARENT)).toTypedArray())
