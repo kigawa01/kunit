@@ -17,33 +17,33 @@ import java.util.logging.Level
 class ResourceRegistrarImpl(
   private val loggerComponent: UnitLoggerComponent,
   private val selectionRegistrar: SelectionRegistrar,
-): ResourceRegistrar {
+) : ResourceRegistrar {
   companion object {
     const val JAR_PROTOCOL = "jar"
     const val FILE_PROTOCOL = "file"
   }
-  
+
   override fun register(classLoader: ClassLoader, packageName: String, selectionRegistrar: SelectionRegistrar) {
     val packageDir = packageName.replace('.', '/')
     classLoader.getResources(packageDir).asIterator().forEach {
       when (it.protocol) {
-        JAR_PROTOCOL ->registerJar(classLoader, it, packageName, selectionRegistrar)
-        FILE_PROTOCOL->registerFile(classLoader, it, packageName, selectionRegistrar)
-        else         ->throw UnitException("could not support resource protocol")
+        JAR_PROTOCOL -> registerJar(classLoader, it, packageName, selectionRegistrar)
+        FILE_PROTOCOL -> registerFile(classLoader, it, packageName, selectionRegistrar)
+        else -> throw UnitException("could not support resource protocol")
       }
     }
   }
-  
+
   override fun register(classLoader: ClassLoader, packageName: String) {
     register(classLoader, packageName, selectionRegistrar)
   }
-  
+
   private fun tryRegister(
     classLoader: ClassLoader,
     className: String,
     selectionRegistrar: SelectionRegistrar,
     errInfo: List<Any>,
-  ): (()->Unit)? {
+  ): (() -> Unit)? {
     return try {
       val unitClass = classLoader.loadClass(className)
       selectionRegistrar.selectRegister(unitClass)
@@ -59,7 +59,7 @@ class ResourceRegistrarImpl(
       null
     }
   }
-  
+
   private fun registerJar(
     classLoader: ClassLoader,
     resource: URL,
@@ -67,18 +67,18 @@ class ResourceRegistrarImpl(
     selectionRegistrar: SelectionRegistrar,
   ) {
     if (JAR_PROTOCOL != resource.protocol) throw RuntimeException("could not support file type")
-    
-    (resource.openConnection() as JarURLConnection).jarFile.use {jarFile->
+
+    (resource.openConnection() as JarURLConnection).jarFile.use { jarFile ->
       Collections.list(jarFile.entries()).map {
         var name = it.name
         if (!name.startsWith(packageName.replace('.', '/'))) return@map null
         if (!name.endsWith(".class")) return@map null
         name = name.replace('/', '.').replace(".class$".toRegex(), "")
-        tryRegister(classLoader, name, selectionRegistrar, listOf(name, classLoader, resource))
+        return@map tryRegister(classLoader, name, selectionRegistrar, listOf(name, classLoader, resource))
       }
-    }.forEach {it?.invoke()}
+    }.forEach { it?.invoke() }
   }
-  
+
   private fun registerFile(
     classLoader: ClassLoader,
     resource: URL,
@@ -86,20 +86,20 @@ class ResourceRegistrarImpl(
     selectionRegistrar: SelectionRegistrar,
   ) {
     if (FILE_PROTOCOL != resource.protocol) throw RuntimeException("could not support file type")
-    loadUnit(classLoader, File(resource.file), packageName, selectionRegistrar).forEach {it?.invoke()}
+    loadUnit(classLoader, File(resource.file), packageName, selectionRegistrar).forEach { it?.invoke() }
   }
-  
+
   private fun loadUnit(
     classLoader: ClassLoader,
     dir: File,
     packageName: String,
     selectionRegistrar: SelectionRegistrar,
-  ): List<(()->Unit)?> {
+  ): List<(() -> Unit)?> {
     val files = dir.listFiles() ?: throw UnitException("cold not load unit files")
-    return files.map {file->
+    return files.map { file ->
       if (file.isDirectory) {
         val list = loadUnit(classLoader, file, packageName + "." + file.name, selectionRegistrar)
-        return@map {list.forEach {it?.invoke()}}
+        return@map { list.forEach { it?.invoke() } }
       }
       if (!file.name.endsWith(".class")) return@map null
       var name = file.name

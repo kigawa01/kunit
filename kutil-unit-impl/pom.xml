@@ -21,7 +21,7 @@
         <dependency>
             <groupId>net.kigawa.kutil</groupId>
             <artifactId>kutil-unit-api</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.kigawa.kutil</groupId>

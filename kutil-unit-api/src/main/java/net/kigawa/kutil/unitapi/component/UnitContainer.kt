@@ -10,6 +10,7 @@ import net.kigawa.kutil.unitapi.options.FindOptions
 import java.util.*
 import java.util.concurrent.*
 
+@Suppress("DEPRECATION")
 @Deprecated("use container.UnitContainer")
 interface UnitContainer :
   AutoCloseable,
@@ -37,7 +38,8 @@ interface UnitContainer :
 
     @JvmStatic
     fun create(name: String?, vararg parent: UnitContainer): UnitContainer {
-      val constructor = implementsClass?.getConstructor(String::class.java, Array<UnitContainer>::class.java)
+      val constructor = implementsClass
+        ?.getConstructor(String::class.java, Array<net.kigawa.kutil.unitapi.component.container.UnitContainer>::class.java)
         ?: throw UnitException("container class is not found")
       return constructor.newInstance(name ?: "", parent)
     }

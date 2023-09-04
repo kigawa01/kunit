@@ -27,7 +27,8 @@ interface UnitGettable : UnitGetOrNull {
   }
 
   fun <T : Any> getUnit(identify: UnitIdentify<T>, findOptions: FindOptions): T {
-    return getUnitOrNull(identify, findOptions) ?: throw NoFoundUnitException("unit is not found", identify = identify)
+    return getUnitOrNull(identify, findOptions)
+      ?: throw NoFoundUnitException("unit is not found", identify = identify)
   }
 
 }

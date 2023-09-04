@@ -17,7 +17,7 @@ class FieldInjectFilter(
       it.getAnnotation(Inject::class.java) ?: return@forEach
       val identify = UnitIdentify(it.type, it.name)
       val info = database.findOneByEqualsOrClass(identify)
-                 ?: throw NoFoundUnitException("unit is not found", identify = identify)
+                 ?: throw NoFoundUnitException("field unit is not found", identify = identify)
       it.isAccessible = true
       if (KutilReflect.isFinal(it)) {
         loggerComponent.log(Level.WARNING, "could not inject to final field", null, it)

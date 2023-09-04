@@ -15,7 +15,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17 (2)" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17 (2)" project-jdk-type="JavaSDK">
+    <output url="file://$APPLICATION_HOME_DIR$/jbr/bin/out" />
+  </component>
   <component name="ProjectType">
     <option name="id" value="jpab" />
   </component>

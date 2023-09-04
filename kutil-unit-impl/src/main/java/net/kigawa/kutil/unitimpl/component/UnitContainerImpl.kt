@@ -5,7 +5,6 @@ import net.kigawa.kutil.unitapi.UnitIdentify
 import net.kigawa.kutil.unitapi.annotation.getter.LateInit
 import net.kigawa.kutil.unitapi.component.*
 import net.kigawa.kutil.unitapi.component.container.UnitContainer
-import net.kigawa.kutil.unitapi.exception.NoFoundUnitException
 import net.kigawa.kutil.unitapi.exception.NoSingleUnitException
 import net.kigawa.kutil.unitapi.extention.Message
 import net.kigawa.kutil.unitapi.options.FindOptionEnum
@@ -14,23 +13,24 @@ import net.kigawa.kutil.unitimpl.util.LocaleBuilder
 import java.util.*
 import java.util.logging.Level
 
+@Suppress("DEPRECATION")
 @LateInit
 class UnitContainerImpl(
   val name: String,
   private vararg val parent: UnitContainer,
-): UnitContainer {
+) : UnitContainer, net.kigawa.kutil.unitapi.component.UnitContainer {
   lateinit var closerComponent: UnitCloserComponent
   lateinit var loggerComponent: UnitLoggerComponent
   lateinit var databaseComponent: UnitDatabaseComponent
   lateinit var finderComponent: UnitFinderComponent
   private var closed = false
-  
+
   init {
     ContainerInitializer(this)
   }
-  
+
   override fun removeUnit(identify: UnitIdentify<out Any>) {
-    databaseComponent.findByIdentify(identify).forEach {info->
+    databaseComponent.findByIdentify(identify).forEach { info ->
       try {
         removeInfo(info)
       } catch (e: Throwable) {
@@ -45,34 +45,34 @@ class UnitContainerImpl(
       }
     }
   }
-  
+
   private fun removeInfo(info: UnitInfo<out Any>) {
     databaseComponent.unregisterInfo(info)
     closerComponent.closeUnit(info)
   }
-  
-  override fun <T: Any> getUnitList(identify: UnitIdentify<T>, findOptions: FindOptions): List<T> {
+
+  override fun <T : Any> getUnitList(identify: UnitIdentify<T>, findOptions: FindOptions): List<T> {
     val list = finderComponent.findUnits(identify, findOptions).toMutableList()
-    if (!findOptions.contain(FindOptionEnum.SKIP_PARENT)) parent.forEach {list.addAll(it.getUnitList(identify))}
+    if (!findOptions.contain(FindOptionEnum.SKIP_PARENT)) parent.forEach { list.addAll(it.getUnitList(identify)) }
     return list
   }
-  
-  override fun <T: Any> getUnitOrNull(identify: UnitIdentify<T>, findOptions: FindOptions): T {
+
+  override fun <T : Any> getUnitOrNull(identify: UnitIdentify<T>, findOptions: FindOptions): T? {
     var units = getUnitList(
       identify,
       FindOptions(*KutilList.connectList(findOptions.options, listOf(FindOptionEnum.SKIP_PARENT)).toTypedArray())
     )
     if (units.isEmpty() && !findOptions.contain(FindOptionEnum.SKIP_PARENT)) {
-      units = parent.map {it.getUnit(identify, findOptions)}
+      units = parent.map { it.getUnit(identify, findOptions) }
     }
     if (units.isEmpty())
-      throw NoFoundUnitException("unit is not found", identify = identify)
+      return null
     if (units.size == 1) {
       return units[0]
     }
     throw NoSingleUnitException("unit is not single count", identify = identify, units = units)
   }
-  
+
   @Synchronized
   override fun close() {
     if (closed) return
