@@ -2,8 +2,8 @@ package net.kigawa.kutil.unitapi.exception
 
 import net.kigawa.kutil.unitapi.UnitIdentify
 
-class NoFoundUnitException(
-  message: String?,
-  cause: Throwable? = null,
+class UnitRegisterException(
+  message: String,
   identify: UnitIdentify<out Any>,
+  cause: Throwable? = null,
 ) : UnitException(message, cause, identify)

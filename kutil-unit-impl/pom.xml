@@ -4,7 +4,7 @@
     <parent>
         <groupId>net.kigawa.kutil</groupId>
         <artifactId>kutil-units</artifactId>
-        <version>4.3.0</version>
+        <version>4.4.0</version>
     </parent>
 
     <artifactId>kutil-unit-impl</artifactId>
@@ -21,17 +21,12 @@
         <dependency>
             <groupId>net.kigawa.kutil</groupId>
             <artifactId>kutil-unit-api</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.kigawa.kutil</groupId>
             <artifactId>log</artifactId>
             <version>2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.kigawa.kutil</groupId>
-            <artifactId>kutil</artifactId>
-            <version>2.1</version>
         </dependency>
     </dependencies>
 </project>

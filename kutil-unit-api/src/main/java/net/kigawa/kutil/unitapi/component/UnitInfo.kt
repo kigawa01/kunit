@@ -14,7 +14,7 @@ interface UnitInfo<T: Any> {
     return getter.initOrGet(identify, initStack)
   }
   
-  fun get(): T {
+  fun get(): T? {
     return getter.get(identify)
   }
   

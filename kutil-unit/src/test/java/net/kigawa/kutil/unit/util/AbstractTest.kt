@@ -5,32 +5,36 @@ import junit.framework.TestCase
 import net.kigawa.kutil.unit.UnitContainerTest
 import net.kigawa.kutil.unit.dummy.NamedUnit
 import net.kigawa.kutil.unitapi.component.UnitConfigComponent
-import net.kigawa.kutil.unitapi.component.UnitContainer
-import net.kigawa.kutil.unitapi.registrar.*
-import org.junit.*
+import net.kigawa.kutil.unitapi.component.container.UnitContainer
+import net.kigawa.kutil.unitapi.registrar.ClassRegistrar
+import net.kigawa.kutil.unitapi.registrar.InstanceRegistrar
+import net.kigawa.kutil.unitapi.registrar.ResourceRegistrar
+import org.junit.AfterClass
+import org.junit.BeforeClass
+import org.junit.Ignore
 import java.util.concurrent.Executors
 
 @Ignore
-open class AbstractTest: TestCase() {
+open class AbstractTest : TestCase() {
   val con = AbstractTest.con
   fun assertContain(expected: Any, actual: Iterable<Any>) {
     if (actual.contains(expected)) return
     throw AssertionFailedError("expected is not contain, expected: $expected, actual: $actual")
   }
-  
+
   fun assertSize(expected: Int, actual: Collection<Any>) {
     if (expected == actual.size) return
     throw AssertionFailedError("collection size is not match: $expected, actual: $actual")
   }
-  
-  fun assertDoesNotThrow(function: ()->Unit) {
+
+  fun assertDoesNotThrow(function: () -> Unit) {
     function()
   }
-  
+
   companion object {
     private val executor = Executors.newCachedThreadPool()
     private val con: UnitContainer = UnitContainer.create()
-    
+
     @JvmStatic
     @BeforeClass
     fun beforeAll() {
@@ -39,7 +43,7 @@ open class AbstractTest: TestCase() {
       con.getUnit(ResourceRegistrar::class.java).register(UnitContainerTest::class.java)
       con.getUnit(ClassRegistrar::class.java).register(NamedUnit::class.java, "b")
     }
-    
+
     @JvmStatic
     @AfterClass
     fun afterAll() {

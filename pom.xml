@@ -11,8 +11,8 @@
     </modules>
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.7.20</kotlin.version>
-        <dokka.version>${kotlin.version}</dokka.version>
+        <kotlin.version>1.9.10</kotlin.version>
+        <dokka.version>1.9.0</dokka.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -21,7 +21,7 @@
 
     <groupId>net.kigawa.kutil</groupId>
     <artifactId>kutil-units</artifactId>
-    <version>4.3.0</version>
+    <version>4.4.0</version>
     <name>${project.artifactId}</name>
     <description>add di container as unit</description>
     <url>https://github.com/kigawa01/kutil-unit</url>
@@ -53,12 +53,6 @@
         <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
         <plugins>
-            <!-- JUnit 5 でのテスト実行に必要なプラグインを導入 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-            </plugin>
             <!-- sonatype release -->
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
@@ -131,6 +125,7 @@
                 </configuration>
             </plugin>
 
+            <!--kotlin-->
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -160,6 +155,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--compiler-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -191,6 +187,12 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- JUnit 5 でのテスト実行に必要なプラグインを導入 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -205,6 +207,11 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>kutil</artifactId>
+            <version>2.2.2</version>
         </dependency>
     </dependencies>
 

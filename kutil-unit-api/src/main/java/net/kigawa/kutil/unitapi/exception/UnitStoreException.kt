@@ -5,15 +5,9 @@ import net.kigawa.kutil.unitapi.options.RegisterOptions
 
 class UnitStoreException(
   message: String,
-  override val identify: UnitIdentify<out Any>,
-  val options: RegisterOptions,
-  cause: Throwable?,
-):
-  UnitException(message, cause) {
-  constructor(message: String, identify: UnitIdentify<out Any>, options: RegisterOptions): this(
-    message,
-    identify,
-    options,
-    null
-  )
+  identify: UnitIdentify<out Any>,
+  val options: RegisterOptions? = null,
+  cause: Throwable? = null,
+) :
+  UnitException(message, cause, identify) {
 }

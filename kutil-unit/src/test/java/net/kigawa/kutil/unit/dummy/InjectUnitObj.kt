@@ -1,4 +1,4 @@
-@file:Suppress("unused", "UNUSED_PARAMETER")
+@file:Suppress("unused")
 
 package net.kigawa.kutil.unit.dummy
 
@@ -7,6 +7,9 @@ import net.kigawa.kutil.unitapi.annotation.Kunit
 
 @Kunit
 object InjectUnitObj: ParentFieldInjection() {
+  init {
+    println("aaaaa")
+  }
   @Inject
   lateinit var finalField: Unit2
   

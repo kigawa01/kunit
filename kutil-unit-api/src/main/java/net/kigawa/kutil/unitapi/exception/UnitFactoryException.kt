@@ -2,8 +2,9 @@ package net.kigawa.kutil.unitapi.exception
 
 import net.kigawa.kutil.unitapi.UnitIdentify
 
-open class UnitException(
+class UnitFactoryException(
   message: String? = null,
   cause: Throwable? = null,
-  open val identify: UnitIdentify<out Any>? = null,
-) : RuntimeException("$message, $identify", cause)
+  identify: UnitIdentify<out Any>? = null,
+) : UnitException(message, cause, identify) {
+}
