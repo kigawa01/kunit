@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: deploy maven central
 
 on:
@@ -12,20 +15,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Maven Central Repository
+      - uses: actions/checkout@v4
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          server-id: ossrh
-          distribution: temurin
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          distribution: 'temurin'
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Restore gradle.properties
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | base64 -d > kutil/sec.pem
+          echo "signing.keyId=ED76201E" >> ./gradle.properties
+          echo "signing.password=${GPG_PASSPHRASE}" >> ./gradle.properties
+          echo "signing.secretKeyRingFile=sec.pem" >> ./gradle.properties
       - name: Publish package
-        run: mvn --batch-mode deploy
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: publish
         env:
           MAVEN_USERNAME: kigawa
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+#####
