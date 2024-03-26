@@ -1,5 +1,5 @@
-package net.kigawa.kutil.kunit.dummy.parent;
+package net.kigawa.kutil.kunit.dummy.parent
 
-public interface UnitInterface1
-{
-}
+interface UnitInterface1
+
+ 

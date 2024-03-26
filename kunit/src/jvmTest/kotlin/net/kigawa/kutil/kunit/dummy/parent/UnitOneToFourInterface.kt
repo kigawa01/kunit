@@ -1,5 +1,5 @@
-package net.kigawa.kutil.kunit.dummy.parent;
+package net.kigawa.kutil.kunit.dummy.parent
 
-public interface UnitOneToFourInterface
-{
-}
+interface UnitOneToFourInterface
+
+ 

@@ -1,16 +1,11 @@
-package net.kigawa.kutil.kunit.dummy;
+package net.kigawa.kutil.kunit.dummy
 
-import net.kigawa.kutil.unit.dummy.parent.*;
+import net.kigawa.kutil.kunit.api.annotation.Kunit
+import net.kigawa.kutil.kunit.api.component.container.UnitContainer
+import net.kigawa.kutil.kunit.dummy.parent.UnitOneToFourInterface
+import kotlin.test.Ignore
 
+@Ignore
 @Kunit
-public class Unit1 implements UnitOneToFourInterface
-{
-    protected final Unit4 unitDummy;
-    protected final UnitContainer unitContainer;
-
-    public Unit1(Unit4 unitDummy, UnitContainer unitContainer)
-    {
-        this.unitDummy = unitDummy;
-        this.unitContainer = unitContainer;
-    }
+class Unit1(private val unitDummy: Unit4, private val unitContainer: UnitContainer) : UnitOneToFourInterface {
 }

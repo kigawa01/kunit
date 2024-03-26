@@ -39,11 +39,14 @@ kotlin {
   sourceSets {
     val jvmMain by getting {
       dependencies {
-        implementation(kotlin("test-junit5"))
         implementation("net.kigawa.kutil:kutil:2.2.2")
       }
     }
-    val jvmTest by getting
+    val jvmTest by getting{
+      dependencies {
+        implementation(kotlin("test-junit5"))
+      }
+    }
     val commonMain by getting
     val commonTest by getting
   }
@@ -62,5 +65,8 @@ tasks {
       freeCompilerArgs += "-Xexpect-actual-classes"
     }
   }
-
+  withType<Test> {
+    useJUnitPlatform()
+//    exclude("net/kigawa/kutil/kunit/dummy/*")
+  }
 }

@@ -21,7 +21,7 @@ interface UnitContainer :
       try {
         @Suppress("UNCHECKED_CAST")
         implementsClass =
-          Class.forName("net.kigawa.kutil.unitimpl.component.UnitContainerImpl") as Class<out UnitContainer>
+          Class.forName("net.kigawa.kutil.kunit.impl.component.UnitContainerImpl") as Class<out UnitContainer>
       } catch (_: ClassNotFoundException) {
       }
     }

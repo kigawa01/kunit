@@ -3,8 +3,10 @@
 package net.kigawa.kutil.kunit.dummy
 
 import net.kigawa.kutil.kunit.api.annotation.Kunit
+import kotlin.test.Ignore
 
 @Kunit
+@Ignore
 class InjectUnit(val injectUnit: Unit2): ParentFieldInjection() {
   @net.kigawa.kutil.kunit.api.annotation.Inject
   lateinit var finalField: Unit2

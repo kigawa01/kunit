@@ -1,12 +1,12 @@
 @file:Suppress("unused")
 
-package net.kigawa.kutil.unit.dummy
+package net.kigawa.kutil.kunit.dummy
 
 import net.kigawa.kutil.kunit.api.annotation.Kunit
-import net.kigawa.kutil.kunit.dummy.ParentFieldInjection
-import net.kigawa.kutil.kunit.dummy.Unit2
+import kotlin.test.Ignore
 
 @Kunit
+@Ignore
 object InjectUnitObj: ParentFieldInjection() {
   init {
     println("aaaaa")

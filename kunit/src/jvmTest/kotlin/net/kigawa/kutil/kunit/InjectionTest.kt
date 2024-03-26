@@ -2,9 +2,9 @@ package net.kigawa.kutil.kunit
 
 import net.kigawa.kutil.kunit.api.registrar.ClassRegistrar
 import net.kigawa.kutil.kunit.dummy.InjectUnit
+import net.kigawa.kutil.kunit.dummy.InjectUnitObj
+import net.kigawa.kutil.kunit.dummy.Unit6
 import net.kigawa.kutil.kunit.util.AbstractTest
-import net.kigawa.kutil.unit.dummy.InjectUnitObj
-import net.kigawa.kutil.unit.dummy.Unit6
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 

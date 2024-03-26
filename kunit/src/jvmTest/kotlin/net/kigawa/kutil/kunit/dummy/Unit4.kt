@@ -1,11 +1,12 @@
-package net.kigawa.kutil.kunit.dummy;
+package net.kigawa.kutil.kunit.dummy
 
-import net.kigawa.kutil.unit.dummy.parent.*;
+import net.kigawa.kutil.kunit.api.annotation.Kunit
+import net.kigawa.kutil.kunit.dummy.parent.UnitInterface1
+import net.kigawa.kutil.kunit.dummy.parent.UnitOneToFourInterface
+import net.kigawa.kutil.unit.dummy.parent.AbstractUnit
+import kotlin.test.Ignore
 
 @Kunit
-public class Unit4 extends AbstractUnit implements UnitInterface1, UnitOneToFourInterface
-{
-    public Unit4()
-    {
-    }
-}
+@Ignore
+class Unit4 : AbstractUnit(), UnitInterface1, UnitOneToFourInterface
+
