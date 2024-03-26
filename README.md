@@ -1,4 +1,4 @@
-# kutil-unit
+# kunit
 
 ## About
 
@@ -47,25 +47,18 @@ Unitをロードして初期化する
 load units and init them
 
 ```java
-import net.kigawa.kutil.unit.api.component.*;
-import net.kigawa.kutil.unit.classlist.*;
-import net.kigawa.kutil.unit.component.container.*;
-import net.kigawa.kutil.unit.container.*;
-import net.kigawa.kutil.unit.extension.identify.*;
 
-import java.util.*;
 
 class Main
 {
-    public static void main(String[] args)
-    {
-        // init
-        var container = UnitContainer.create();
-        container.getUnit(ResourceRegistrar.class).register(UnitContainerTest.class);
+  public static void main(String[] args) {
+    // init
+    var container = UnitContainer.create();
+    container.getUnit(ResourceRegistrar.class).register(UnitContainerTest.class);
 
-        // shutdown
-        container.close();
-    }
+    // shutdown
+    container.close();
+  }
 }
 ```
 

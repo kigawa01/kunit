@@ -6,14 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="kutil-unit-api" />
-        <module name="kutil-unit" />
         <module name="template-java" />
-        <module name="kutil-unit-impl" />
-        <module name="kutil" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="17">
+      <module name="kutil-unit" target="17" />
+      <module name="kutil-unit-api" target="17" />
+      <module name="kutil-unit-impl" target="17" />
+      <module name="kutil-units" target="17" />
+      <module name="kutil.api" target="17" />
+      <module name="kutil.buildSrc" target="17" />
+      <module name="kutil.buildSrc.main" target="17" />
+      <module name="kutil.buildSrc.test" target="17" />
+      <module name="kutil.kutil" target="17" />
       <module name="unit" target="17" />
     </bytecodeTargetLevel>
   </component>

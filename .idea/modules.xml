@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/kutil-units.iml" filepath="$PROJECT_DIR$/kutil-units.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kunit/kunit.kunit.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/kunit/kunit.kunit.jvmMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kunit/kunit.kunit.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/kunit/kunit.kunit.jvmTest.iml" />
     </modules>
   </component>
 </project>

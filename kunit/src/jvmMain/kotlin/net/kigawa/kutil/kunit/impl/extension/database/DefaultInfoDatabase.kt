@@ -1,0 +1,32 @@
+package net.kigawa.kutil.kunit.impl.extension.database
+
+import net.kigawa.kutil.kunit.api.UnitIdentify
+import net.kigawa.kutil.kunit.api.annotation.getter.LateInit
+import net.kigawa.kutil.kunit.api.component.UnitInfo
+import net.kigawa.kutil.kunit.api.extention.UnitInfoDatabase
+import net.kigawa.kutil.kunit.api.options.RegisterOptions
+import net.kigawa.kutil.kunit.impl.concurrent.ConcurrentList
+
+@LateInit
+class DefaultInfoDatabase: UnitInfoDatabase {
+  private val infoList = ConcurrentList<UnitInfo<out Any>>()
+  override fun register(unitInfo: UnitInfo<out Any>, registerOptions: RegisterOptions): Boolean {
+    infoList.add(unitInfo)
+    return true
+  }
+  
+  override fun unregister(unitInfo: UnitInfo<out Any>) {
+    infoList.remove(unitInfo)
+  }
+  
+  override fun identifyList(): List<UnitIdentify<out Any>> {
+    return infoList.map {
+      it.identify
+    }
+  }
+  
+  override fun <T: Any> findByIdentify(identify: UnitIdentify<T>): List<UnitInfo<T>> {
+    @Suppress("UNCHECKED_CAST")
+    return infoList.filter {it.identify.equalsOrSuperClass(identify)} as List<UnitInfo<T>>
+  }
+}

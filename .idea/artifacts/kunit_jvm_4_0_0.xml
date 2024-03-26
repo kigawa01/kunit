@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="kunit-jvm-4.0.0">
+    <output-path>$PROJECT_DIR$/kunit/build/libs</output-path>
+    <root id="archive" name="kunit-jvm-4.0.0.jar" />
+  </artifact>
+</component>

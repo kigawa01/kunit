@@ -1,0 +1,23 @@
+package net.kigawa.kutil.kunit.api.options
+
+import net.kigawa.kutil.kunit.api.annotation.getter.*
+
+enum class RegisterOptionEnum(private val annotationClass: Class<out Annotation>): RegisterOption {
+  ALWAYS_INIT(AlwaysInit::class.java),
+  LATE_INIT(LateInit::class.java),
+  
+  @Suppress("unused")
+  SINGLETON(Singleton::class.java),
+  ;
+  
+  companion object {
+    @JvmStatic
+    fun getOption(clazz: Class<out Any>): Array<RegisterOptionEnum> {
+      return values().filter {clazz.isAnnotationPresent(it.annotationClass)}.toTypedArray()
+    }
+  }
+  
+  override fun match(clazz: Class<out Any>): Boolean {
+    return clazz.isAnnotationPresent(annotationClass)
+  }
+}
