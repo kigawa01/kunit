@@ -1,4 +1,4 @@
-package net.kigawa.kutil.kunit.item
+package net.kigawa.kutil.kunit.exception
 
 import net.kigawa.kutil.kunit.provider.Provider
 
