@@ -1,10 +1,10 @@
 package net.kigawa.kutil.kunit.impl.extension.factory
 
-import net.kigawa.kutil.kutil.reflection.KutilReflect
 import net.kigawa.kutil.kunit.api.UnitIdentify
 import net.kigawa.kutil.kunit.api.annotation.getter.LateInit
 import net.kigawa.kutil.kunit.api.component.InitStack
 import net.kigawa.kutil.kunit.api.extention.UnitFactory
+import net.kigawa.kutil.kutil.api.reflection.KutilReflect
 
 @LateInit
 class KotlinObjectFactory : UnitFactory {

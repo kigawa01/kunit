@@ -6,7 +6,7 @@ import net.kigawa.kutil.kunit.api.component.container.UnitContainer
 import net.kigawa.kutil.kunit.api.extention.PreInitFilter
 import net.kigawa.kutil.kunit.api.options.FindInitGetOption
 import net.kigawa.kutil.kunit.api.options.FindOptions
-import net.kigawa.kutil.kutil.reflection.KutilReflect
+import net.kigawa.kutil.kutil.api.reflection.KutilReflect
 
 class AnnotationPreInitFilter(
   private val container: UnitContainer,

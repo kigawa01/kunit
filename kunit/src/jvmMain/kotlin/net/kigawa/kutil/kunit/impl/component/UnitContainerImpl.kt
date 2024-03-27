@@ -10,7 +10,7 @@ import net.kigawa.kutil.kunit.api.component.container.UnitContainer
 import net.kigawa.kutil.kunit.api.exception.NoSingleUnitException
 import net.kigawa.kutil.kunit.api.options.FindOptionEnum
 import net.kigawa.kutil.kunit.api.options.FindOptions
-import net.kigawa.kutil.kutil.list.KutilList
+import net.kigawa.kutil.kutil.api.list.KutilList
 
 @LateInit
 class UnitContainerImpl(
@@ -23,7 +23,7 @@ class UnitContainerImpl(
   private var closed = false
 
   init {
-    net.kigawa.kutil.kunit.impl.component.ContainerInitializer(this)
+    ContainerInitializer(this)
   }
 
   override fun removeUnit(identify: UnitIdentify<out Any>) {

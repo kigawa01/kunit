@@ -22,6 +22,7 @@ dependencies {
   commonTestImplementation(kotlin("test-common"))
   commonMainImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
   // https://mvnrepository.com/artifact/net.kigawa.kutil/kutil
+  commonMainImplementation("net.kigawa.kutil:kutil:4.0.2")
 }
 
 version = ProjectConfig.VERSION
@@ -39,10 +40,10 @@ kotlin {
   sourceSets {
     val jvmMain by getting {
       dependencies {
-        implementation("net.kigawa.kutil:kutil:2.2.2")
+//        implementation("net.kigawa.kutil:kutil:2.2.2")
       }
     }
-    val jvmTest by getting{
+    val jvmTest by getting {
       dependencies {
         implementation(kotlin("test-junit5"))
       }
@@ -67,6 +68,5 @@ tasks {
   }
   withType<Test> {
     useJUnitPlatform()
-//    exclude("net/kigawa/kutil/kunit/dummy/*")
   }
 }

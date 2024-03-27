@@ -1,7 +1,7 @@
 package net.kigawa.kutil.kunit.api
 
-import net.kigawa.kutil.kutil.reflection.KutilReflect
 import net.kigawa.kutil.kunit.api.annotation.ArgName
+import net.kigawa.kutil.kutil.api.reflection.KutilReflect
 import java.lang.reflect.Executable
 import java.util.*
 

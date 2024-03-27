@@ -1,18 +1,15 @@
 package net.kigawa.kutil.kunit.impl.extension.initializedfilter
 
-import net.kigawa.kutil.kutil.reflection.KutilReflect
 import net.kigawa.kutil.kunit.api.UnitIdentify
-import net.kigawa.kutil.kunit.api.annotation.Inject
 import net.kigawa.kutil.kunit.api.component.InitStack
 import net.kigawa.kutil.kunit.api.component.UnitDatabaseComponent
-import net.kigawa.kutil.kunit.api.component.UnitLoggerComponent
 import net.kigawa.kutil.kunit.api.exception.InjectFinalException
 import net.kigawa.kutil.kunit.api.exception.NoFoundUnitException
 import net.kigawa.kutil.kunit.api.extention.InitializedFilter
+import net.kigawa.kutil.kutil.api.reflection.KutilReflect
 
 class FieldInjectFilter(
   private val database: UnitDatabaseComponent,
-  private val loggerComponent: UnitLoggerComponent,
 ) : InitializedFilter {
   override fun <T : Any> filter(obj: T, stack: InitStack): T {
     KutilReflect.getAllExitFields(obj.javaClass).forEach {
