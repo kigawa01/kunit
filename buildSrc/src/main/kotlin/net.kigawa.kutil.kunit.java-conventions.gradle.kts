@@ -23,6 +23,8 @@ dependencies {
   commonMainImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
   // https://mvnrepository.com/artifact/net.kigawa.kutil/kutil
   commonMainImplementation("net.kigawa.kutil:kutil:4.0.2")
+  // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
+  commonMainImplementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23")
 }
 
 version = ProjectConfig.VERSION
