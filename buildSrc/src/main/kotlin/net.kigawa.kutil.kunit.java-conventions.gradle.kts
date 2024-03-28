@@ -20,7 +20,7 @@ repositories {
 dependencies {
   commonMainImplementation("org.jetbrains.kotlin:kotlin-stdlib")
   commonTestImplementation(kotlin("test-common"))
-  commonMainImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+  commonMainImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1-Beta")
   // https://mvnrepository.com/artifact/net.kigawa.kutil/kutil
   commonMainImplementation("net.kigawa.kutil:kutil:4.0.2")
   // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect

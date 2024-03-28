@@ -1,7 +1,7 @@
 package net.kigawa.kutil.kunit.provider
 
 import net.kigawa.kutil.kunit.api.annotation.Inject
-import net.kigawa.kutil.kunit.dependency.ClassDependency
+import net.kigawa.kutil.kunit.context.Context
 import net.kigawa.kutil.kunit.exception.NoSingleConstructorException
 import net.kigawa.kutil.kunit.executor.Executor
 import net.kigawa.kutil.kutil.api.list.containsIf
@@ -10,8 +10,13 @@ import kotlin.reflect.KFunction
 
 class InitializeProvider<T : Any>(
   override val instanceClass: KClass<out T>,
-  private val executor: Executor,
+  context: Context,
 ) : Provider<T> {
+  private val executor = Executor(getInitConstructor(), context)
+  override val dependencies: List<Provider<out Any>>
+    get() = executor.dependencies
+
+
   override fun <U : Any> safeCast(superClass: KClass<U>): Provider<out U>? {
     @Suppress("UNCHECKED_CAST")
     if (superClass.java.isAssignableFrom(instanceClass.java)) return this as Provider<out U>
@@ -19,12 +24,9 @@ class InitializeProvider<T : Any>(
   }
 
   override fun getInstance(): T {
-    val constructor = getInitConstructor()
-    return executor.execute(constructor)
+    return executor.execute()
   }
 
-  override val dependencies: List<ClassDependency<out Any>>
-    get() = emptyList()
 
   private fun getInitConstructor(): KFunction<T> {
     val allFuncs = instanceClass.constructors
